@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Code Runner — Web</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.27.5/full/pyodide.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.11.0/sql-wasm.js"></script>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    :root{
+      --bg:#0a0a0f;--bg2:#0f0f1a;--card:#16162a;
+      --border:#2a2a50;--border2:#3a3a70;
+      --text:#e8e8ff;--text2:#a0a0cc;--text3:#6060aa;
+      --cyan:#00ffff;--blue:#4488ff;--purple:#aa44ff;
+      --green:#00ff88;--orange:#ff8800;--pink:#ff44aa;
+    }
+    body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh}
+    .header{padding:30px 20px;text-align:center;border-bottom:1px solid var(--border)}
+    .header h1{font-size:1.5rem;font-weight:600;margin-bottom:4px}
+    .header p{color:var(--text2);font-size:14px}
+    .main{max-width:1100px;margin:0 auto;padding:20px}
+    .lang-tabs{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
+    .lang-tab{padding:8px 20px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text3);font-family:'Inter',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all 0.2s}
+    .lang-tab:hover{color:var(--text);border-color:var(--border2)}
+    .lang-tab.active{color:var(--cyan);border-color:rgba(0,255,255,0.4);background:rgba(0,255,255,0.08)}
+    .editor-wrap{display:grid;grid-template-columns:1fr 1fr;gap:16px;min-height:400px}
+    @media(max-width:700px){.editor-wrap{grid-template-columns:1fr}}
+    .panel{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
+    .panel-header{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid var(--border);font-size:12px;font-weight:600;color:var(--text2)}
+    .panel-header .label{display:flex;align-items:center;gap:8px}
+    .panel-header .dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+    .btn-run{background:rgba(0,255,136,0.12);border:1px solid rgba(0,255,136,0.3);color:var(--green);padding:6px 18px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600;font-family:'Inter',sans-serif;transition:all 0.2s}
+    .btn-run:hover{background:rgba(0,255,136,0.2);transform:translateY(-1px)}
+    .btn-run:disabled{opacity:0.4;cursor:not-allowed;transform:none}
+    textarea{flex:1;background:#0d1117;border:none;outline:none;color:var(--green);font-family:'JetBrains Mono',monospace;font-size:14px;line-height:1.7;padding:16px;resize:none;tab-size:4}
+    textarea::placeholder{color:var(--text3)}
+    #output{flex:1;background:#0d1117;padding:16px;font-family:'JetBrains Mono',monospace;font-size:14px;line-height:1.7;overflow:auto;white-space:pre-wrap;color:var(--text2)}
+    #output.error{color:var(--pink)}
+    #output .info{color:var(--text3);font-style:italic}
+    .spinner{display:inline-block;width:14px;height:14px;border:2px solid var(--border);border-top-color:var(--green);border-radius:50%;animation:spin 0.7s linear infinite;vertical-align:middle;margin-right:6px}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .samples{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+    .sample-btn{background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:6px;padding:4px 12px;font-size:12px;color:var(--text3);cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.2s}
+    .sample-btn:hover{color:var(--text);border-color:var(--border2);background:rgba(255,255,255,0.06)}
+  </style>
+</head>
+<body>
+<div class="header">
+  <h1>⚡ Web Code Runner</h1>
+  <p>Python & SQL run in-browser — C & HTML show guidance</p>
+</div>
+<div class="main">
+  <div class="lang-tabs">
+    <button class="lang-tab active" data-lang="python">Python</button>
+    <button class="lang-tab" data-lang="sql">SQL</button>
+    <button class="lang-tab" data-lang="c">C</button>
+    <button class="lang-tab" data-lang="html">HTML</button>
+  </div>
+
+  <div class="samples" id="samples"></div>
+
+  <div class="editor-wrap">
+    <div class="panel">
+      <div class="panel-header">
+        <span class="label"><span class="dot" style="background:var(--cyan)"></span> <span id="lang-label">Python</span></span>
+        <button class="btn-run" id="runBtn" onclick="runCode()">▶ Run</button>
+      </div>
+      <textarea id="code" placeholder="Paste or type your code here..."></textarea>
+    </div>
+    <div class="panel">
+      <div class="panel-header">
+        <span class="label"><span class="dot" style="background:var(--green)"></span> Output</span>
+        <span id="status" style="font-size:12px;color:var(--text3)">ready</span>
+      </div>
+      <div id="output"><span class="info">Run code to see output</span></div>
+    </div>
+  </div>
+</div>
+
+<script>
+let pyodide = null;
+let SQL = null;
+let currentLang = 'python';
+
+const SAMPLES = {
+  python: [
+    { label: "Hello World", code: 'print("Hello, World!")' },
+    { label: "Fibonacci", code: `def fib(n):\n    a, b = 0, 1\n    for _ in range(n):\n        print(a, end=" ")\n        a, b = b, a + b\n    print()\nfib(10)` },
+    { label: "List Ops", code: `nums = [3, 7, 1, 9, 4]\nprint(f"Original: {nums}")\nprint(f"Sorted:   {sorted(nums)}")\nprint(f"Sum:      {sum(nums)}")\nprint(f"Average:  {sum(nums)/len(nums):.2f}")` },
+  ],
+  sql: [
+    { label: "Create & Query", code: `CREATE TABLE students (\n  id INT,\n  name TEXT,\n  grade INT\n);\nINSERT INTO students VALUES (1, 'Alice', 85);\nINSERT INTO students VALUES (2, 'Bob', 92);\nINSERT INTO students VALUES (3, 'Charlie', 78);\nSELECT * FROM students;` },
+    { label: "Aggregation", code: `CREATE TABLE sales(item TEXT, qty INT, price REAL);\nINSERT INTO sales VALUES ('A', 10, 5.0),('B', 5, 12.0),('A', 3, 5.0),('C', 8, 7.5);\nSELECT item, SUM(qty) as total_qty, SUM(qty*price) as revenue FROM sales GROUP BY item;` },
+  ],
+  c: [
+    { label: "Hello World", code: `#include <stdio.h>\n\nint main() {\n    printf("Hello from C!\\n");\n    return 0;\n}` },
+    { label: "Factorial", code: `#include <stdio.h>\n\nint fact(int n) {\n    return n <= 1 ? 1 : n * fact(n - 1);\n}\n\nint main() {\n    for (int i = 1; i <= 10; i++)\n        printf("%d! = %d\\n", i, fact(i));\n    return 0;\n}` },
+  ],
+  html: [
+    { label: "Simple Page", code: `<!DOCTYPE html>\n<html>\n<head><title>Demo</title></head>\n<body style="font-family:sans-serif;text-align:center;padding:40px">\n  <h1>Hello!</h1>\n  <p>This HTML renders below.</p>\n</body>\n</html>` },
+  ]
+};
+
+let pyodideReady = false;
+let sqlReady = false;
+
+async function initPyodide() {
+  pyodide = await loadPyodide({ indexURL: "https://cdn.jsdelivr.net/pyodide/v0.27.5/full/" });
+  pyodideReady = true;
+  document.getElementById('status').textContent = 'pyodide ready';
+}
+
+async function initSQL() {
+  SQL = await initSqlJs({ locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.11.0/${file}` });
+  sqlReady = true;
+}
+
+initPyodide();
+initSQL();
+
+function setSamples(lang) {
+  const container = document.getElementById('samples');
+  container.innerHTML = '';
+  (SAMPLES[lang] || []).forEach(s => {
+    const btn = document.createElement('button');
+    btn.className = 'sample-btn';
+    btn.textContent = s.label;
+    btn.onclick = () => document.getElementById('code').value = s.code;
+    container.appendChild(btn);
+  });
+}
+
+document.querySelectorAll('.lang-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.lang-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    currentLang = tab.dataset.lang;
+    document.getElementById('lang-label').textContent = tab.textContent;
+    setSamples(currentLang);
+    document.getElementById('output').innerHTML = '<span class="info">Run code to see output</span>';
+    document.getElementById('code').value = '';
+  });
+});
+
+setSamples('python');
+
+async function runPython(code) {
+  if (!pyodideReady) return 'Loading Python runtime... please wait.';
+  try {
+    pyodide.FS.writeFile('/home/py_user/tmp_script.py', code);
+    const result = await pyodide.runPythonAsync(code);
+    const stdout = pyodide.runPython("import sys; sys.stdout.getvalue()");
+    pyodide.runPython("import sys; sys.stdout = __import__('io').StringIO()");
+    return (stdout || '').trim() + (result !== undefined && result !== null ? '\n' + result : '');
+  } catch (e) {
+    throw e.message;
+  }
+}
+
+async function runSQLite(code) {
+  if (!sqlReady) return 'Loading SQL runtime... please wait.';
+  try {
+    const db = new SQL.Database();
+    const statements = code.split(';').filter(s => s.trim());
+    let output = [];
+    for (const stmt of statements) {
+      try {
+        const trimmed = stmt.trim();
+        if (!trimmed) continue;
+        const result = db.exec(trimmed + ';');
+        if (result.length > 0) {
+          for (const r of result) {
+            output.push(r.columns.join(' | '));
+            output.push('-'.repeat(r.columns.join(' | ').length));
+            r.values.forEach(row => output.push(row.join(' | ')));
+            output.push(`(${r.values.length} rows)`);
+          }
+        } else {
+          output.push('(executed successfully)');
+        }
+      } catch (e) {
+        output.push(`[ERROR] ${e.message}`);
+      }
+    }
+    db.close();
+    return output.join('\n');
+  } catch (e) {
+    throw e.message;
+  }
+}
+
+function runC(code) {
+  return `[C execution requires a compiler]
+To run this C code, use the CLI:
+  python run.py --code "${code.replace(/"/g, '\\"').replace(/\n/g, '\\n')}"
+
+Or compile manually:
+  echo '${code.replace(/'/g, "'\\''")}' > program.c
+  gcc program.c -o program && ./program`;
+}
+
+function runHtmlPreview(code) {
+  const blob = new Blob([code], { type: 'text/html' });
+  const url = URL.createObjectURL(blob);
+  return `<iframe src="${url}" style="width:100%;height:300px;border:1px solid #333;border-radius:4px;background:white"></iframe>`;
+}
+
+async function runCode() {
+  const code = document.getElementById('code').value.trim();
+  if (!code) return;
+
+  const runBtn = document.getElementById('runBtn');
+  const output = document.getElementById('output');
+  const status = document.getElementById('status');
+
+  runBtn.disabled = true;
+  runBtn.innerHTML = '<span class="spinner"></span> Running';
+  status.textContent = 'running...';
+  output.className = '';
+
+  try {
+    let result;
+    switch (currentLang) {
+      case 'python':
+        result = await runPython(code);
+        break;
+      case 'sql':
+        result = await runSQLite(code);
+        break;
+      case 'c':
+        result = runC(code);
+        break;
+      case 'html':
+        result = runHtmlPreview(code);
+        break;
+    }
+    if (currentLang === 'html') {
+      output.innerHTML = result;
+    } else {
+      output.textContent = result || '(no output)';
+    }
+    status.textContent = 'done';
+  } catch (e) {
+    output.textContent = e.message || String(e);
+    output.className = 'error';
+    status.textContent = 'error';
+  }
+
+  runBtn.disabled = false;
+  runBtn.innerHTML = '▶ Run';
+}
+</script>
+</body>
+</html>

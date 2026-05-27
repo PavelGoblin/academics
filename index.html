@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Code Runner — Multi-Language Lab</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=JetBrains+Mono:wght@400;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    :root{
+      --bg:#0a0a0f;--bg2:#0f0f1a;--card:#16162a;--card2:#1c1c35;
+      --border:#2a2a50;--border2:#3a3a70;
+      --text:#e8e8ff;--text2:#a0a0cc;--text3:#6060aa;
+      --cyan:#00ffff;--blue:#4488ff;--purple:#aa44ff;
+      --green:#00ff88;--orange:#ff8800;--pink:#ff44aa;
+    }
+    body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh}
+    .hero{text-align:center;padding:60px 20px 40px}
+    .hero h1{font-family:'Orbitron',sans-serif;font-size:clamp(2rem,5vw,4rem);font-weight:900;background:linear-gradient(135deg,var(--cyan),var(--blue),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:12px}
+    .hero p{color:var(--text2);font-size:1.1rem;max-width:500px;margin:0 auto 20px}
+    .badge{display:inline-block;padding:4px 14px;border-radius:20px;font-size:12px;font-weight:600;margin:3px}
+    .badge-cyan{background:rgba(0,255,255,0.1);color:var(--cyan);border:1px solid rgba(0,255,255,0.25)}
+    .badge-blue{background:rgba(68,136,255,0.1);color:var(--blue);border:1px solid rgba(68,136,255,0.25)}
+    .badge-purple{background:rgba(170,68,255,0.1);color:var(--purple);border:1px solid rgba(170,68,255,0.25)}
+    .badge-green{background:rgba(0,255,136,0.1);color:var(--green);border:1px solid rgba(0,255,136,0.25)}
+    .badge-orange{background:rgba(255,136,0,0.1);color:var(--orange);border:1px solid rgba(255,136,0,0.25)}
+    .main{max-width:1000px;margin:0 auto;padding:0 20px 60px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;transition:transform 0.2s,border-color 0.2s,box-shadow 0.2s;position:relative;overflow:hidden}
+    .card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.02) 0%,transparent 60%);pointer-events:none}
+    .card:hover{transform:translateY(-4px);border-color:var(--border2);box-shadow:0 8px 40px rgba(0,0,0,0.4)}
+    .card-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:14px}
+    .card h3{font-size:1.2rem;font-weight:600;margin-bottom:8px}
+    .card p{color:var(--text2);font-size:0.92rem;line-height:1.6;margin-bottom:14px}
+    .card .link{display:inline-block;padding:8px 18px;border-radius:8px;font-size:13px;font-weight:600;text-decoration:none;transition:all 0.2s;border:1px solid}
+    .card .link:hover{transform:translateY(-2px)}
+    .section-title{font-family:'Orbitron',sans-serif;font-size:1.3rem;font-weight:700;margin:40px 0 20px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+  </style>
+</head>
+<body>
+<div class="hero">
+  <h1>Code Runner</h1>
+  <p>Multi-language programming lab — learn C, Python, SQL & HTML</p>
+  <div>
+    <span class="badge badge-cyan">C</span>
+    <span class="badge badge-blue">Python</span>
+    <span class="badge badge-purple">SQL</span>
+    <span class="badge badge-green">HTML</span>
+    <span class="badge badge-orange">CSS</span>
+  </div>
+</div>
+<div class="main">
+  <div class="section-title">📚 Learning Guides</div>
+  <div class="grid">
+    <div class="card" style="border-color:rgba(0,255,255,0.2)">
+      <div class="card-icon" style="background:rgba(0,255,255,0.1);border:1px solid rgba(0,255,255,0.2)">⚡</div>
+      <h3 style="color:var(--cyan)">C Programming</h3>
+      <p>Complete C guide — basics, data types, pointers, structs, file I/O, and advanced topics with runnable examples.</p>
+      <a class="link" style="color:var(--cyan);border-color:rgba(0,255,255,0.3)" href="c_programming_guide.html">Open Guide →</a>
+    </div>
+    <div class="card" style="border-color:rgba(68,136,255,0.2)">
+      <div class="card-icon" style="background:rgba(68,136,255,0.1);border:1px solid rgba(68,136,255,0.2)">🐍</div>
+      <h3 style="color:var(--blue)">Python Notes</h3>
+      <p>Comprehensive Python reference — syntax, data structures, OOP, modules, and practical examples.</p>
+      <a class="link" style="color:var(--blue);border-color:rgba(68,136,255,0.3)" href="python/index.html">Open Guide →</a>
+    </div>
+    <div class="card" style="border-color:rgba(170,68,255,0.2)">
+      <div class="card-icon" style="background:rgba(170,68,255,0.1);border:1px solid rgba(170,68,255,0.2)">🌐</div>
+      <h3 style="color:var(--purple)">HTML & CSS</h3>
+      <p>Full HTML & CSS reference — tags, flexbox, grid, animations, responsive design, and best practices.</p>
+      <a class="link" style="color:var(--purple);border-color:rgba(170,68,255,0.3)" href="task-1/index.html">Open Guide →</a>
+    </div>
+  </div>
+
+  <div class="section-title">⚙️ Code Runner</div>
+  <div class="grid">
+    <div class="card" style="border-color:rgba(0,255,136,0.2)">
+      <div class="card-icon" style="background:rgba(0,255,136,0.1);border:1px solid rgba(0,255,136,0.2)">▶</div>
+      <h3 style="color:var(--green)">Web Code Runner</h3>
+      <p>Run Python and SQL directly in your browser. Paste code, click run, see results instantly — no setup needed.</p>
+      <a class="link" style="color:var(--green);border-color:rgba(0,255,136,0.3)" href="runner.html">Open Runner →</a>
+    </div>
+    <div class="card" style="border-color:rgba(255,136,0,0.2)">
+      <div class="card-icon" style="background:rgba(255,136,0,0.1);border:1px solid rgba(255,136,0,0.2)">🖥</div>
+      <h3 style="color:var(--orange)">CLI Runner (run.py)</h3>
+      <p>Offline multi-language runner supporting C, Python, SQL, and HTML. Auto-detects language from code content.</p>
+      <code style="font-size:13px;background:rgba(255,255,255,0.06);padding:4px 10px;border-radius:6px;display:inline-block;margin-bottom:10px;color:var(--orange)">python run.py --code "..."</code>
+      <a class="link" style="color:var(--orange);border-color:rgba(255,136,0,0.3)" href="https://github.com/anomalyco/code-runner" target="_blank">GitHub →</a>
+    </div>
+  </div>
+
+  <div class="section-title">🚀 Quick Start</div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px">
+    <pre style="font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--text2);line-height:1.8"><span style="color:var(--green)"># Install dependencies</span>
+pip install flask
+
+<span style="color:var(--green)"># Start the live server</span>
+python server.py
+
+<span style="color:var(--green)"># Or use the CLI runner directly</span>
+python run.py -i</pre>
+  </div>
+</div>
+</body>
+</html>

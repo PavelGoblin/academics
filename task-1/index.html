@@ -1,0 +1,2200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HTML & CSS Complete Reference</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=JetBrains+Mono:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    /* ── CSS VARIABLES ── */
+    :root {
+      --bg:        #0b0f19;
+      --surface:   #111827;
+      --card:      #1a2236;
+      --border:    #2a3650;
+      --accent:    #38bdf8;
+      --accent2:   #f472b6;
+      --accent3:   #a78bfa;
+      --green:     #34d399;
+      --yellow:    #fbbf24;
+      --text:      #e2e8f0;
+      --muted:     #64748b;
+      --tag-bg:    #0f2235;
+      --code-bg:   #0d1117;
+      --radius:    10px;
+      --mono:      'JetBrains Mono', monospace;
+      --serif:     'Playfair Display', serif;
+      --sans:      'DM Sans', sans-serif;
+    }
+
+    /* ── RESET & BASE ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--sans);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      font-size: 15px;
+    }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+    /* ── HERO ── */
+    .hero {
+      background: linear-gradient(135deg, #0b0f19 0%, #0f2235 50%, #130a2a 100%);
+      padding: 80px 40px 60px;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 60% 50% at 50% -20%, rgba(56,189,248,0.15), transparent);
+      pointer-events: none;
+    }
+    .hero-badge {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      padding: 5px 14px;
+      border-radius: 20px;
+      margin-bottom: 24px;
+    }
+    .hero h1 {
+      font-family: var(--serif);
+      font-size: clamp(2.4rem, 6vw, 4.5rem);
+      font-weight: 900;
+      line-height: 1.1;
+      background: linear-gradient(90deg, var(--accent), var(--accent3), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 16px;
+    }
+    .hero p {
+      color: var(--muted);
+      font-size: 1rem;
+      max-width: 560px;
+      margin: 0 auto 28px;
+    }
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+    .hero-stats span {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .hero-stats strong {
+      display: block;
+      font-size: 22px;
+      color: var(--text);
+      font-family: var(--serif);
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(11,15,25,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 32px;
+      display: flex;
+      gap: 4px;
+      overflow-x: auto;
+    }
+    nav a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 500;
+      padding: 14px 16px;
+      white-space: nowrap;
+      border-bottom: 2px solid transparent;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    nav a:hover { color: var(--accent); border-color: var(--accent); }
+
+    /* ── LAYOUT ── */
+    main { max-width: 1200px; margin: 0 auto; padding: 48px 24px 80px; }
+    section { margin-bottom: 64px; }
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 28px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border);
+    }
+    .section-icon {
+      width: 38px; height: 38px;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .section-header h2 {
+      font-family: var(--serif);
+      font-size: 1.7rem;
+      font-weight: 700;
+    }
+    .section-header .count {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      margin-left: auto;
+    }
+
+    /* ── GRID ── */
+    .tag-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 16px;
+    }
+    .wide-grid {
+      grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+    }
+    .tag-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .tag-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+    .tag-name {
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .tag-name .badge {
+      font-size: 9px;
+      padding: 2px 7px;
+      border-radius: 10px;
+      font-family: var(--sans);
+      letter-spacing: 0.5px;
+    }
+    .badge-deprecated { background: rgba(239,68,68,0.15); color: #f87171; }
+    .badge-new        { background: rgba(52,211,153,0.15); color: var(--green); }
+    .badge-block      { background: rgba(167,139,250,0.15); color: var(--accent3); }
+    .badge-inline     { background: rgba(251,191,36,0.15);  color: var(--yellow); }
+    .badge-void       { background: rgba(244,114,182,0.15); color: var(--accent2); }
+
+    .tag-desc {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 12px 14px;
+      font-family: var(--mono);
+      font-size: 12px;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .preview-box {
+      margin-top: 10px;
+      background: #ffffff;
+      border-radius: 6px;
+      padding: 10px 14px;
+      font-family: var(--sans);
+      color: #111;
+      font-size: 13px;
+    }
+
+    /* ── CSS PROPERTY CARDS ── */
+    .css-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .css-card:hover { border-color: var(--accent2); transform: translateY(-2px); }
+    .css-prop-name {
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--accent2);
+      margin-bottom: 4px;
+    }
+    .css-values {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--accent3);
+      margin-bottom: 8px;
+    }
+
+    /* ── LIVE DEMOS ── */
+    .demo-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 12px; }
+    .demo-box {
+      padding: 10px 16px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-family: var(--mono);
+      text-align: center;
+    }
+
+    /* ── TABLE ── */
+    .ref-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .ref-table th {
+      background: var(--surface);
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 1px;
+      text-align: left;
+      padding: 10px 16px;
+      border-bottom: 2px solid var(--accent);
+    }
+    .ref-table td {
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    .ref-table tr:hover td { background: rgba(255,255,255,0.02); }
+    .ref-table code {
+      font-family: var(--mono);
+      background: var(--tag-bg);
+      color: var(--accent);
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+
+    /* ── FULL EXAMPLE ── */
+    .full-example {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .full-example-header {
+      background: var(--surface);
+      padding: 10px 18px;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .dot { width:10px; height:10px; border-radius:50%; display:inline-block; }
+    .dot-r { background:#ff5f57; } .dot-y { background:#febc2e; } .dot-g { background:#28c840; }
+    .full-example pre { border:none; border-radius:0; padding:20px; }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 32px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 12px;
+    }
+    footer strong { color: var(--accent); }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════ HERO ═══════════════════════════ -->
+<div class="hero">
+  <div class="hero-badge">Web Engineering · Complete Reference</div>
+  <h1>HTML &amp; CSS<br/>Complete Tag Reference by Ibrahim Pavel</h1>
+  <p>A comprehensive guide to every HTML element and core CSS property, with live syntax examples.</p>
+  <div class="hero-stats">
+    <span><strong>100+</strong>HTML Tags</span>
+    <span><strong>60+</strong>CSS Properties</span>
+    <span><strong>10</strong>Sections</span>
+    <span><strong>1</strong>File</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ NAV ═══════════════════════════ -->
+<nav>
+  <a href="#document">Document</a>
+  <a href="#text">Text</a>
+  <a href="#lists">Lists</a>
+  <a href="#links-media">Links &amp; Media</a>
+  <a href="#tables">Tables</a>
+  <a href="#forms">Forms</a>
+  <a href="#semantic">Semantic / Layout</a>
+  <a href="#scripting">Scripting</a>
+  <a href="#meta">Meta &amp; Head</a>
+  <a href="#css-box">CSS: Box Model</a>
+  <a href="#css-text">CSS: Typography</a>
+  <a href="#css-color">CSS: Colors &amp; BG</a>
+  <a href="#css-layout">CSS: Flexbox &amp; Grid</a>
+  <a href="#css-anim">CSS: Transitions &amp; Animation</a>
+  <a href="#css-other">CSS: Misc Properties</a>
+  <a href="#full-page">Full Page Example</a>
+</nav>
+
+<main>
+
+<!-- ══════════════════ 1. DOCUMENT STRUCTURE ══════════════════ -->
+<section id="document">
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(56,189,248,0.12)">📄</div>
+    <h2 style="color:var(--accent)">Document Structure Tags</h2>
+    <span class="count">9 tags</span>
+  </div>
+  <div class="tag-grid">
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;!DOCTYPE html&gt; <span class="badge badge-void">Declaration</span></div>
+      <div class="tag-desc">Tells the browser this is an HTML5 document. Must be the very first line.</div>
+      <pre>&lt;!DOCTYPE html&gt;</pre>
+    </div>
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;html&gt; <span class="badge badge-block">Block</span></div>
+      <div class="tag-desc">The root element that wraps all HTML content. The <code>lang</code> attribute sets the language.</div>
+      <pre>&lt;html lang="en"&gt;
+  ...
+&lt;/html&gt;</pre>
+    </div>
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;head&gt; <span class="badge badge-block">Block</span></div>
+      <div class="tag-desc">Contains metadata: title, links to stylesheets, scripts, and SEO tags. Not visible on page.</div>
+      <pre>&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;title&gt;My Page&lt;/title&gt;
+&lt;/head&gt;</pre>
+    </div>
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;body&gt; <span class="badge badge-block">Block</span></div>
+      <div class="tag-desc">Contains all visible page content: text, images, links, forms, etc.</div>
+      <pre>&lt;body&gt;
+  &lt;h1&gt;Hello World&lt;/h1&gt;
+&lt;/body&gt;</pre>
+    </div>
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;title&gt;</div>
+      <div class="tag-desc">Sets the browser tab title and is used by search engines.</div>
+      <pre>&lt;title&gt;My Awesome Website&lt;/title&gt;</pre>
+    </div>
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;meta&gt; <span class="badge badge-void">Void</span></div>
+      <div class="tag-desc">Provides metadata like charset, viewport, description, and author.</div>
+      <pre>&lt;meta charset="UTF-8"&gt;
+&lt;meta name="viewport"
+      content="width=device-width,
+               initial-scale=1.0"&gt;
+&lt;meta name="description"
+      content="Page description"&gt;</pre>
+    </div>
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;link&gt; <span class="badge badge-void">Void</span></div>
+      <div class="tag-desc">Links external resources like CSS stylesheets or favicons.</div>
+      <pre>&lt;link rel="stylesheet"
+      href="style.css"&gt;
+&lt;link rel="icon"
+      href="favicon.ico"&gt;</pre>
+    </div>
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;style&gt;</div>
+      <div class="tag-desc">Embeds internal CSS rules directly inside the HTML document.</div>
+      <pre>&lt;style&gt;
+  body { background: #fff; }
+  h1   { color: navy; }
+&lt;/style&gt;</pre>
+    </div>
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;base&gt; <span class="badge badge-void">Void</span></div>
+      <div class="tag-desc">Sets the base URL for all relative links and targets in a document.</div>
+      <pre>&lt;base href="https://example.com/"
+      target="_blank"&gt;</pre>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════ 2. TEXT CONTENT ══════════════════ -->
+<section id="text">
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(167,139,250,0.12)">✍️</div>
+    <h2 style="color:var(--accent3)">Text Content Tags</h2>
+    <span class="count">28 tags</span>
+  </div>
+  <div class="tag-grid">
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;h1&gt; … &lt;h6&gt; <span class="badge badge-block">Block</span></div>
+      <div class="tag-desc">Six heading levels. <code>&lt;h1&gt;</code> is the most important; <code>&lt;h6&gt;</code> is the least.</div>
+      <pre>&lt;h1&gt;Heading 1&lt;/h1&gt;
+&lt;h2&gt;Heading 2&lt;/h2&gt;
+&lt;h3&gt;Heading 3&lt;/h3&gt;
+&lt;h4&gt;Heading 4&lt;/h4&gt;
+&lt;h5&gt;Heading 5&lt;/h5&gt;
+&lt;h6&gt;Heading 6&lt;/h6&gt;</pre>
+      <div class="preview-box">
+        <h1 style="font-size:1.6em;margin:0">Heading 1</h1>
+        <h2 style="font-size:1.3em;margin:0">Heading 2</h2>
+        <h3 style="font-size:1.1em;margin:0">Heading 3</h3>
+        <h4 style="font-size:1em;margin:0">Heading 4</h4>
+        <h5 style="font-size:.9em;margin:0">Heading 5</h5>
+        <h6 style="font-size:.8em;margin:0;color:#555">Heading 6</h6>
+      </div>
+    </div>
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;p&gt; <span class="badge badge-block">Block</span></div>
+      <div class="tag-desc">Defines a paragraph of text. Browsers add spacing before and after.</div>
+      <pre>&lt;p&gt;This is a paragraph.&lt;/p&gt;
+&lt;p&gt;This is another one.&lt;/p&gt;</pre>
+      <div class="preview-box">
+        <p style="margin:0 0 6px">This is a paragraph.</p>
+        <p style="margin:0">This is another one.</p>
+      </div>
+    </div>
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;strong&gt; <span class="badge badge-inline">Inline</span></div>
+      <div class="tag-desc">Renders text in <strong>bold</strong> and marks it as semantically important.</div>
+      <pre>&lt;p&gt;This is &lt;strong&gt;important&lt;/strong&gt;.&lt;/p&gt;</pre>
+      <div class="preview-box">This is <strong>important</strong>.</div>
+    </div>
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;em&gt; <span class="badge badge-inline">Inline</span></div>
+      <div class="tag-desc">Renders text in <em>italic</em> and marks it as emphasized.</div>
+      <pre>&lt;p&gt;This is &lt;em&gt;emphasized&lt;/em&gt;.&lt;/p&gt;</pre>
+      <div class="preview-box">This is <em>emphasized</em>.</div>
+    </div>
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;b&gt; / &lt;i&gt; <span class="badge badge-inline">Inline</span></div>
+      <div class="tag-desc"><code>&lt;b&gt;</code> = bold (stylistic). <code>&lt;i&gt;</code> = italic (stylistic, no semantic meaning).</div>
+      <pre>&lt;b&gt;Bold text&lt;/b&gt; and
+&lt;i&gt;Italic text&lt;/i&gt;</pre>
+      <div class="preview-box"><b>Bold text</b> and <i>Italic text</i></div>
+    </div>
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;u&gt; / &lt;s&gt; <span class="badge badge-inline">Inline</span></div>
+      <div class="tag-desc"><code>&lt;u&gt;</code> underlines text. <code>&lt;s&gt;</code> adds a strikethrough (no longer relevant).</div>
+      <pre>&lt;u&gt;Underlined&lt;/u&gt; and
+&lt;s&gt;Strikethrough&lt;/s&gt;</pre>
+      <div class="preview-box"><u>Underlined</u> and <s>Strikethrough</s></div>
+    </div>
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;mark&gt; <span class="badge badge-inline">Inline</span></div>
+      <div class="tag-desc">Highlights text like a <mark>yellow marker</mark>.</div>
+      <pre>&lt;p&gt;Find the &lt;mark&gt;keyword&lt;/mark&gt;.&lt;/p&gt;</pre>
+      <div class="preview-box">Find the <mark>keyword</mark>.</div>
+    </div>
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;small&gt; <span class="badge badge-inline">Inline</span></div>
+      <div class="tag-desc">Makes text smaller, used for fine print or copyright notices.</div>
+      <pre>&lt;small&gt;© 2025 All rights reserved&lt;/small&gt;</pre>
+      <div class="preview-box"><small>© 2025 All rights reserved</small></div>
+    </div>
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;sup&gt; / &lt;sub&gt; <span class="badge badge-inline">Inline</span></div>
+      <div class="tag-desc"><code>&lt;sup&gt;</code> = superscript. <code>&lt;sub&gt;</code> = subscript. Used in math and chemistry.</div>
+      <pre>H&lt;sub&gt;2&lt;/sub&gt;O and E=mc&lt;sup&gt;2&lt;/sup&gt;</pre>
+      <div class="preview-box">H<sub>2</sub>O and E=mc<sup>2</sup></div>
+    </div>
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;code&gt; / &lt;pre&gt; / &lt;kbd&gt; <span class="badge badge-inline">Inline</span></div>
+      <div class="tag-desc"><code>&lt;code&gt;</code> inline code. <code>&lt;pre&gt;</code> preformatted block. <code>&lt;kbd&gt;</code> keyboard input.</div>
+      <pre>&lt;code&gt;let x = 5;&lt;/code&gt;
+&lt;pre&gt;  indented
+  text&lt;/pre&gt;
+Press &lt;kbd&gt;Ctrl+C&lt;/kbd&gt;</pre>
+      <div class="preview-box">
+        <code>let x = 5;</code><br>
+        Press <kbd>Ctrl+C</kbd>
+      </div>
+    </div>
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;blockquote&gt; <span class="badge badge-block">Block</span></div>
+      <div class="tag-desc">Represents a long quotation from another source. Use <code>cite</code> for the URL.</div>
+      <pre>&lt;blockquote cite="https://example.com"&gt;
+  The only way to learn a new
+  programming language is by writing
+  programs in it.
+&lt;/blockquote&gt;</pre>
+      <div class="preview-box">
+        <blockquote style="border-left:3px solid #999;padding-left:12px;margin:0;color:#444">
+          The only way to learn a new programming language is by writing programs in it.
+        </blockquote>
+      </div>
+    </div>
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;q&gt; <span class="badge badge-inline">Inline</span></div>
+      <div class="tag-desc">A short inline quotation. Browsers automatically add quotation marks.</div>
+      <pre>&lt;p&gt;He said &lt;q&gt;Hello World&lt;/q&gt;.&lt;/p&gt;</pre>
+      <div class="preview-box">He said <q>Hello World</q>.</div>
+    </div>
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;abbr&gt; <span class="badge badge-inline">Inline</span></div>
+      <div class="tag-desc">Defines an abbreviation. The <code>title</code> attribute shows the full form on hover.</div>
+      <pre>&lt;abbr title="HyperText Markup Language"&gt;
+  HTML
+&lt;/abbr&gt;</pre>
+      <div class="preview-box">Learning <abbr title="HyperText Markup Language">HTML</abbr> is fun.</div>
+    </div>
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;cite&gt; <span class="badge badge-inline">Inline</span></div>
+      <div class="tag-desc">Marks the title of a creative work — a book, film, song, etc.</div>
+      <pre>&lt;cite&gt;Clean Code&lt;/cite&gt; by Robert Martin.</pre>
+      <div class="preview-box"><cite>Clean Code</cite> by Robert Martin.</div>
+    </div>
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;address&gt; <span class="badge badge-block">Block</span></div>
+      <div class="tag-desc">Contact information for the nearest article or body element.</div>
+      <pre>&lt;address&gt;
+  Written by &lt;a href="#"&gt;Pavel&lt;/a&gt;&lt;br&gt;
+  Dhaka, Bangladesh
+&lt;/address&gt;</pre>
+    </div>
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;hr&gt; <span class="badge badge-void">Void</span></div>
+      <div class="tag-desc">A thematic break — renders a horizontal line to separate content.</div>
+      <pre>&lt;p&gt;Section one.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;Section two.&lt;/p&gt;</pre>
+      <div class="preview-box">
+        <p style="margin:0 0 6px">Section one.</p>
+        <hr style="margin:6px 0">
+        <p style="margin:0">Section two.</p>
+      </div>
+    </div>
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;br&gt; <span class="badge badge-void">Void</span></div>
+      <div class="tag-desc">A line break inside inline content like addresses or poems.</div>
+      <pre>Line one.&lt;br&gt;
+Line two.&lt;br&gt;
+Line three.</pre>
+      <div class="preview-box">Line one.<br>Line two.<br>Line three.</div>
+    </div>
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;span&gt; <span class="badge badge-inline">Inline</span></div>
+      <div class="tag-desc">Generic inline container. Used to apply CSS or JS to a piece of text.</div>
+      <pre>&lt;p&gt;This word is
+  &lt;span style="color:red"&gt;red&lt;/span&gt;.
+&lt;/p&gt;</pre>
+      <div class="preview-box">This word is <span style="color:red">red</span>.</div>
+    </div>
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;div&gt; <span class="badge badge-block">Block</span></div>
+      <div class="tag-desc">Generic block-level container. The most used tag for layout and grouping.</div>
+      <pre>&lt;div class="card"&gt;
+  &lt;h3&gt;Title&lt;/h3&gt;
+  &lt;p&gt;Content here.&lt;/p&gt;
+&lt;/div&gt;</pre>
+    </div>
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;del&gt; / &lt;ins&gt; <span class="badge badge-inline">Inline</span></div>
+      <div class="tag-desc"><code>&lt;del&gt;</code> = deleted text. <code>&lt;ins&gt;</code> = inserted text. Used for tracked changes.</div>
+      <pre>Price: &lt;del&gt;$50&lt;/del&gt; &lt;ins&gt;$30&lt;/ins&gt;</pre>
+      <div class="preview-box">Price: <del>$50</del> <ins>$30</ins></div>
+    </div>
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;time&gt; <span class="badge badge-inline">Inline</span></div>
+      <div class="tag-desc">Represents a date/time value. The <code>datetime</code> attribute is machine-readable.</div>
+      <pre>&lt;time datetime="2025-01-01"&gt;
+  New Year's Day
+&lt;/time&gt;</pre>
+    </div>
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;details&gt; / &lt;summary&gt;</div>
+      <div class="tag-desc">Creates a native accordion/disclosure widget with no JavaScript.</div>
+      <pre>&lt;details&gt;
+  &lt;summary&gt;Click to expand&lt;/summary&gt;
+  &lt;p&gt;Hidden content here!&lt;/p&gt;
+&lt;/details&gt;</pre>
+      <div class="preview-box">
+        <details>
+          <summary>Click to expand</summary>
+          <p>Hidden content here!</p>
+        </details>
+      </div>
+    </div>
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;dialog&gt; <span class="badge badge-new">HTML5</span></div>
+      <div class="tag-desc">A native modal dialog box, controlled via JavaScript's <code>.showModal()</code>.</div>
+      <pre>&lt;dialog id="dlg"&gt;
+  &lt;p&gt;I am a dialog&lt;/p&gt;
+  &lt;button onclick=
+    "dlg.close()"&gt;Close&lt;/button&gt;
+&lt;/dialog&gt;
+&lt;button onclick=
+  "dlg.showModal()"&gt;Open&lt;/button&gt;</pre>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════ 3. LISTS ══════════════════ -->
+<section id="lists">
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(52,211,153,0.12)">📋</div>
+    <h2 style="color:var(--green)">List Tags</h2>
+    <span class="count">5 tags</span>
+  </div>
+  <div class="tag-grid">
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;ul&gt; <span class="badge badge-block">Block</span></div>
+      <div class="tag-desc">Unordered (bulleted) list. Each item goes inside <code>&lt;li&gt;</code>.</div>
+      <pre>&lt;ul&gt;
+  &lt;li&gt;HTML&lt;/li&gt;
+  &lt;li&gt;CSS&lt;/li&gt;
+  &lt;li&gt;JavaScript&lt;/li&gt;
+&lt;/ul&gt;</pre>
+      <div class="preview-box">
+        <ul style="padding-left:18px;margin:0">
+          <li>HTML</li><li>CSS</li><li>JavaScript</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;ol&gt; <span class="badge badge-block">Block</span></div>
+      <div class="tag-desc">Ordered (numbered) list. Supports <code>type</code>, <code>start</code>, and <code>reversed</code> attributes.</div>
+      <pre>&lt;ol type="A" start="1"&gt;
+  &lt;li&gt;First step&lt;/li&gt;
+  &lt;li&gt;Second step&lt;/li&gt;
+  &lt;li&gt;Third step&lt;/li&gt;
+&lt;/ol&gt;</pre>
+      <div class="preview-box">
+        <ol type="A" style="padding-left:18px;margin:0">
+          <li>First step</li><li>Second step</li><li>Third step</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;li&gt;</div>
+      <div class="tag-desc">A list item. Used inside <code>&lt;ul&gt;</code>, <code>&lt;ol&gt;</code>, or <code>&lt;menu&gt;</code>.</div>
+      <pre>&lt;ul&gt;
+  &lt;li&gt;Simple item&lt;/li&gt;
+  &lt;li&gt;Item with &lt;strong&gt;bold&lt;/strong&gt;&lt;/li&gt;
+  &lt;li value="5"&gt;Jump to 5&lt;/li&gt;
+&lt;/ul&gt;</pre>
+    </div>
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;dl&gt; / &lt;dt&gt; / &lt;dd&gt;</div>
+      <div class="tag-desc">Description list. <code>&lt;dt&gt;</code> = term, <code>&lt;dd&gt;</code> = definition. Great for glossaries.</div>
+      <pre>&lt;dl&gt;
+  &lt;dt&gt;HTML&lt;/dt&gt;
+  &lt;dd&gt;HyperText Markup Language&lt;/dd&gt;
+  &lt;dt&gt;CSS&lt;/dt&gt;
+  &lt;dd&gt;Cascading Style Sheets&lt;/dd&gt;
+&lt;/dl&gt;</pre>
+      <div class="preview-box">
+        <dl style="margin:0">
+          <dt style="font-weight:bold">HTML</dt><dd style="margin-left:20px">HyperText Markup Language</dd>
+          <dt style="font-weight:bold">CSS</dt><dd style="margin-left:20px">Cascading Style Sheets</dd>
+        </dl>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════ 4. LINKS & MEDIA ══════════════════ -->
+<section id="links-media">
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(251,191,36,0.12)">🔗</div>
+    <h2 style="color:var(--yellow)">Links &amp; Media Tags</h2>
+    <span class="count">10 tags</span>
+  </div>
+  <div class="tag-grid">
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;a&gt; <span class="badge badge-inline">Inline</span></div>
+      <div class="tag-desc">Anchor/hyperlink. Key attributes: <code>href</code>, <code>target</code>, <code>rel</code>, <code>download</code>.</div>
+      <pre>&lt;a href="https://example.com"
+   target="_blank"
+   rel="noopener"&gt;
+  Visit Example
+&lt;/a&gt;
+&lt;a href="mailto:hi@mail.com"&gt;Email&lt;/a&gt;
+&lt;a href="tel:+8801700000000"&gt;Call&lt;/a&gt;
+&lt;a href="#section"&gt;Jump to section&lt;/a&gt;</pre>
+    </div>
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;img&gt; <span class="badge badge-void">Void</span></div>
+      <div class="tag-desc">Embeds an image. <code>alt</code> is required for accessibility. Supports <code>width</code>, <code>height</code>, <code>loading</code>.</div>
+      <pre>&lt;img src="photo.jpg"
+     alt="A beautiful photo"
+     width="400"
+     height="300"
+     loading="lazy"&gt;</pre>
+    </div>
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;video&gt; <span class="badge badge-new">HTML5</span></div>
+      <div class="tag-desc">Embeds a video player. Supports <code>controls</code>, <code>autoplay</code>, <code>loop</code>, <code>muted</code>, <code>poster</code>.</div>
+      <pre>&lt;video width="320" controls
+       poster="thumbnail.jpg"&gt;
+  &lt;source src="movie.mp4"
+          type="video/mp4"&gt;
+  &lt;source src="movie.ogg"
+          type="video/ogg"&gt;
+  Your browser doesn't support video.
+&lt;/video&gt;</pre>
+    </div>
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;audio&gt; <span class="badge badge-new">HTML5</span></div>
+      <div class="tag-desc">Embeds an audio player. Supports <code>controls</code>, <code>autoplay</code>, <code>loop</code>, <code>muted</code>.</div>
+      <pre>&lt;audio controls&gt;
+  &lt;source src="song.mp3"
+          type="audio/mpeg"&gt;
+  &lt;source src="song.ogg"
+          type="audio/ogg"&gt;
+&lt;/audio&gt;</pre>
+    </div>
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;source&gt; <span class="badge badge-void">Void</span></div>
+      <div class="tag-desc">Specifies alternative media files inside <code>&lt;video&gt;</code>, <code>&lt;audio&gt;</code>, or <code>&lt;picture&gt;</code>.</div>
+      <pre>&lt;picture&gt;
+  &lt;source media="(max-width:600px)"
+          srcset="small.jpg"&gt;
+  &lt;source media="(min-width:601px)"
+          srcset="large.jpg"&gt;
+  &lt;img src="default.jpg" alt="img"&gt;
+&lt;/picture&gt;</pre>
+    </div>
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;picture&gt; <span class="badge badge-new">HTML5</span></div>
+      <div class="tag-desc">Responsive image container. Uses multiple <code>&lt;source&gt;</code> for different viewports.</div>
+      <pre>&lt;picture&gt;
+  &lt;source srcset="photo.webp"
+          type="image/webp"&gt;
+  &lt;img src="photo.jpg" alt="photo"&gt;
+&lt;/picture&gt;</pre>
+    </div>
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;figure&gt; / &lt;figcaption&gt; <span class="badge badge-block">Block</span></div>
+      <div class="tag-desc">Wraps self-contained content (image/diagram) with an optional caption.</div>
+      <pre>&lt;figure&gt;
+  &lt;img src="chart.png" alt="Chart"&gt;
+  &lt;figcaption&gt;
+    Fig 1: Monthly Revenue 2024
+  &lt;/figcaption&gt;
+&lt;/figure&gt;</pre>
+    </div>
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;iframe&gt;</div>
+      <div class="tag-desc">Embeds another webpage inside the current page (YouTube, maps, etc.).</div>
+      <pre>&lt;iframe
+  src="https://www.youtube.com/
+       embed/dQw4w9WgXcQ"
+  width="560" height="315"
+  frameborder="0"
+  allowfullscreen&gt;
+&lt;/iframe&gt;</pre>
+    </div>
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;canvas&gt; <span class="badge badge-new">HTML5</span></div>
+      <div class="tag-desc">A drawable surface controlled by JavaScript. Used for games, charts, and graphics.</div>
+      <pre>&lt;canvas id="myCanvas"
+        width="300"
+        height="150"&gt;
+&lt;/canvas&gt;
+&lt;script&gt;
+  const ctx = document.getElementById(
+    'myCanvas').getContext('2d');
+  ctx.fillStyle = 'red';
+  ctx.fillRect(10,10,100,80);
+&lt;/script&gt;</pre>
+    </div>
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;svg&gt; <span class="badge badge-new">HTML5</span></div>
+      <div class="tag-desc">Inline Scalable Vector Graphics. Infinitely scalable, no quality loss.</div>
+      <pre>&lt;svg width="100" height="100"&gt;
+  &lt;circle cx="50" cy="50" r="40"
+          fill="blue"
+          stroke="navy"
+          stroke-width="3"/&gt;
+&lt;/svg&gt;</pre>
+      <div class="preview-box">
+        <svg width="80" height="80">
+          <circle cx="40" cy="40" r="30" fill="#38bdf8" stroke="#0369a1" stroke-width="3"/>
+        </svg>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════ 5. TABLES ══════════════════ -->
+<section id="tables">
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(244,114,182,0.12)">🗂️</div>
+    <h2 style="color:var(--accent2)">Table Tags</h2>
+    <span class="count">9 tags</span>
+  </div>
+  <div class="tag-grid wide-grid">
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;table&gt; &lt;thead&gt; &lt;tbody&gt; &lt;tfoot&gt; &lt;tr&gt; &lt;th&gt; &lt;td&gt; &lt;caption&gt; &lt;colgroup&gt; &lt;col&gt;</div>
+      <div class="tag-desc">Complete table structure. <code>&lt;th&gt;</code> = header cell; <code>&lt;td&gt;</code> = data cell. Use <code>colspan</code> / <code>rowspan</code> to merge cells.</div>
+      <pre>&lt;table border="1"&gt;
+  &lt;caption&gt;Student Grades&lt;/caption&gt;
+  &lt;colgroup&gt;
+    &lt;col style="background:#fef9c3"&gt;
+    &lt;col span="2"&gt;
+  &lt;/colgroup&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Name&lt;/th&gt;
+      &lt;th&gt;Course&lt;/th&gt;
+      &lt;th&gt;Grade&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Pavel&lt;/td&gt;
+      &lt;td&gt;Web Engineering&lt;/td&gt;
+      &lt;td&gt;A+&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Alice&lt;/td&gt;
+      &lt;td colspan="2"&gt;(merged cell)&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+  &lt;tfoot&gt;
+    &lt;tr&gt;
+      &lt;td colspan="3"&gt;End of Table&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tfoot&gt;
+&lt;/table&gt;</pre>
+      <div class="preview-box">
+        <table border="1" style="border-collapse:collapse;width:100%;font-size:13px">
+          <caption style="font-weight:bold;margin-bottom:4px">Student Grades</caption>
+          <thead style="background:#e0f2fe">
+            <tr><th style="padding:6px">Name</th><th style="padding:6px">Course</th><th style="padding:6px">Grade</th></tr>
+          </thead>
+          <tbody>
+            <tr><td style="padding:6px">Pavel</td><td style="padding:6px">Web Engineering</td><td style="padding:6px;text-align:center">A+</td></tr>
+            <tr><td style="padding:6px">Alice</td><td colspan="2" style="padding:6px;text-align:center">(merged cell)</td></tr>
+          </tbody>
+          <tfoot style="background:#f1f5f9">
+            <tr><td colspan="3" style="padding:6px;text-align:center">End of Table</td></tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════ 6. FORMS ══════════════════ -->
+<section id="forms">
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(56,189,248,0.12)">📝</div>
+    <h2 style="color:var(--accent)">Form Tags</h2>
+    <span class="count">18 tags</span>
+  </div>
+  <div class="tag-grid wide-grid">
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;form&gt;</div>
+      <div class="tag-desc">Container for user-input controls. Key attrs: <code>action</code>, <code>method</code> (GET/POST), <code>enctype</code>.</div>
+      <pre>&lt;form action="/submit" method="POST"
+      enctype="multipart/form-data"&gt;
+  ...
+&lt;/form&gt;</pre>
+    </div>
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;input&gt; — all types <span class="badge badge-void">Void</span></div>
+      <div class="tag-desc">The most versatile form element. 22 types available in HTML5.</div>
+      <pre>&lt;input type="text"     placeholder="Name"&gt;
+&lt;input type="email"    placeholder="Email"&gt;
+&lt;input type="password" placeholder="Pass"&gt;
+&lt;input type="number"   min="0" max="100"&gt;
+&lt;input type="range"    min="0" max="10"&gt;
+&lt;input type="date"&gt;
+&lt;input type="time"&gt;
+&lt;input type="color"    value="#38bdf8"&gt;
+&lt;input type="file"     accept=".pdf,.jpg"&gt;
+&lt;input type="checkbox" checked&gt; Remember me
+&lt;input type="radio"    name="q"&gt; Option A
+&lt;input type="radio"    name="q"&gt; Option B
+&lt;input type="search"   placeholder="Search"&gt;
+&lt;input type="url"      placeholder="URL"&gt;
+&lt;input type="tel"      placeholder="Phone"&gt;
+&lt;input type="hidden"   value="csrf_token"&gt;
+&lt;input type="submit"   value="Send"&gt;
+&lt;input type="reset"    value="Clear"&gt;
+&lt;input type="button"   value="Click"&gt;</pre>
+      <div class="preview-box" style="display:grid;gap:8px">
+        <input type="text" placeholder="Text input" style="padding:4px 8px;border:1px solid #ccc;border-radius:4px;width:100%">
+        <input type="number" min="0" max="100" value="50" style="padding:4px 8px;border:1px solid #ccc;border-radius:4px;width:100%">
+        <input type="range" min="0" max="100" value="60" style="width:100%">
+        <input type="color" value="#38bdf8">
+        <label><input type="checkbox" checked> Remember me</label>
+      </div>
+    </div>
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;label&gt;</div>
+      <div class="tag-desc">Associates a label with a form control. Clicking the label focuses the input.</div>
+      <pre>&lt;label for="name"&gt;Full Name:&lt;/label&gt;
+&lt;input id="name" type="text"&gt;
+
+&lt;!-- Implicit wrapping --&gt;
+&lt;label&gt;
+  Email: &lt;input type="email"&gt;
+&lt;/label&gt;</pre>
+    </div>
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;textarea&gt;</div>
+      <div class="tag-desc">A multi-line text input. Resizable by default. Use <code>rows</code> and <code>cols</code>.</div>
+      <pre>&lt;textarea name="message"
+          rows="5" cols="40"
+          placeholder="Your message..."
+          maxlength="500"&gt;
+&lt;/textarea&gt;</pre>
+      <div class="preview-box">
+        <textarea rows="3" style="width:100%;padding:6px;border:1px solid #ccc;border-radius:4px" placeholder="Your message..."></textarea>
+      </div>
+    </div>
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;select&gt; / &lt;option&gt; / &lt;optgroup&gt;</div>
+      <div class="tag-desc">A dropdown list. Use <code>multiple</code> for multi-select. <code>&lt;optgroup&gt;</code> groups options.</div>
+      <pre>&lt;select name="course" multiple&gt;
+  &lt;optgroup label="CSE Core"&gt;
+    &lt;option value="web"&gt;
+      Web Engineering
+    &lt;/option&gt;
+    &lt;option value="db" selected&gt;
+      Database
+    &lt;/option&gt;
+  &lt;/optgroup&gt;
+  &lt;optgroup label="Electives"&gt;
+    &lt;option value="ai"&gt;AI&lt;/option&gt;
+  &lt;/optgroup&gt;
+&lt;/select&gt;</pre>
+      <div class="preview-box">
+        <select style="padding:4px;border:1px solid #ccc;border-radius:4px">
+          <optgroup label="CSE Core">
+            <option>Web Engineering</option>
+            <option selected>Database</option>
+          </optgroup>
+          <optgroup label="Electives">
+            <option>AI</option>
+          </optgroup>
+        </select>
+      </div>
+    </div>
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;button&gt;</div>
+      <div class="tag-desc">A clickable button. Types: <code>submit</code> (default), <code>reset</code>, <code>button</code>.</div>
+      <pre>&lt;button type="submit"&gt;Submit Form&lt;/button&gt;
+&lt;button type="reset"&gt;Reset&lt;/button&gt;
+&lt;button type="button"
+        onclick="alert('Hi!')"&gt;
+  Click Me
+&lt;/button&gt;</pre>
+      <div class="preview-box" style="display:flex;gap:8px;flex-wrap:wrap">
+        <button style="padding:6px 14px;background:#3b82f6;color:#fff;border:none;border-radius:4px;cursor:pointer">Submit</button>
+        <button style="padding:6px 14px;background:#fff;border:1px solid #ccc;border-radius:4px;cursor:pointer">Reset</button>
+      </div>
+    </div>
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;fieldset&gt; / &lt;legend&gt;</div>
+      <div class="tag-desc">Groups related form controls with a visible border. <code>&lt;legend&gt;</code> is the group title.</div>
+      <pre>&lt;fieldset&gt;
+  &lt;legend&gt;Personal Info&lt;/legend&gt;
+  &lt;label&gt;Name: &lt;input type="text"&gt;&lt;/label&gt;
+  &lt;label&gt;Age:  &lt;input type="number"&gt;&lt;/label&gt;
+&lt;/fieldset&gt;</pre>
+      <div class="preview-box">
+        <fieldset style="border:1px solid #ccc;border-radius:4px;padding:10px">
+          <legend style="padding:0 6px;font-weight:bold">Personal Info</legend>
+          <label>Name: <input type="text" style="padding:3px;border:1px solid #ccc;border-radius:3px"></label>
+        </fieldset>
+      </div>
+    </div>
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;datalist&gt; <span class="badge badge-new">HTML5</span></div>
+      <div class="tag-desc">Provides autocomplete suggestions for an <code>&lt;input&gt;</code> via the <code>list</code> attribute.</div>
+      <pre>&lt;input list="langs" placeholder="Language"&gt;
+&lt;datalist id="langs"&gt;
+  &lt;option value="HTML"&gt;
+  &lt;option value="CSS"&gt;
+  &lt;option value="JavaScript"&gt;
+  &lt;option value="Python"&gt;
+&lt;/datalist&gt;</pre>
+    </div>
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;progress&gt; / &lt;meter&gt; <span class="badge badge-new">HTML5</span></div>
+      <div class="tag-desc"><code>&lt;progress&gt;</code> = task completion bar. <code>&lt;meter&gt;</code> = scalar value in a range.</div>
+      <pre>&lt;progress value="70" max="100"&gt;&lt;/progress&gt;
+&lt;meter value="0.6"
+       low="0.25" high="0.75"
+       optimum="1"&gt;60%
+&lt;/meter&gt;</pre>
+      <div class="preview-box" style="display:flex;flex-direction:column;gap:8px">
+        <label>Progress: <progress value="70" max="100" style="width:180px"></progress></label>
+        <label>Meter: <meter value="0.6" low="0.25" high="0.75" optimum="1" style="width:180px"></meter></label>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════ 7. SEMANTIC / LAYOUT ══════════════════ -->
+<section id="semantic">
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(167,139,250,0.12)">🏗️</div>
+    <h2 style="color:var(--accent3)">Semantic Layout Tags</h2>
+    <span class="count">12 tags</span>
+  </div>
+  <div class="tag-grid">
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;header&gt; <span class="badge badge-block">Block</span></div>
+      <div class="tag-desc">The introductory section of a page or article — usually contains logo, nav, and title.</div>
+      <pre>&lt;header&gt;
+  &lt;h1&gt;My Website&lt;/h1&gt;
+  &lt;nav&gt;...&lt;/nav&gt;
+&lt;/header&gt;</pre>
+    </div>
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;nav&gt; <span class="badge badge-block">Block</span></div>
+      <div class="tag-desc">Navigation links. Signals to screen readers this block is for navigation.</div>
+      <pre>&lt;nav&gt;
+  &lt;a href="/"&gt;Home&lt;/a&gt;
+  &lt;a href="/about"&gt;About&lt;/a&gt;
+  &lt;a href="/contact"&gt;Contact&lt;/a&gt;
+&lt;/nav&gt;</pre>
+    </div>
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;main&gt; <span class="badge badge-block">Block</span></div>
+      <div class="tag-desc">The primary unique content of a page. Only one <code>&lt;main&gt;</code> per page.</div>
+      <pre>&lt;main&gt;
+  &lt;article&gt;...&lt;/article&gt;
+  &lt;aside&gt;...&lt;/aside&gt;
+&lt;/main&gt;</pre>
+    </div>
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;article&gt; <span class="badge badge-block">Block</span></div>
+      <div class="tag-desc">Self-contained content that can be independently distributed (blog post, news item).</div>
+      <pre>&lt;article&gt;
+  &lt;h2&gt;Blog Post Title&lt;/h2&gt;
+  &lt;time datetime="2025-06-01"&gt;
+    June 1, 2025
+  &lt;/time&gt;
+  &lt;p&gt;Article content...&lt;/p&gt;
+&lt;/article&gt;</pre>
+    </div>
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;section&gt; <span class="badge badge-block">Block</span></div>
+      <div class="tag-desc">A thematic grouping of content, typically with a heading.</div>
+      <pre>&lt;section id="about"&gt;
+  &lt;h2&gt;About Us&lt;/h2&gt;
+  &lt;p&gt;We build great software.&lt;/p&gt;
+&lt;/section&gt;</pre>
+    </div>
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;aside&gt; <span class="badge badge-block">Block</span></div>
+      <div class="tag-desc">Content tangentially related to the main content — like a sidebar or callout box.</div>
+      <pre>&lt;aside&gt;
+  &lt;h3&gt;Quick Tip&lt;/h3&gt;
+  &lt;p&gt;Use semantic tags for
+     better SEO!&lt;/p&gt;
+&lt;/aside&gt;</pre>
+    </div>
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;footer&gt; <span class="badge badge-block">Block</span></div>
+      <div class="tag-desc">Footer for its nearest sectioning ancestor. Contains copyright, links, contact info.</div>
+      <pre>&lt;footer&gt;
+  &lt;p&gt;© 2025 Pavel. All rights reserved.&lt;/p&gt;
+  &lt;nav&gt;
+    &lt;a href="/privacy"&gt;Privacy&lt;/a&gt;
+  &lt;/nav&gt;
+&lt;/footer&gt;</pre>
+    </div>
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;template&gt; <span class="badge badge-new">HTML5</span></div>
+      <div class="tag-desc">Holds HTML that is not rendered until cloned via JavaScript. Used for dynamic content.</div>
+      <pre>&lt;template id="card-tmpl"&gt;
+  &lt;div class="card"&gt;
+    &lt;h3&gt;&lt;/h3&gt;
+    &lt;p&gt;&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/template&gt;</pre>
+    </div>
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;noscript&gt;</div>
+      <div class="tag-desc">Fallback content shown when JavaScript is disabled in the browser.</div>
+      <pre>&lt;noscript&gt;
+  &lt;p&gt;Please enable JavaScript
+     to view this page.&lt;/p&gt;
+&lt;/noscript&gt;</pre>
+    </div>
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;wbr&gt; / &lt;bdi&gt; / &lt;bdo&gt; <span class="badge badge-inline">Inline</span></div>
+      <div class="tag-desc"><code>&lt;wbr&gt;</code> optional line break. <code>&lt;bdi&gt;</code> isolates text direction. <code>&lt;bdo&gt;</code> overrides text direction.</div>
+      <pre>&lt;p&gt;https://very&lt;wbr&gt;long&lt;wbr&gt;url.com&lt;/p&gt;
+&lt;bdo dir="rtl"&gt;Right to Left&lt;/bdo&gt;</pre>
+      <div class="preview-box">
+        <bdo dir="rtl">Right to Left</bdo>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════ 8. SCRIPTING ══════════════════ -->
+<section id="scripting">
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(251,191,36,0.12)">⚙️</div>
+    <h2 style="color:var(--yellow)">Scripting Tags</h2>
+    <span class="count">3 tags</span>
+  </div>
+  <div class="tag-grid">
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;script&gt;</div>
+      <div class="tag-desc">Embeds or links to JavaScript. Use <code>defer</code> or <code>async</code> for performance.</div>
+      <pre>&lt;!-- Internal --&gt;
+&lt;script&gt;
+  document.getElementById('btn')
+    .addEventListener('click', () =&gt; {
+      alert('Hello World!');
+    });
+&lt;/script&gt;
+
+&lt;!-- External (deferred) --&gt;
+&lt;script src="app.js" defer&gt;&lt;/script&gt;
+
+&lt;!-- Module --&gt;
+&lt;script type="module"
+        src="module.js"&gt;&lt;/script&gt;</pre>
+    </div>
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;noscript&gt;</div>
+      <div class="tag-desc">Shown when the browser has scripting disabled. Provides fallback content.</div>
+      <pre>&lt;noscript&gt;
+  &lt;style&gt;.js-only { display:none; }&lt;/style&gt;
+  &lt;p&gt;Enable JS for full experience.&lt;/p&gt;
+&lt;/noscript&gt;</pre>
+    </div>
+
+    <div class="tag-card">
+      <div class="tag-name">&lt;object&gt; / &lt;embed&gt; / &lt;param&gt;</div>
+      <div class="tag-desc">Embed external content (PDFs, Flash legacy). Largely replaced by <code>&lt;video&gt;</code> and <code>&lt;iframe&gt;</code>.</div>
+      <pre>&lt;object data="file.pdf"
+        type="application/pdf"
+        width="600" height="400"&gt;
+  &lt;param name="print" value="false"&gt;
+  &lt;p&gt;Your browser can't display PDFs.&lt;/p&gt;
+&lt;/object&gt;</pre>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════ 9. META & HEAD ══════════════════ -->
+<section id="meta">
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(52,211,153,0.12)">🔖</div>
+    <h2 style="color:var(--green)">Meta &amp; Head Reference</h2>
+  </div>
+  <div class="full-example">
+    <div class="full-example-header">
+      <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
+      Complete &lt;head&gt; Reference
+    </div>
+    <pre>&lt;head&gt;
+  &lt;!-- Character encoding --&gt;
+  &lt;meta charset="UTF-8"&gt;
+
+  &lt;!-- Responsive viewport --&gt;
+  &lt;meta name="viewport"
+        content="width=device-width, initial-scale=1.0"&gt;
+
+  &lt;!-- Page title (shown in tab + search engines) --&gt;
+  &lt;title&gt;Page Title | Site Name&lt;/title&gt;
+
+  &lt;!-- SEO meta tags --&gt;
+  &lt;meta name="description" content="Page description (150-160 chars)"&gt;
+  &lt;meta name="keywords"    content="html, css, web"&gt;
+  &lt;meta name="author"      content="Pavel"&gt;
+  &lt;meta name="robots"      content="index, follow"&gt;
+
+  &lt;!-- Open Graph (Facebook/LinkedIn sharing) --&gt;
+  &lt;meta property="og:title"       content="Page Title"&gt;
+  &lt;meta property="og:description" content="Description"&gt;
+  &lt;meta property="og:image"       content="https://example.com/img.jpg"&gt;
+  &lt;meta property="og:url"         content="https://example.com"&gt;
+  &lt;meta property="og:type"        content="website"&gt;
+
+  &lt;!-- Twitter Card --&gt;
+  &lt;meta name="twitter:card"        content="summary_large_image"&gt;
+  &lt;meta name="twitter:title"       content="Page Title"&gt;
+  &lt;meta name="twitter:description" content="Description"&gt;
+  &lt;meta name="twitter:image"       content="https://example.com/img.jpg"&gt;
+
+  &lt;!-- Favicon --&gt;
+  &lt;link rel="icon"              href="/favicon.ico"&gt;
+  &lt;link rel="apple-touch-icon"  href="/apple-touch-icon.png"&gt;
+
+  &lt;!-- Stylesheets --&gt;
+  &lt;link rel="stylesheet" href="style.css"&gt;
+
+  &lt;!-- Google Fonts --&gt;
+  &lt;link rel="preconnect" href="https://fonts.googleapis.com"&gt;
+  &lt;link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Roboto&amp;display=swap"&gt;
+
+  &lt;!-- Preload critical resource --&gt;
+  &lt;link rel="preload" href="hero.jpg" as="image"&gt;
+
+  &lt;!-- Theme color (mobile browser toolbar) --&gt;
+  &lt;meta name="theme-color" content="#38bdf8"&gt;
+
+  &lt;!-- HTTP-Equiv --&gt;
+  &lt;meta http-equiv="X-UA-Compatible" content="IE=edge"&gt;
+  &lt;meta http-equiv="refresh"         content="30"&gt;
+
+  &lt;!-- Canonical URL (SEO) --&gt;
+  &lt;link rel="canonical" href="https://example.com/page"&gt;
+
+  &lt;!-- Scripts (deferred so they don't block rendering) --&gt;
+  &lt;script src="app.js" defer&gt;&lt;/script&gt;
+&lt;/head&gt;</pre>
+  </div>
+</section>
+
+<!-- ══════════════════ CSS SECTIONS ══════════════════ -->
+
+<!-- CSS: BOX MODEL -->
+<section id="css-box">
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(56,189,248,0.12)">📦</div>
+    <h2 style="color:var(--accent)">CSS: Box Model Properties</h2>
+  </div>
+  <div class="tag-grid wide-grid">
+
+    <div class="css-card">
+      <div class="css-prop-name">width / height / min-* / max-*</div>
+      <div class="css-values">Values: px · % · em · rem · vw · vh · auto · fit-content · max-content · min-content</div>
+      <div class="tag-desc">Controls the dimensions of an element's content box.</div>
+      <pre>div {
+  width: 100%;
+  max-width: 1200px;
+  min-height: 300px;
+  height: auto;
+}</pre>
+    </div>
+
+    <div class="css-card">
+      <div class="css-prop-name">margin</div>
+      <div class="css-values">Shorthand: top right bottom left · auto · negative values allowed</div>
+      <div class="tag-desc">Space outside the element border. Use <code>auto</code> to center block elements.</div>
+      <pre>/* 4-value shorthand: top right bottom left */
+div { margin: 10px 20px 10px 20px; }
+
+/* Center horizontally */
+div { width: 600px; margin: 0 auto; }
+
+/* Individual sides */
+div { margin-top: 16px; margin-bottom: 8px; }</pre>
+    </div>
+
+    <div class="css-card">
+      <div class="css-prop-name">padding</div>
+      <div class="css-values">Shorthand: top right bottom left · no negative values</div>
+      <div class="tag-desc">Space inside the border, between content and border.</div>
+      <pre>/* 2-value: vertical horizontal */
+div { padding: 16px 24px; }
+
+/* 4-value */
+div { padding: 8px 12px 8px 12px; }
+
+/* Individual */
+div { padding-left: 20px; }</pre>
+    </div>
+
+    <div class="css-card">
+      <div class="css-prop-name">border</div>
+      <div class="css-values">border-width · border-style · border-color · border-radius</div>
+      <div class="tag-desc">Shorthand for width, style, and color of an element's border.</div>
+      <pre>div {
+  border: 2px solid #38bdf8;
+  border-radius: 8px;
+  border-top: 4px solid red;
+
+  /* Individual sides */
+  border-left: 3px dashed green;
+  border-bottom: 1px dotted gray;
+}</pre>
+      <div class="demo-row">
+        <div class="demo-box" style="border:2px solid #38bdf8;color:#ccc">solid</div>
+        <div class="demo-box" style="border:2px dashed #f472b6;color:#ccc">dashed</div>
+        <div class="demo-box" style="border:2px dotted #a78bfa;color:#ccc">dotted</div>
+        <div class="demo-box" style="border:4px double #34d399;color:#ccc">double</div>
+      </div>
+    </div>
+
+    <div class="css-card">
+      <div class="css-prop-name">box-sizing</div>
+      <div class="css-values">content-box (default) · border-box</div>
+      <div class="tag-desc"><code>border-box</code> includes padding and border in the element's total width/height. Always use it.</div>
+      <pre>*, *::before, *::after {
+  box-sizing: border-box; /* Best practice */
+}
+
+/* content-box (default):
+   width = content only
+   border-box:
+   width = content + padding + border */</pre>
+    </div>
+
+    <div class="css-card">
+      <div class="css-prop-name">display</div>
+      <div class="css-values">block · inline · inline-block · flex · grid · none · contents · table</div>
+      <div class="tag-desc">Controls how an element is rendered in the document flow.</div>
+      <pre>span   { display: block; }        /* Now takes full width */
+div    { display: inline; }       /* Now flows inline */
+button { display: inline-block; } /* Both properties */
+.hide  { display: none; }         /* Removed from layout */
+.flex  { display: flex; }
+.grid  { display: grid; }</pre>
+    </div>
+
+    <div class="css-card">
+      <div class="css-prop-name">position</div>
+      <div class="css-values">static · relative · absolute · fixed · sticky</div>
+      <div class="tag-desc">Positions elements within their container or viewport.</div>
+      <pre>.relative { position: relative; top: 10px; left: 5px; }
+.absolute { position: absolute; top: 0;    right: 0; }
+.fixed    { position: fixed;    bottom: 20px; right: 20px; }
+.sticky   { position: sticky;   top: 0; }
+
+/* z-index controls stacking */
+.on-top   { position: relative; z-index: 10; }</pre>
+    </div>
+
+    <div class="css-card">
+      <div class="css-prop-name">overflow</div>
+      <div class="css-values">visible · hidden · scroll · auto · clip</div>
+      <div class="tag-desc">Controls what happens when content overflows an element's box.</div>
+      <pre>div { overflow: hidden; }     /* Clip content */
+div { overflow: auto; }       /* Scroll only when needed */
+div { overflow: scroll; }     /* Always show scrollbars */
+div { overflow-x: hidden;     /* Individual axes */
+      overflow-y: auto; }</pre>
+    </div>
+
+  </div>
+</section>
+
+<!-- CSS: TYPOGRAPHY -->
+<section id="css-text">
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(167,139,250,0.12)">🔤</div>
+    <h2 style="color:var(--accent3)">CSS: Typography Properties</h2>
+  </div>
+  <div class="tag-grid wide-grid">
+
+    <div class="css-card">
+      <div class="css-prop-name">font-family</div>
+      <div class="css-values">Font name · generic (serif / sans-serif / monospace / cursive / fantasy)</div>
+      <div class="tag-desc">Sets the typeface. Always end with a generic family as fallback.</div>
+      <pre>body {
+  font-family: 'Roboto', Arial, sans-serif;
+}
+code {
+  font-family: 'JetBrains Mono', monospace;
+}</pre>
+    </div>
+
+    <div class="css-card">
+      <div class="css-prop-name">font-size / font-weight / font-style</div>
+      <div class="css-values">px · em · rem · % · vw · 100–900 · normal · bold · italic</div>
+      <div class="tag-desc">Core typographic sizing and styling properties.</div>
+      <pre>h1 { font-size: 2.5rem;  }  /* 40px at base 16px */
+p  { font-size: 1rem;    }  /* 16px */
+
+.bold   { font-weight: 700; }
+.thin   { font-weight: 300; }
+.italic { font-style: italic; }</pre>
+    </div>
+
+    <div class="css-card">
+      <div class="css-prop-name">line-height / letter-spacing / word-spacing</div>
+      <div class="css-values">px · em · unitless (recommended) · normal</div>
+      <div class="tag-desc">Controls vertical and horizontal spacing between text elements.</div>
+      <pre>p {
+  line-height: 1.7;          /* Recommended for body */
+  letter-spacing: 0.02em;   /* Slight tracking */
+  word-spacing: 2px;
+}
+
+h1 {
+  line-height: 1.1;          /* Tighter for headings */
+  letter-spacing: -0.03em;  /* Negative for large text */
+}</pre>
+    </div>
+
+    <div class="css-card">
+      <div class="css-prop-name">text-align / text-decoration / text-transform</div>
+      <div class="css-values">left · center · right · justify · underline · none · uppercase · capitalize</div>
+      <div class="tag-desc">Alignment, decoration, and case transformation of text.</div>
+      <pre>h2 { text-align: center; }
+a  { text-decoration: none; }    /* Remove underline */
+.caps   { text-transform: uppercase; }
+.title  { text-transform: capitalize; }
+.del    { text-decoration: line-through; }</pre>
+    </div>
+
+    <div class="css-card">
+      <div class="css-prop-name">text-shadow / text-overflow</div>
+      <div class="css-values">h-offset v-offset blur color · ellipsis · clip</div>
+      <div class="tag-desc">Adds shadow to text. <code>text-overflow:ellipsis</code> shows "…" for clipped text.</div>
+      <pre>h1 {
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  /* Multiple shadows */
+  text-shadow: 0 0 10px #38bdf8,
+               0 0 20px #38bdf8;
+}
+.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}</pre>
+    </div>
+
+  </div>
+</section>
+
+<!-- CSS: COLORS & BACKGROUND -->
+<section id="css-color">
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(244,114,182,0.12)">🎨</div>
+    <h2 style="color:var(--accent2)">CSS: Colors &amp; Backgrounds</h2>
+  </div>
+  <div class="tag-grid wide-grid">
+
+    <div class="css-card">
+      <div class="css-prop-name">color</div>
+      <div class="css-values">keyword · hex · rgb() · rgba() · hsl() · hsla() · oklch()</div>
+      <div class="tag-desc">Sets foreground (text) color using any CSS color format.</div>
+      <pre>p { color: #1e293b; }          /* Hex */
+p { color: rgb(30, 41, 59); }  /* RGB */
+p { color: rgba(0,0,0, 0.8); } /* RGBA (with opacity) */
+p { color: hsl(215, 28%, 17%); }
+p { color: oklch(0.4 0.1 240); } /* Modern */
+p { color: currentColor; }     /* Inherits color */</pre>
+      <div class="demo-row">
+        <div class="demo-box" style="background:#38bdf8;color:#000">#38bdf8</div>
+        <div class="demo-box" style="background:#f472b6;color:#000">#f472b6</div>
+        <div class="demo-box" style="background:#a78bfa;color:#000">#a78bfa</div>
+        <div class="demo-box" style="background:#34d399;color:#000">#34d399</div>
+      </div>
+    </div>
+
+    <div class="css-card">
+      <div class="css-prop-name">background</div>
+      <div class="css-values">color · image · gradient · position · size · repeat · attachment</div>
+      <div class="tag-desc">Shorthand for all background properties.</div>
+      <pre>/* Solid color */
+div { background: #0f172a; }
+
+/* Image */
+div { background: url('img.jpg') center/cover no-repeat; }
+
+/* Linear gradient */
+div { background: linear-gradient(135deg,
+        #667eea 0%, #764ba2 100%); }
+
+/* Radial gradient */
+div { background: radial-gradient(circle,
+        #38bdf8, #1e40af); }
+
+/* Multiple backgrounds */
+div {
+  background:
+    url('dots.png'),
+    linear-gradient(#000, #111);
+}
+
+/* Individual props */
+div {
+  background-color:      #0f172a;
+  background-image:      url('bg.jpg');
+  background-position:   center top;
+  background-size:       cover;
+  background-repeat:     no-repeat;
+  background-attachment: fixed;  /* Parallax */
+}</pre>
+      <div class="demo-row">
+        <div class="demo-box" style="background:linear-gradient(135deg,#667eea,#764ba2);color:#fff">linear</div>
+        <div class="demo-box" style="background:radial-gradient(circle,#38bdf8,#1e40af);color:#fff">radial</div>
+        <div class="demo-box" style="background:conic-gradient(#f472b6,#38bdf8,#f472b6);color:#fff">conic</div>
+      </div>
+    </div>
+
+    <div class="css-card">
+      <div class="css-prop-name">opacity / visibility</div>
+      <div class="css-values">0–1 (opacity) · visible / hidden / collapse</div>
+      <div class="tag-desc"><code>opacity</code> affects the element and all children. <code>visibility:hidden</code> hides but keeps space.</div>
+      <pre>.ghost   { opacity: 0.3; }   /* 30% visible, space kept */
+.hidden  { opacity: 0; }     /* Invisible, space kept */
+.gone    { visibility: hidden; } /* Space kept */
+.removed { display: none; }  /* No space */</pre>
+    </div>
+
+    <div class="css-card">
+      <div class="css-prop-name">box-shadow / filter</div>
+      <div class="css-values">h v blur spread color · inset · blur() brightness() contrast() grayscale()</div>
+      <div class="tag-desc">Adds shadows to boxes; filters apply visual effects like blur or brightness.</div>
+      <pre>/* box-shadow */
+.card {
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 25px 50px rgba(0,0,0,0.25); /* Large */
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.2); /* Inset */
+}
+
+/* filter */
+img { filter: grayscale(100%); }
+img { filter: blur(4px); }
+img { filter: brightness(1.2) contrast(1.1); }
+img { filter: drop-shadow(2px 2px 8px #000); }</pre>
+    </div>
+
+  </div>
+</section>
+
+<!-- CSS: FLEXBOX & GRID -->
+<section id="css-layout">
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(52,211,153,0.12)">⚡</div>
+    <h2 style="color:var(--green)">CSS: Flexbox &amp; Grid</h2>
+  </div>
+  <div class="tag-grid wide-grid">
+
+    <div class="css-card">
+      <div class="css-prop-name">Flexbox — Container Properties</div>
+      <div class="css-values">display:flex · flex-direction · flex-wrap · justify-content · align-items · gap</div>
+      <div class="tag-desc">One-dimensional layout system — controls alignment along a single axis.</div>
+      <pre>.container {
+  display: flex;
+  flex-direction: row;       /* row | column | row-reverse */
+  flex-wrap: wrap;           /* wrap | nowrap | wrap-reverse */
+  justify-content: center;   /* Main axis alignment */
+  /* flex-start | flex-end | center |
+     space-between | space-around | space-evenly */
+  align-items: center;       /* Cross axis alignment */
+  /* flex-start | flex-end | center | stretch | baseline */
+  align-content: flex-start; /* Multi-line cross axis */
+  gap: 16px;                 /* Gap between items */
+  column-gap: 24px;
+  row-gap: 12px;
+}</pre>
+    </div>
+
+    <div class="css-card">
+      <div class="css-prop-name">Flexbox — Item Properties</div>
+      <div class="css-values">flex-grow · flex-shrink · flex-basis · flex · align-self · order</div>
+      <div class="tag-desc">Controls how individual flex items grow, shrink, and align.</div>
+      <pre>.item {
+  flex-grow: 1;       /* Grow to fill space (ratio) */
+  flex-shrink: 0;     /* Don't shrink */
+  flex-basis: 200px;  /* Starting size */
+  flex: 1 0 200px;    /* Shorthand: grow shrink basis */
+
+  align-self: flex-end; /* Override align-items */
+  order: -1;            /* Reorder visually */
+}
+
+/* Equal columns */
+.col { flex: 1; }
+
+/* Fixed sidebar + fluid main */
+.sidebar { flex: 0 0 250px; }
+.main    { flex: 1; }</pre>
+    </div>
+
+    <div class="css-card">
+      <div class="css-prop-name">CSS Grid — Container Properties</div>
+      <div class="css-values">display:grid · grid-template-columns/rows · gap · place-items</div>
+      <div class="tag-desc">Two-dimensional layout — controls both rows and columns simultaneously.</div>
+      <pre>.grid {
+  display: grid;
+
+  /* Define columns */
+  grid-template-columns: 1fr 2fr 1fr;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(250px,1fr));
+  grid-template-columns: 200px auto 200px;
+
+  /* Define rows */
+  grid-template-rows: auto 1fr auto;
+
+  /* Named areas */
+  grid-template-areas:
+    "header header header"
+    "sidebar main main"
+    "footer footer footer";
+
+  gap: 24px;
+  row-gap: 16px; column-gap: 24px;
+
+  justify-items: center; /* Horizontal alignment */
+  align-items:   center; /* Vertical alignment */
+  place-items: center;   /* Shorthand */
+}</pre>
+    </div>
+
+    <div class="css-card">
+      <div class="css-prop-name">CSS Grid — Item Properties</div>
+      <div class="css-values">grid-column · grid-row · grid-area · justify-self · align-self</div>
+      <div class="tag-desc">Controls placement and spanning of individual grid items.</div>
+      <pre>.header  { grid-area: header; }
+.sidebar { grid-area: sidebar; }
+.main    { grid-area: main; }
+.footer  { grid-area: footer; }
+
+/* Manual placement */
+.item {
+  grid-column: 1 / 3;    /* Span from col 1 to 3 */
+  grid-column: 1 / -1;   /* Span full width */
+  grid-column: span 2;   /* Span 2 columns */
+  grid-row: 2 / 4;       /* Span rows 2–4 */
+  justify-self: end;     /* Horizontal */
+  align-self: start;     /* Vertical */
+}</pre>
+    </div>
+
+  </div>
+</section>
+
+<!-- CSS: TRANSITIONS & ANIMATION -->
+<section id="css-anim">
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(244,114,182,0.12)">✨</div>
+    <h2 style="color:var(--accent2)">CSS: Transitions &amp; Animations</h2>
+  </div>
+  <div class="tag-grid wide-grid">
+
+    <div class="css-card">
+      <div class="css-prop-name">transition</div>
+      <div class="css-values">property · duration · timing-function · delay</div>
+      <div class="tag-desc">Smoothly animates CSS property changes on state changes like <code>:hover</code>.</div>
+      <pre>button {
+  background: #38bdf8;
+  transform: scale(1);
+
+  /* Single property */
+  transition: background 0.3s ease;
+
+  /* Multiple properties */
+  transition:
+    background  0.3s ease,
+    transform   0.2s ease-out,
+    box-shadow  0.3s ease;
+
+  /* All properties */
+  transition: all 0.3s ease;
+}
+button:hover {
+  background: #0284c7;
+  transform: scale(1.05);
+}
+
+/* Timing functions */
+/* ease | linear | ease-in | ease-out |
+   ease-in-out | cubic-bezier(0.4,0,0.2,1) */</pre>
+    </div>
+
+    <div class="css-card">
+      <div class="css-prop-name">animation / @keyframes</div>
+      <div class="css-values">name · duration · timing · delay · iteration · direction · fill-mode · play-state</div>
+      <div class="tag-desc">Full keyframe animations that run independently of user interaction.</div>
+      <pre>/* Define animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* Apply animation */
+.card {
+  animation: fadeIn 0.6s ease forwards;
+}
+.loader {
+  animation: spin 1s linear infinite;
+}
+.badge {
+  animation: pulse 2s ease-in-out infinite;
+  /* name | dur | timing | delay |
+     count | direction | fill-mode */
+  animation: pulse 2s ease 0.5s infinite
+             alternate both;
+}</pre>
+    </div>
+
+    <div class="css-card">
+      <div class="css-prop-name">transform</div>
+      <div class="css-values">translate · scale · rotate · skew · perspective · matrix</div>
+      <div class="tag-desc">Applies 2D and 3D geometric transformations to elements.</div>
+      <pre>.card {
+  /* 2D transforms */
+  transform: translateX(50px);
+  transform: translateY(-20px);
+  transform: translate(10px, 20px);
+  transform: scale(1.5);
+  transform: scaleX(2);
+  transform: rotate(45deg);
+  transform: skew(10deg, 5deg);
+
+  /* Chain multiple */
+  transform: translate(-50%,-50%) scale(1.1);
+
+  /* 3D transforms */
+  transform: perspective(400px) rotateY(45deg);
+  transform: rotateX(15deg) rotateY(25deg);
+
+  /* Origin point */
+  transform-origin: top left;
+  transform-origin: 50% 50%; /* center (default) */
+}</pre>
+    </div>
+
+  </div>
+</section>
+
+<!-- CSS: MISC PROPERTIES -->
+<section id="css-other">
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(56,189,248,0.12)">🛠️</div>
+    <h2 style="color:var(--accent)">CSS: Other Essential Properties</h2>
+  </div>
+
+  <table class="ref-table" style="margin-bottom:24px">
+    <thead>
+      <tr>
+        <th>Property</th>
+        <th>Common Values</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td><code>cursor</code></td><td>default · pointer · text · move · not-allowed · grab · crosshair · zoom-in</td><td>Changes the mouse cursor on hover</td></tr>
+      <tr><td><code>pointer-events</code></td><td>none · auto · all</td><td>Controls mouse interaction; <code>none</code> makes element unclickable</td></tr>
+      <tr><td><code>user-select</code></td><td>none · text · all · auto</td><td>Controls if user can select text</td></tr>
+      <tr><td><code>outline</code></td><td>width style color · none</td><td>Like border but outside the box model (accessibility focus ring)</td></tr>
+      <tr><td><code>list-style</code></td><td>disc · circle · square · decimal · none · url()</td><td>Style of list markers on <code>&lt;ul&gt;</code> / <code>&lt;ol&gt;</code></td></tr>
+      <tr><td><code>white-space</code></td><td>normal · nowrap · pre · pre-wrap · pre-line</td><td>Controls text wrapping and whitespace handling</td></tr>
+      <tr><td><code>word-break</code></td><td>normal · break-all · keep-all · break-word</td><td>How words break when overflowing</td></tr>
+      <tr><td><code>vertical-align</code></td><td>top · middle · bottom · baseline · sub · super · px</td><td>Aligns inline/table-cell elements vertically</td></tr>
+      <tr><td><code>float</code></td><td>left · right · none</td><td>Floats element; surrounding text wraps around it</td></tr>
+      <tr><td><code>clear</code></td><td>both · left · right · none</td><td>Prevents element from floating alongside previous floated elements</td></tr>
+      <tr><td><code>resize</code></td><td>none · both · horizontal · vertical</td><td>Allows user to resize element (usually textarea)</td></tr>
+      <tr><td><code>content</code></td><td>string · url() · counter() · attr() · none</td><td>Used with <code>::before</code> / <code>::after</code> pseudo-elements</td></tr>
+      <tr><td><code>object-fit</code></td><td>contain · cover · fill · none · scale-down</td><td>Controls how <code>&lt;img&gt;</code> or <code>&lt;video&gt;</code> fills its box</td></tr>
+      <tr><td><code>aspect-ratio</code></td><td>16/9 · 1/1 · 4/3 · auto</td><td>Maintains a width-to-height ratio</td></tr>
+      <tr><td><code>clip-path</code></td><td>circle() · polygon() · ellipse() · inset() · path()</td><td>Clips an element to a geometric shape</td></tr>
+      <tr><td><code>columns</code></td><td>count · width · auto</td><td>Multi-column layout like a newspaper</td></tr>
+      <tr><td><code>scroll-behavior</code></td><td>auto · smooth</td><td>Enables smooth scrolling on anchor navigation</td></tr>
+      <tr><td><code>accent-color</code></td><td>color value</td><td>Colors checkboxes, radio buttons, and range inputs</td></tr>
+      <tr><td><code>will-change</code></td><td>transform · opacity · auto</td><td>Hints to browser to optimize a property for animation</td></tr>
+      <tr><td><code>isolation</code></td><td>auto · isolate</td><td>Creates a new stacking context</td></tr>
+      <tr><td><code>mix-blend-mode</code></td><td>multiply · screen · overlay · difference · luminosity …</td><td>Blend modes similar to Photoshop layers</td></tr>
+      <tr><td><code>backdrop-filter</code></td><td>blur() · brightness() · contrast() · saturate()</td><td>Applies filters to the area behind the element (glassmorphism)</td></tr>
+      <tr><td><code>var()</code></td><td>--custom-property</td><td>References a CSS custom property (variable)</td></tr>
+      <tr><td><code>calc()</code></td><td>calc(100% - 20px)</td><td>Performs math calculations on CSS values</td></tr>
+      <tr><td><code>clamp()</code></td><td>clamp(min, preferred, max)</td><td>Fluid value between a min and max (responsive typography)</td></tr>
+    </tbody>
+  </table>
+
+  <!-- CSS Selectors Table -->
+  <h3 style="font-family:var(--serif);font-size:1.2rem;margin-bottom:16px;color:var(--accent)">CSS Selectors Reference</h3>
+  <table class="ref-table">
+    <thead>
+      <tr><th>Selector</th><th>Example</th><th>What it selects</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>*</code></td><td><code>*</code></td><td>All elements</td></tr>
+      <tr><td><code>element</code></td><td><code>p</code></td><td>All &lt;p&gt; elements</td></tr>
+      <tr><td><code>.class</code></td><td><code>.card</code></td><td>Elements with class="card"</td></tr>
+      <tr><td><code>#id</code></td><td><code>#header</code></td><td>Element with id="header"</td></tr>
+      <tr><td><code>A B</code></td><td><code>div p</code></td><td>All &lt;p&gt; inside &lt;div&gt; (descendant)</td></tr>
+      <tr><td><code>A > B</code></td><td><code>ul > li</code></td><td>Direct children only</td></tr>
+      <tr><td><code>A + B</code></td><td><code>h1 + p</code></td><td>Immediately following sibling</td></tr>
+      <tr><td><code>A ~ B</code></td><td><code>h1 ~ p</code></td><td>All subsequent siblings</td></tr>
+      <tr><td><code>[attr]</code></td><td><code>[href]</code></td><td>Elements with href attribute</td></tr>
+      <tr><td><code>[attr="val"]</code></td><td><code>[type="email"]</code></td><td>Exact attribute value</td></tr>
+      <tr><td><code>[attr^="val"]</code></td><td><code>[href^="https"]</code></td><td>Attribute starts with</td></tr>
+      <tr><td><code>[attr$="val"]</code></td><td><code>[src$=".jpg"]</code></td><td>Attribute ends with</td></tr>
+      <tr><td><code>[attr*="val"]</code></td><td><code>[class*="btn"]</code></td><td>Attribute contains</td></tr>
+      <tr><td><code>:hover</code></td><td><code>a:hover</code></td><td>Mouse over element</td></tr>
+      <tr><td><code>:focus</code></td><td><code>input:focus</code></td><td>Keyboard focused element</td></tr>
+      <tr><td><code>:active</code></td><td><code>button:active</code></td><td>Being clicked</td></tr>
+      <tr><td><code>:visited</code></td><td><code>a:visited</code></td><td>Visited link</td></tr>
+      <tr><td><code>:first-child</code></td><td><code>li:first-child</code></td><td>First child of parent</td></tr>
+      <tr><td><code>:last-child</code></td><td><code>li:last-child</code></td><td>Last child of parent</td></tr>
+      <tr><td><code>:nth-child(n)</code></td><td><code>tr:nth-child(2n)</code></td><td>Every 2nd child (even rows)</td></tr>
+      <tr><td><code>:not(selector)</code></td><td><code>p:not(.special)</code></td><td>All &lt;p&gt; except .special</td></tr>
+      <tr><td><code>:checked</code></td><td><code>input:checked</code></td><td>Checked checkbox/radio</td></tr>
+      <tr><td><code>:disabled</code></td><td><code>button:disabled</code></td><td>Disabled form control</td></tr>
+      <tr><td><code>:empty</code></td><td><code>div:empty</code></td><td>Elements with no children</td></tr>
+      <tr><td><code>::before</code></td><td><code>div::before</code></td><td>Pseudo-element before content</td></tr>
+      <tr><td><code>::after</code></td><td><code>div::after</code></td><td>Pseudo-element after content</td></tr>
+      <tr><td><code>::placeholder</code></td><td><code>input::placeholder</code></td><td>Input placeholder text</td></tr>
+      <tr><td><code>::selection</code></td><td><code>p::selection</code></td><td>Highlighted/selected text</td></tr>
+      <tr><td><code>@media</code></td><td><code>@media (max-width: 768px)</code></td><td>Responsive breakpoint</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ══════════════════ FULL PAGE EXAMPLE ══════════════════ -->
+<section id="full-page">
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(52,211,153,0.12)">🌐</div>
+    <h2 style="color:var(--green)">Complete HTML Page Example</h2>
+  </div>
+  <div class="full-example">
+    <div class="full-example-header">
+      <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
+      complete-page.html — A fully structured web page using all semantic elements
+    </div>
+    <pre>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+  &lt;meta name="description" content="A complete HTML5 web page example"&gt;
+  &lt;title&gt;Complete Page | Web Engineering&lt;/title&gt;
+  &lt;style&gt;
+    :root {
+      --primary: #2563eb;
+      --text: #1e293b;
+      --bg: #f8fafc;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    /* Layout */
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+    /* Header */
+    header {
+      background: var(--primary);
+      color: white;
+      padding: 16px 0;
+      position: sticky; top: 0; z-index: 100;
+    }
+    header .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    nav a { color: white; text-decoration: none; margin-left: 24px; }
+    nav a:hover { text-decoration: underline; }
+    /* Hero */
+    .hero {
+      padding: 80px 0;
+      background: linear-gradient(135deg, #dbeafe, #ede9fe);
+      text-align: center;
+    }
+    .hero h1 { font-size: 3rem; color: var(--primary); margin-bottom: 16px; }
+    .hero p  { font-size: 1.2rem; color: #475569; max-width: 500px; margin: 0 auto 28px; }
+    .btn {
+      display: inline-block;
+      background: var(--primary);
+      color: white;
+      padding: 12px 28px;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: transform 0.2s, background 0.2s;
+    }
+    .btn:hover { background: #1d4ed8; transform: translateY(-2px); }
+    /* Cards */
+    .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; padding: 60px 0; }
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 28px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .card:hover { box-shadow: 0 8px 30px rgba(0,0,0,0.15); transform: translateY(-4px); }
+    /* Form */
+    .contact { background: white; padding: 60px 0; }
+    .form-group { margin-bottom: 20px; }
+    label { display: block; font-weight: 600; margin-bottom: 6px; }
+    input, textarea, select {
+      width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1;
+      border-radius: 6px; font-size: 15px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    input:focus, textarea:focus, select:focus {
+      outline: none; border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
+    }
+    /* Footer */
+    footer { background: #1e293b; color: #94a3b8; text-align: center; padding: 32px; }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+  &lt;!-- HEADER --&gt;
+  &lt;header&gt;
+    &lt;div class="container"&gt;
+      &lt;h1 style="font-size:1.3rem"&gt;🌐 WebDev&lt;/h1&gt;
+      &lt;nav&gt;
+        &lt;a href="#about"&gt;About&lt;/a&gt;
+        &lt;a href="#services"&gt;Services&lt;/a&gt;
+        &lt;a href="#contact"&gt;Contact&lt;/a&gt;
+      &lt;/nav&gt;
+    &lt;/div&gt;
+  &lt;/header&gt;
+
+  &lt;!-- HERO SECTION --&gt;
+  &lt;section class="hero"&gt;
+    &lt;div class="container"&gt;
+      &lt;h1&gt;Build the Web&lt;/h1&gt;
+      &lt;p&gt;A complete showcase of HTML5 semantic structure with modern CSS styling.&lt;/p&gt;
+      &lt;a href="#contact" class="btn"&gt;Get Started →&lt;/a&gt;
+    &lt;/div&gt;
+  &lt;/section&gt;
+
+  &lt;!-- MAIN CONTENT --&gt;
+  &lt;main&gt;
+    &lt;div class="container"&gt;
+
+      &lt;!-- ABOUT --&gt;
+      &lt;article id="about" style="padding:60px 0"&gt;
+        &lt;h2 style="font-size:2rem;margin-bottom:16px"&gt;About HTML5&lt;/h2&gt;
+        &lt;p&gt;HTML5 is the latest evolution of the standard that defines &lt;strong&gt;HTML&lt;/strong&gt;.
+           It introduces new semantic elements like &lt;code&gt;&amp;lt;article&amp;gt;&lt;/code&gt;, 
+           &lt;code&gt;&amp;lt;section&amp;gt;&lt;/code&gt;, and &lt;code&gt;&amp;lt;aside&amp;gt;&lt;/code&gt; for better document structure.&lt;/p&gt;
+        &lt;blockquote style="margin:20px 0;padding:16px;border-left:4px solid #2563eb;background:#eff6ff"&gt;
+          "The Web is the platform." — Tim Berners-Lee
+        &lt;/blockquote&gt;
+      &lt;/article&gt;
+
+      &lt;!-- FEATURE CARDS --&gt;
+      &lt;section id="services"&gt;
+        &lt;h2 style="font-size:2rem;text-align:center;margin-bottom:8px"&gt;Our Services&lt;/h2&gt;
+        &lt;div class="cards"&gt;
+          &lt;div class="card"&gt;
+            &lt;h3&gt;🎨 Design&lt;/h3&gt;
+            &lt;p&gt;Beautiful, responsive interfaces built with modern CSS.&lt;/p&gt;
+          &lt;/div&gt;
+          &lt;div class="card"&gt;
+            &lt;h3&gt;⚡ Performance&lt;/h3&gt;
+            &lt;p&gt;Optimized code for fast loading and smooth interactions.&lt;/p&gt;
+          &lt;/div&gt;
+          &lt;div class="card"&gt;
+            &lt;h3&gt;📱 Responsive&lt;/h3&gt;
+            &lt;p&gt;Works perfectly on every screen size using CSS Grid &amp; Flexbox.&lt;/p&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/section&gt;
+
+      &lt;!-- DATA TABLE --&gt;
+      &lt;section style="padding-bottom:60px"&gt;
+        &lt;h2 style="font-size:2rem;margin-bottom:20px"&gt;HTML Evolution&lt;/h2&gt;
+        &lt;table style="width:100%;border-collapse:collapse"&gt;
+          &lt;thead&gt;
+            &lt;tr style="background:#2563eb;color:white"&gt;
+              &lt;th style="padding:12px 16px;text-align:left"&gt;Version&lt;/th&gt;
+              &lt;th style="padding:12px 16px;text-align:left"&gt;Year&lt;/th&gt;
+              &lt;th style="padding:12px 16px;text-align:left"&gt;Key Feature&lt;/th&gt;
+            &lt;/tr&gt;
+          &lt;/thead&gt;
+          &lt;tbody&gt;
+            &lt;tr style="border-bottom:1px solid #e2e8f0"&gt;
+              &lt;td style="padding:12px 16px"&gt;HTML 1.0&lt;/td&gt;
+              &lt;td style="padding:12px 16px"&gt;1991&lt;/td&gt;
+              &lt;td style="padding:12px 16px"&gt;Basic tags only&lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr style="border-bottom:1px solid #e2e8f0;background:#f8fafc"&gt;
+              &lt;td style="padding:12px 16px"&gt;HTML 4.01&lt;/td&gt;
+              &lt;td style="padding:12px 16px"&gt;1999&lt;/td&gt;
+              &lt;td style="padding:12px 16px"&gt;CSS separation&lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr style="border-bottom:1px solid #e2e8f0"&gt;
+              &lt;td style="padding:12px 16px"&gt;HTML5&lt;/td&gt;
+              &lt;td style="padding:12px 16px"&gt;2014&lt;/td&gt;
+              &lt;td style="padding:12px 16px"&gt;Semantic elements, Canvas, Video, Forms&lt;/td&gt;
+            &lt;/tr&gt;
+          &lt;/tbody&gt;
+        &lt;/table&gt;
+      &lt;/section&gt;
+
+    &lt;/div&gt;
+  &lt;/main&gt;
+
+  &lt;!-- CONTACT FORM --&gt;
+  &lt;section class="contact" id="contact"&gt;
+    &lt;div class="container" style="max-width:600px"&gt;
+      &lt;h2 style="font-size:2rem;text-align:center;margin-bottom:32px"&gt;Contact Us&lt;/h2&gt;
+      &lt;form action="/contact" method="POST"&gt;
+        &lt;fieldset style="border:none;padding:0"&gt;
+          &lt;div class="form-group"&gt;
+            &lt;label for="name"&gt;Full Name *&lt;/label&gt;
+            &lt;input type="text" id="name" name="name" required placeholder="Your name"&gt;
+          &lt;/div&gt;
+          &lt;div class="form-group"&gt;
+            &lt;label for="email"&gt;Email Address *&lt;/label&gt;
+            &lt;input type="email" id="email" name="email" required placeholder="you@example.com"&gt;
+          &lt;/div&gt;
+          &lt;div class="form-group"&gt;
+            &lt;label for="subject"&gt;Subject&lt;/label&gt;
+            &lt;select id="subject" name="subject"&gt;
+              &lt;option value=""&gt;Choose a subject&lt;/option&gt;
+              &lt;option value="general"&gt;General Inquiry&lt;/option&gt;
+              &lt;option value="support"&gt;Technical Support&lt;/option&gt;
+            &lt;/select&gt;
+          &lt;/div&gt;
+          &lt;div class="form-group"&gt;
+            &lt;label for="message"&gt;Message *&lt;/label&gt;
+            &lt;textarea id="message" name="message" rows="5"
+                      required placeholder="Write your message..."&gt;&lt;/textarea&gt;
+          &lt;/div&gt;
+          &lt;div class="form-group"&gt;
+            &lt;label&gt;
+              &lt;input type="checkbox" name="agree" required&gt;
+              I agree to the Terms and Conditions
+            &lt;/label&gt;
+          &lt;/div&gt;
+          &lt;button type="submit" class="btn" style="width:100%;text-align:center"&gt;
+            Send Message
+          &lt;/button&gt;
+        &lt;/fieldset&gt;
+      &lt;/form&gt;
+    &lt;/div&gt;
+  &lt;/section&gt;
+
+  &lt;!-- SIDEBAR EXAMPLE (as aside) --&gt;
+  &lt;aside style="background:#eff6ff;border-top:4px solid #2563eb;padding:32px 0"&gt;
+    &lt;div class="container" style="display:flex;gap:24px;align-items:center;flex-wrap:wrap"&gt;
+      &lt;div&gt;
+        &lt;h3&gt;💡 Did You Know?&lt;/h3&gt;
+        &lt;p&gt;There are over &lt;strong&gt;100+ HTML tags&lt;/strong&gt; defined in the HTML5 specification.&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;a href="#" class="btn" style="margin-left:auto"&gt;Learn More&lt;/a&gt;
+    &lt;/div&gt;
+  &lt;/aside&gt;
+
+  &lt;!-- FOOTER --&gt;
+  &lt;footer&gt;
+    &lt;div class="container"&gt;
+      &lt;p&gt;&amp;copy; &lt;time datetime="2025"&gt;2025&lt;/time&gt; Web Engineering Reference. All rights reserved.&lt;/p&gt;
+      &lt;nav style="margin-top:12px"&gt;
+        &lt;a href="#" style="color:#60a5fa;margin:0 12px"&gt;Privacy&lt;/a&gt;
+        &lt;a href="#" style="color:#60a5fa;margin:0 12px"&gt;Terms&lt;/a&gt;
+        &lt;a href="#" style="color:#60a5fa;margin:0 12px"&gt;Sitemap&lt;/a&gt;
+      &lt;/nav&gt;
+    &lt;/div&gt;
+  &lt;/footer&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <p>Prepared for <strong>Web Engineering Course</strong> · School of Science & Technology · CSE Department</p>
+  <p style="margin-top:8px">Covers HTML5 specification tags · CSS3 properties · Selectors · Layout systems</p>
+</footer>
+
+</body>
+</html>
