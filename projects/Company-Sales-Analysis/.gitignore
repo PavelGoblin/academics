@@ -1,0 +1,41 @@
+# Byte-compiled
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+dist/
+build/
+*.egg
+.eggs/
+
+# Virtual environment
+venv/
+.venv/
+env/
+.env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Jupyter
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Data (large files)
+*.csv
+*.pkl
+*.h5
+*.npy
+data/raw/
+data/processed/
+
+# Logs
+*.log
+logs/

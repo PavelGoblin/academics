@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Computer Graphics Lab Report — Labs 01–04</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=IM+Fell+English:ital@0;1&display=swap');
+
+  :root {
+    --ink: #1a1a1a;
+    --ink-light: #444;
+    --ink-faint: #888;
+    --paper: #f9f6ef;
+    --paper-dark: #ede9df;
+    --rule: #c8c0b0;
+    --accent: #1a3a5c;
+    --accent2: #8b1a1a;
+    --code-bg: #1e1e2e;
+    --code-fg: #cdd6f4;
+    --kw: #89b4fa;
+    --fn: #a6e3a1;
+    --cm: #6c7086;
+    --num: #fab387;
+    --str: #f38ba8;
+    --canvas-bg: #0d0d1a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Courier Prime', monospace;
+    background: #d4cfc5;
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 2rem 1rem;
+  }
+
+  .page {
+    background: var(--paper);
+    max-width: 860px;
+    margin: 0 auto;
+    box-shadow: 0 4px 40px rgba(0,0,0,0.25), 0 1px 4px rgba(0,0,0,0.1);
+    border-radius: 2px;
+  }
+
+  /* ── COVER PAGE ── */
+  .cover {
+    padding: 60px 80px 50px;
+    border-bottom: 3px double var(--rule);
+    text-align: center;
+    position: relative;
+  }
+  .cover::before {
+    content: '';
+    display: block;
+    height: 4px;
+    background: repeating-linear-gradient(90deg, var(--accent) 0 60%, var(--accent2) 60% 100%);
+    margin-bottom: 40px;
+  }
+  .university-logo {
+    font-family: 'IM Fell English', serif;
+    font-size: 13px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 6px;
+  }
+  .university-name {
+    font-family: 'IM Fell English', serif;
+    font-size: 22px;
+    color: var(--accent);
+    margin-bottom: 4px;
+    letter-spacing: 1px;
+  }
+  .dept {
+    font-size: 12px;
+    color: var(--ink-faint);
+    margin-bottom: 36px;
+    letter-spacing: 1px;
+  }
+  .cover-divider {
+    border: none;
+    border-top: 1px solid var(--rule);
+    margin: 0 auto 36px;
+    width: 60%;
+  }
+  .course-tag {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    font-size: 11px;
+    letter-spacing: 3px;
+    padding: 4px 14px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .report-title {
+    font-family: 'IM Fell English', serif;
+    font-size: 30px;
+    color: var(--ink);
+    line-height: 1.3;
+    margin-bottom: 8px;
+  }
+  .report-subtitle {
+    font-size: 13px;
+    color: var(--ink-faint);
+    margin-bottom: 40px;
+    font-style: italic;
+  }
+  .meta-table {
+    width: 100%;
+    max-width: 440px;
+    margin: 0 auto;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  .meta-table td {
+    padding: 7px 12px;
+    border: 0.5px solid var(--rule);
+  }
+  .meta-table td:first-child {
+    color: var(--ink-faint);
+    width: 140px;
+    background: var(--paper-dark);
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .meta-table td:last-child { color: var(--ink); font-weight: 700; }
+  .cover-footer {
+    margin-top: 44px;
+    font-size: 11px;
+    color: var(--ink-faint);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  /* ── LAB SECTION ── */
+  .lab-section {
+    padding: 50px 80px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .lab-section:last-child { border-bottom: none; }
+
+  .lab-header {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 28px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--ink);
+  }
+  .lab-num {
+    font-family: 'IM Fell English', serif;
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--accent2);
+    white-space: nowrap;
+  }
+  .lab-title {
+    font-family: 'IM Fell English', serif;
+    font-size: 20px;
+    color: var(--accent);
+  }
+
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent2);
+    margin-bottom: 6px;
+    margin-top: 22px;
+    font-weight: 700;
+  }
+  .section-label:first-of-type { margin-top: 0; }
+
+  p, li {
+    font-size: 13.5px;
+    line-height: 1.8;
+    color: var(--ink-light);
+  }
+  ul, ol { padding-left: 22px; margin-top: 4px; }
+  li { margin-bottom: 3px; }
+  strong { color: var(--ink); font-weight: 700; }
+
+  /* ── CANVAS AREA ── */
+  .canvas-wrapper {
+    margin: 16px 0;
+    background: var(--canvas-bg);
+    border-radius: 4px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .canvas-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+  }
+  .ctrl-label {
+    font-size: 11px;
+    color: #888;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .ctrl-label input[type=number] {
+    width: 60px;
+    background: #2a2a3e;
+    border: 0.5px solid #444;
+    color: #eee;
+    padding: 3px 6px;
+    font-family: 'Courier Prime', monospace;
+    font-size: 12px;
+    border-radius: 3px;
+  }
+  .ctrl-label input[type=color] {
+    width: 36px;
+    height: 26px;
+    padding: 1px;
+    border: 0.5px solid #444;
+    background: none;
+    cursor: pointer;
+    border-radius: 3px;
+  }
+  .btn {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 5px 14px;
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    border-radius: 2px;
+    text-transform: uppercase;
+  }
+  .btn:hover { background: #254d7a; }
+  .btn.red { background: var(--accent2); }
+  .btn.red:hover { background: #a02020; }
+  .btn.dim { background: #3a3a5a; }
+  .btn.dim:hover { background: #4a4a6a; }
+  canvas {
+    display: block;
+    border-radius: 2px;
+    cursor: crosshair;
+  }
+  .canvas-caption {
+    font-size: 11px;
+    color: #666;
+    text-align: center;
+    font-style: italic;
+  }
+
+  /* ── CODE BLOCK ── */
+  .code-block {
+    background: var(--code-bg);
+    border-radius: 4px;
+    padding: 18px 20px;
+    margin: 12px 0;
+    overflow-x: auto;
+    border-left: 3px solid var(--accent);
+  }
+  .code-block pre {
+    font-family: 'Courier Prime', monospace;
+    font-size: 12.5px;
+    line-height: 1.75;
+    color: var(--code-fg);
+    white-space: pre;
+  }
+  .kw { color: var(--kw); }
+  .fn { color: var(--fn); }
+  .cm { color: var(--cm); font-style: italic; }
+  .num { color: var(--num); }
+  .str { color: var(--str); }
+  .pp { color: #f9e2af; }
+
+  /* ── ALGO TABLE ── */
+  .algo-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12.5px;
+    margin: 10px 0;
+  }
+  .algo-table th {
+    background: var(--accent);
+    color: #fff;
+    padding: 7px 12px;
+    text-align: left;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .algo-table td {
+    padding: 7px 12px;
+    border-bottom: 0.5px solid var(--rule);
+    color: var(--ink-light);
+    vertical-align: top;
+  }
+  .algo-table tr:nth-child(even) td { background: var(--paper-dark); }
+  .algo-table td:first-child { color: var(--ink); font-weight: 700; width: 110px; }
+
+  /* ── RESULT BOX ── */
+  .result-box {
+    background: var(--paper-dark);
+    border: 0.5px solid var(--rule);
+    border-left: 3px solid var(--accent2);
+    padding: 12px 16px;
+    margin: 12px 0;
+    font-size: 13px;
+    color: var(--ink-light);
+    line-height: 1.7;
+  }
+
+  /* ── COMPARISON TABLE ── */
+  .compare-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12.5px;
+    margin: 10px 0;
+  }
+  .compare-table th {
+    background: var(--paper-dark);
+    padding: 8px 12px;
+    text-align: center;
+    border: 0.5px solid var(--rule);
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+  .compare-table td {
+    padding: 7px 12px;
+    border: 0.5px solid var(--rule);
+    color: var(--ink-light);
+    text-align: center;
+  }
+  .compare-table td:first-child { text-align: left; font-weight: 700; color: var(--ink); }
+  .good { color: #2a7a2a; }
+  .bad { color: #8b1a1a; }
+
+  .toc { padding: 36px 80px; border-bottom: 1px solid var(--rule); }
+  .toc-title { font-family: 'IM Fell English', serif; font-size: 16px; color: var(--accent); margin-bottom: 14px; }
+  .toc-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 13px;
+    padding: 5px 0;
+    border-bottom: 1px dotted var(--rule);
+    color: var(--ink-light);
+  }
+  .toc-item span:last-child { color: var(--ink-faint); font-size: 11px; }
+
+  @media print {
+    body { background: white; padding: 0; }
+    .page { box-shadow: none; max-width: 100%; }
+    .btn { display: none; }
+    canvas { break-inside: avoid; }
+    .lab-section { break-inside: avoid; page-break-before: always; }
+    .cover { page-break-after: always; }
+  }
+
+  .print-btn {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-family: 'Courier Prime', monospace;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 2px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+    z-index: 999;
+  }
+  .print-btn:hover { background: #254d7a; }
+</style>
+</head>
+<body>
+
+<button class="print-btn" onclick="window.print()">⎙ Print / PDF</button>
+<a href="https://github.com/PavelGoblin/computer-graphics-lab" style="position:fixed;bottom:70px;right:24px;background:#1a3a5c;color:white;border:none;padding:10px 20px;font-family:'Courier Prime',monospace;font-size:12px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;border-radius:2px;box-shadow:0 2px 12px rgba(0,0,0,0.3);z-index:999;text-decoration:none" target="_blank">⟨ View on GitHub</a>
+
+<div class="page">
+
+  <!-- COVER -->
+  <div class="cover">
+    <div class="university-logo">Laboratory Report</div>
+    <div class="university-name">Bangladesh Open University</div>
+    <div class="dept">School of Science and Technology &nbsp;·&nbsp; Department of CSE</div>
+    <hr class="cover-divider">
+    <div class="course-tag">CSE41P8 &nbsp;·&nbsp; Computer Graphics</div>
+    <div class="report-title">Lab Reports:<br>Lines &amp; Geometric Translation</div>
+    <div class="report-subtitle">Labs 01 through 04 — Line Drawing Algorithms &amp; 2D Transformations</div>
+    <table class="meta-table">
+      <tr><td>Student Name</td><td>Pavel</td></tr>
+      <tr><td>Student ID</td><td>20-0-52-801-04</td></tr>
+      <tr><td>Program</td><td>B.Sc. in CSE &nbsp;(4th Year, 1st Semester)</td></tr>
+      <tr><td>Session</td><td>231 Term</td></tr>
+      <tr><td>Labs Covered</td><td>01, 02, 03, 04</td></tr>
+      <tr><td>Language</td><td>C &nbsp;(OpenGL / BGI)</td></tr>
+    </table>
+    <div class="cover-footer">Computer Graphics Laboratory &nbsp;·&nbsp; BOU CSE</div>
+  </div>
+
+  <!-- TOC -->
+  <div class="toc">
+    <div class="toc-title">Table of Contents</div>
+    <div class="toc-item"><span>Lab 01 — Drawing a Straight Line (Parametric)</span><span>Pg 01</span></div>
+    <div class="toc-item"><span>Lab 02 — DDA Line Drawing Algorithm</span><span>Pg 02</span></div>
+    <div class="toc-item"><span>Lab 03 — Bresenham's Line Drawing Algorithm</span><span>Pg 03</span></div>
+    <div class="toc-item"><span>Lab 04 — Geometric Translation (2D)</span><span>Pg 04</span></div>
+  </div>
+
+  <!-- LAB 01 -->
+  <div class="lab-section">
+    <div class="lab-header">
+      <div class="lab-num">Lab 01</div>
+      <div class="lab-title">Drawing a Straight Line using C Program</div>
+    </div>
+
+    <div class="section-label">1.1 &nbsp; Objective</div>
+    <p>To write a C program that draws a straight line on the screen using the basic parametric line equation, utilizing the <code>putpixel()</code> function available in BGI graphics (Turbo C / DevC++ with WinBGIm) or equivalent OpenGL primitive.</p>
+
+    <div class="section-label">1.2 &nbsp; Theory</div>
+    <p>A line segment between two points P₁(x₁, y₁) and P₂(x₂, y₂) can be described using the parametric form:</p>
+    <div class="result-box">
+      <strong>x(t) = x₁ + t · (x₂ − x₁)</strong><br>
+      <strong>y(t) = y₁ + t · (y₂ − y₁)</strong><br>
+      where t ∈ [0, 1], sampled at intervals of 1 / max(|Δx|, |Δy|)
+    </div>
+    <p>The number of steps is set to <strong>max(|Δx|, |Δy|)</strong> to ensure no pixel gaps along either axis. At each step, the floating-point coordinates are rounded to the nearest integer before calling <code>putpixel()</code>.</p>
+
+    <div class="section-label">1.3 &nbsp; Algorithm Steps</div>
+    <ol>
+      <li>Input two endpoints: (x1, y1) and (x2, y2)</li>
+      <li>Compute dx = x2 − x1 and dy = y2 − y1</li>
+      <li>Compute steps = max(|dx|, |dy|)</li>
+      <li>Compute xInc = dx / steps and yInc = dy / steps</li>
+      <li>Initialize x = x1, y = y1</li>
+      <li>Loop i from 0 to steps: plot pixel at (round(x), round(y)), then x += xInc, y += yInc</li>
+    </ol>
+
+    <div class="section-label">1.4 &nbsp; Source Code</div>
+    <div class="code-block"><pre><span class="pp">#include &lt;stdio.h&gt;
+#include &lt;graphics.h&gt;
+#include &lt;math.h&gt;</span>
+
+<span class="kw">void</span> <span class="fn">drawLine</span>(<span class="kw">int</span> x1, <span class="kw">int</span> y1, <span class="kw">int</span> x2, <span class="kw">int</span> y2) {
+    <span class="kw">int</span> dx = x2 - x1;
+    <span class="kw">int</span> dy = y2 - y1;
+    <span class="kw">int</span> steps = (abs(dx) > abs(dy)) ? abs(dx) : abs(dy);
+    <span class="kw">float</span> xInc = (<span class="kw">float</span>)dx / steps;
+    <span class="kw">float</span> yInc = (<span class="kw">float</span>)dy / steps;
+    <span class="kw">float</span> x = x1, y = y1;
+    <span class="kw">int</span> i;
+    <span class="kw">for</span> (i = <span class="num">0</span>; i <= steps; i++) {
+        putpixel((<span class="kw">int</span>)round(x), (<span class="kw">int</span>)round(y), WHITE);
+        x += xInc;
+        y += yInc;
+    }
+}
+
+<span class="kw">int</span> <span class="fn">main</span>() {
+    <span class="kw">int</span> gd = DETECT, gm;
+    initgraph(&amp;gd, &amp;gm, <span class="str">""</span>);
+    <span class="fn">drawLine</span>(<span class="num">50</span>, <span class="num">50</span>, <span class="num">350</span>, <span class="num">200</span>);
+    getch();
+    closegraph();
+    <span class="kw">return</span> <span class="num">0</span>;
+}</pre></div>
+
+    <div class="section-label">1.5 &nbsp; Interactive Simulation</div>
+    <div class="canvas-wrapper">
+      <div class="canvas-controls">
+        <span class="ctrl-label">x1 <input type="number" id="l1x1" value="50"></span>
+        <span class="ctrl-label">y1 <input type="number" id="l1y1" value="50"></span>
+        <span class="ctrl-label">x2 <input type="number" id="l1x2" value="650"></span>
+        <span class="ctrl-label">y2 <input type="number" id="l1y2" value="230"></span>
+        <span class="ctrl-label">Color <input type="color" id="l1col" value="#00ff99"></span>
+        <button class="btn" onclick="drawLab1()">Draw</button>
+        <button class="btn red" onclick="clearC('c1')">Clear</button>
+      </div>
+      <canvas id="c1" width="700" height="280" style="width:100%"></canvas>
+      <div class="canvas-caption">Fig 1.1 — Straight line plotted using parametric method</div>
+    </div>
+
+    <div class="section-label">1.6 &nbsp; Result &amp; Discussion</div>
+    <p>The program successfully draws a straight line between any two given points. The parametric approach works for all slopes including vertical lines (Δx = 0) and horizontal lines (Δy = 0). The line appears continuous with no visible pixel gaps because the step count equals the dominant delta. This method uses floating-point arithmetic, making it slightly slower than integer-only methods.</p>
+
+    <div class="section-label">1.7 &nbsp; Conclusion</div>
+    <p>The parametric straight-line algorithm is conceptually simple and handles all cases correctly. However, it relies on floating-point operations and rounding, which introduces overhead. This motivates more efficient algorithms such as DDA and Bresenham, explored in subsequent labs.</p>
+  </div>
+
+  <!-- LAB 02 -->
+  <div class="lab-section">
+    <div class="lab-header">
+      <div class="lab-num">Lab 02</div>
+      <div class="lab-title">Line Drawing using DDA Algorithm</div>
+    </div>
+
+    <div class="section-label">2.1 &nbsp; Objective</div>
+    <p>To implement the Digital Differential Analyzer (DDA) algorithm in C for rasterizing a line segment between two given endpoints on a pixel grid.</p>
+
+    <div class="section-label">2.2 &nbsp; Theory</div>
+    <p>The DDA algorithm is based on the differential equation of a line. Given slope <strong>m = dy/dx</strong>, the algorithm samples at unit intervals along the dominant axis and computes the other coordinate by accumulation:</p>
+    <div class="result-box">
+      <strong>Case |dx| ≥ |dy| (shallow):</strong> x increments by 1, y += m (slope)<br>
+      <strong>Case |dy| &gt; |dx| (steep):</strong> y increments by 1, x += 1/m<br><br>
+      Generalized: steps = max(|dx|,|dy|), xInc = dx/steps, yInc = dy/steps
+    </div>
+    <p>DDA improves on the brute parametric method by always incrementing the dominant axis by exactly 1, reducing the number of float operations. However, cumulative float rounding errors can accumulate over long lines.</p>
+
+    <div class="section-label">2.3 &nbsp; Algorithm Steps</div>
+    <ol>
+      <li>Read endpoints (x1, y1) and (x2, y2)</li>
+      <li>Calculate dx = x2 − x1, dy = y2 − y1</li>
+      <li>Set steps = max(|dx|, |dy|)</li>
+      <li>xInc = dx / steps &nbsp;·&nbsp; yInc = dy / steps</li>
+      <li>Initialize x = x1, y = y1</li>
+      <li>For i = 0 to steps: putpixel(round(x), round(y)); x += xInc; y += yInc</li>
+    </ol>
+
+    <div class="section-label">2.4 &nbsp; Source Code</div>
+    <div class="code-block"><pre><span class="pp">#include &lt;stdio.h&gt;
+#include &lt;graphics.h&gt;
+#include &lt;math.h&gt;</span>
+
+<span class="kw">void</span> <span class="fn">DDA</span>(<span class="kw">int</span> x1, <span class="kw">int</span> y1, <span class="kw">int</span> x2, <span class="kw">int</span> y2) {
+    <span class="kw">int</span> dx = x2 - x1;
+    <span class="kw">int</span> dy = y2 - y1;
+    <span class="kw">int</span> steps = (abs(dx) > abs(dy)) ? abs(dx) : abs(dy);
+    <span class="kw">float</span> xInc = (<span class="kw">float</span>)dx / steps;
+    <span class="kw">float</span> yInc = (<span class="kw">float</span>)dy / steps;
+    <span class="kw">float</span> x = x1, y = y1;
+    <span class="kw">int</span> i;
+    <span class="kw">for</span> (i = <span class="num">0</span>; i <= steps; i++) {
+        putpixel((<span class="kw">int</span>)round(x), (<span class="kw">int</span>)round(y), CYAN);
+        x += xInc;
+        y += yInc;
+    }
+}
+
+<span class="kw">int</span> <span class="fn">main</span>() {
+    <span class="kw">int</span> gd = DETECT, gm;
+    initgraph(&amp;gd, &amp;gm, <span class="str">""</span>);
+    <span class="fn">DDA</span>(<span class="num">40</span>, <span class="num">200</span>, <span class="num">360</span>, <span class="num">60</span>);
+    getch();
+    closegraph();
+    <span class="kw">return</span> <span class="num">0</span>;
+}</pre></div>
+
+    <div class="section-label">2.5 &nbsp; Interactive Simulation</div>
+    <div class="canvas-wrapper">
+      <div class="canvas-controls">
+        <span class="ctrl-label">x1 <input type="number" id="l2x1" value="40"></span>
+        <span class="ctrl-label">y1 <input type="number" id="l2y1" value="240"></span>
+        <span class="ctrl-label">x2 <input type="number" id="l2x2" value="660"></span>
+        <span class="ctrl-label">y2 <input type="number" id="l2y2" value="40"></span>
+        <span class="ctrl-label">Color <input type="color" id="l2col" value="#4fc3f7"></span>
+        <button class="btn" onclick="drawLab2()">Draw</button>
+        <button class="btn red" onclick="clearC('c2')">Clear</button>
+      </div>
+      <canvas id="c2" width="700" height="280" style="width:100%"></canvas>
+      <div class="canvas-caption">Fig 2.1 — DDA line drawing output</div>
+    </div>
+
+    <div class="section-label">2.6 &nbsp; Result &amp; Discussion</div>
+    <p>The DDA algorithm correctly rasterizes lines of all slopes. The output is visually identical to the parametric method. DDA is marginally more systematic — it always advances by exactly 1 unit along the dominant axis — but still depends on floating-point arithmetic. Rounding errors become noticeable only for extremely long lines (&gt;1000 pixels).</p>
+
+    <div class="section-label">2.7 &nbsp; Conclusion</div>
+    <p>DDA is an improvement over the naive parametric approach in terms of systematic step control. However, the floating-point dependency remains a limitation. Bresenham's algorithm (Lab 03) eliminates this by using only integers.</p>
+  </div>
+
+  <!-- LAB 03 -->
+  <div class="lab-section">
+    <div class="lab-header">
+      <div class="lab-num">Lab 03</div>
+      <div class="lab-title">Line Drawing using Bresenham's Algorithm</div>
+    </div>
+
+    <div class="section-label">3.1 &nbsp; Objective</div>
+    <p>To implement Bresenham's Line Drawing Algorithm in C, which uses only integer arithmetic (no floating-point operations) to determine pixel positions along a rasterized line.</p>
+
+    <div class="section-label">3.2 &nbsp; Theory</div>
+    <p>Bresenham's algorithm (1965) uses a <strong>decision parameter</strong> <em>p</em> derived from the line equation to decide, at each step, whether the next pixel should stay at the same y level or increment y by 1. The key insight is that all quantities can be maintained as integers:</p>
+    <div class="result-box">
+      <strong>Initial decision parameter:</strong> p₀ = 2·dy − dx<br><br>
+      <strong>If p &lt; 0:</strong> plot (x+1, y), update p = p + 2·dy<br>
+      <strong>If p ≥ 0:</strong> plot (x+1, y+1), update p = p + 2·dy − 2·dx<br><br>
+      For general octants: use sign(dx) and sign(dy) to handle all directions.
+    </div>
+    <p>This algorithm runs faster than DDA because it avoids all floating-point operations and uses only addition and comparison — operations that are very fast on hardware.</p>
+
+    <div class="section-label">3.3 &nbsp; Algorithm Steps (General — All Octants)</div>
+    <ol>
+      <li>Compute dx = |x2−x1|, dy = |y2−y1|</li>
+      <li>Set sx = sign(x2−x1), sy = sign(y2−y1)</li>
+      <li>Initialize err = dx − dy</li>
+      <li>Loop: plot (x, y); if reached endpoint, break</li>
+      <li>e2 = 2·err; if e2 &gt; −dy: err −= dy; x += sx</li>
+      <li>if e2 &lt; dx: err += dx; y += sy</li>
+    </ol>
+
+    <div class="section-label">3.4 &nbsp; Source Code</div>
+    <div class="code-block"><pre><span class="pp">#include &lt;stdio.h&gt;
+#include &lt;graphics.h&gt;
+#include &lt;stdlib.h&gt;</span>
+
+<span class="kw">void</span> <span class="fn">Bresenham</span>(<span class="kw">int</span> x1, <span class="kw">int</span> y1, <span class="kw">int</span> x2, <span class="kw">int</span> y2) {
+    <span class="kw">int</span> dx = abs(x2 - x1);
+    <span class="kw">int</span> dy = abs(y2 - y1);
+    <span class="kw">int</span> sx = (x1 &lt; x2) ? <span class="num">1</span> : -<span class="num">1</span>;
+    <span class="kw">int</span> sy = (y1 &lt; y2) ? <span class="num">1</span> : -<span class="num">1</span>;
+    <span class="kw">int</span> err = dx - dy;
+    <span class="kw">int</span> e2;
+
+    <span class="kw">while</span> (<span class="num">1</span>) {
+        putpixel(x1, y1, YELLOW);
+        <span class="kw">if</span> (x1 == x2 &amp;&amp; y1 == y2) <span class="kw">break</span>;
+        e2 = <span class="num">2</span> * err;
+        <span class="kw">if</span> (e2 > -dy) { err -= dy; x1 += sx; }
+        <span class="kw">if</span> (e2 &lt;  dx) { err += dx; y1 += sy; }
+    }
+}
+
+<span class="kw">int</span> <span class="fn">main</span>() {
+    <span class="kw">int</span> gd = DETECT, gm;
+    initgraph(&amp;gd, &amp;gm, <span class="str">""</span>);
+    <span class="fn">Bresenham</span>(<span class="num">30</span>, <span class="num">220</span>, <span class="num">380</span>, <span class="num">50</span>);
+    getch();
+    closegraph();
+    <span class="kw">return</span> <span class="num">0</span>;
+}</pre></div>
+
+    <div class="section-label">3.5 &nbsp; Interactive Simulation</div>
+    <div class="canvas-wrapper">
+      <div class="canvas-controls">
+        <span class="ctrl-label">x1 <input type="number" id="l3x1" value="30"></span>
+        <span class="ctrl-label">y1 <input type="number" id="l3y1" value="250"></span>
+        <span class="ctrl-label">x2 <input type="number" id="l3x2" value="670"></span>
+        <span class="ctrl-label">y2 <input type="number" id="l3y2" value="30"></span>
+        <span class="ctrl-label">Color <input type="color" id="l3col" value="#ffd54f"></span>
+        <button class="btn" onclick="drawLab3()">Draw</button>
+        <button class="btn dim" onclick="animBresenham()">Animate</button>
+        <button class="btn red" onclick="clearC('c3')">Clear</button>
+      </div>
+      <canvas id="c3" width="700" height="280" style="width:100%"></canvas>
+      <div class="canvas-caption">Fig 3.1 — Bresenham's algorithm output (click Animate to see pixel-by-pixel plotting)</div>
+    </div>
+
+    <div class="section-label">3.6 &nbsp; Comparison: DDA vs Bresenham</div>
+    <table class="compare-table">
+      <tr>
+        <th>Property</th>
+        <th>DDA</th>
+        <th>Bresenham</th>
+      </tr>
+      <tr><td>Arithmetic type</td><td class="bad">Floating-point</td><td class="good">Integer only</td></tr>
+      <tr><td>Speed</td><td>Moderate</td><td class="good">Faster</td></tr>
+      <tr><td>Accuracy</td><td>Round-off errors possible</td><td class="good">Exact</td></tr>
+      <tr><td>Hardware suitability</td><td>Less suitable</td><td class="good">Very suitable</td></tr>
+      <tr><td>Complexity</td><td>Simple</td><td>Slightly complex</td></tr>
+      <tr><td>Memory usage</td><td>More (floats)</td><td class="good">Less (ints)</td></tr>
+    </table>
+
+    <div class="section-label">3.7 &nbsp; Result &amp; Discussion</div>
+    <p>Bresenham's algorithm produces a visually identical line to DDA, but uses only integer arithmetic throughout. The decision parameter <em>err</em> is updated by simple addition and subtraction. The algorithm handles all eight octants through the sign variables <code>sx</code> and <code>sy</code>. Performance advantage is significant in hardware implementations such as GPU rasterizers.</p>
+
+    <div class="section-label">3.8 &nbsp; Conclusion</div>
+    <p>Bresenham's algorithm is the gold standard for line rasterization in computer graphics. Its exclusive use of integer arithmetic makes it both fast and accurate. Modern GPU rasterizers are fundamentally based on variations of this approach.</p>
+  </div>
+
+  <!-- LAB 04 -->
+  <div class="lab-section">
+    <div class="lab-header">
+      <div class="lab-num">Lab 04</div>
+      <div class="lab-title">Geometric Translation (2D Transformation)</div>
+    </div>
+
+    <div class="section-label">4.1 &nbsp; Objective</div>
+    <p>To implement geometric translation — a fundamental 2D affine transformation — in C, which repositions every vertex of a shape by a fixed offset vector (Tx, Ty).</p>
+
+    <div class="section-label">4.2 &nbsp; Theory</div>
+    <p>Translation moves a geometric object from one position to another without rotation or scaling. For each point P(x, y) in the object, the translated point P'(x', y') is given by:</p>
+    <div class="result-box">
+      <strong>x' = x + Tx</strong><br>
+      <strong>y' = y + Ty</strong><br><br>
+      <strong>Homogeneous matrix form (3×3):</strong><br>
+      [ x' ]   [ 1  0  Tx ] [ x ]<br>
+      [ y' ] = [ 0  1  Ty ] [ y ]<br>
+      [ 1  ]   [ 0  0  1  ] [ 1 ]
+    </div>
+    <p>The homogeneous coordinate representation is particularly important because it unifies all affine transformations (translation, rotation, scaling, shearing) into single matrix multiplications, enabling efficient composition of transforms.</p>
+
+    <div class="section-label">4.3 &nbsp; Algorithm Steps</div>
+    <ol>
+      <li>Define the original polygon vertices as arrays x[] and y[]</li>
+      <li>Input translation values Tx and Ty</li>
+      <li>Draw the original shape using line drawing functions</li>
+      <li>For each vertex i: x[i] = x[i] + Tx; y[i] = y[i] + Ty</li>
+      <li>Draw the translated shape using updated coordinates</li>
+      <li>Optionally draw arrows from original to translated vertices</li>
+    </ol>
+
+    <div class="section-label">4.4 &nbsp; Source Code</div>
+    <div class="code-block"><pre><span class="pp">#include &lt;stdio.h&gt;
+#include &lt;graphics.h&gt;</span>
+
+<span class="kw">void</span> <span class="fn">drawPolygon</span>(<span class="kw">int</span> x[], <span class="kw">int</span> y[], <span class="kw">int</span> n, <span class="kw">int</span> color) {
+    <span class="kw">int</span> i;
+    setcolor(color);
+    <span class="kw">for</span> (i = <span class="num">0</span>; i &lt; n - <span class="num">1</span>; i++)
+        line(x[i], y[i], x[i+<span class="num">1</span>], y[i+<span class="num">1</span>]);
+    line(x[n-<span class="num">1</span>], y[n-<span class="num">1</span>], x[<span class="num">0</span>], y[<span class="num">0</span>]);
+}
+
+<span class="kw">void</span> <span class="fn">translate</span>(<span class="kw">int</span> x[], <span class="kw">int</span> y[], <span class="kw">int</span> n, <span class="kw">int</span> tx, <span class="kw">int</span> ty) {
+    <span class="kw">int</span> i;
+    <span class="kw">for</span> (i = <span class="num">0</span>; i &lt; n; i++) {
+        x[i] += tx;
+        y[i] += ty;
+    }
+}
+
+<span class="kw">int</span> <span class="fn">main</span>() {
+    <span class="kw">int</span> gd = DETECT, gm;
+    initgraph(&amp;gd, &amp;gm, <span class="str">""</span>);
+
+    <span class="kw">int</span> x[] = {<span class="num">100</span>, <span class="num">200</span>, <span class="num">200</span>, <span class="num">100</span>};
+    <span class="kw">int</span> y[] = {<span class="num">100</span>, <span class="num">100</span>, <span class="num">200</span>, <span class="num">200</span>};
+    <span class="kw">int</span> n = <span class="num">4</span>;
+    <span class="kw">int</span> tx = <span class="num">150</span>, ty = <span class="num">80</span>;
+
+    <span class="fn">drawPolygon</span>(x, y, n, WHITE);   <span class="cm">// draw original</span>
+    <span class="fn">translate</span>(x, y, n, tx, ty);    <span class="cm">// apply translation</span>
+    <span class="fn">drawPolygon</span>(x, y, n, CYAN);    <span class="cm">// draw translated</span>
+
+    outtextxy(<span class="num">110</span>, <span class="num">210</span>, <span class="str">"Original"</span>);
+    outtextxy(<span class="num">260</span>, <span class="num">290</span>, <span class="str">"Translated"</span>);
+
+    getch();
+    closegraph();
+    <span class="kw">return</span> <span class="num">0</span>;
+}</pre></div>
+
+    <div class="section-label">4.5 &nbsp; Interactive Simulation</div>
+    <div class="canvas-wrapper">
+      <div class="canvas-controls">
+        <span class="ctrl-label">Tx <input type="number" id="tx" value="200"></span>
+        <span class="ctrl-label">Ty <input type="number" id="ty" value="100"></span>
+        <span class="ctrl-label">Shape
+          <select id="shapeType" style="background:#2a2a3e;border:0.5px solid #444;color:#eee;padding:3px 6px;font-family:'Courier Prime',monospace;font-size:12px;border-radius:3px">
+            <option value="square">Square</option>
+            <option value="triangle">Triangle</option>
+            <option value="pentagon">Pentagon</option>
+          </select>
+        </span>
+        <button class="btn" onclick="doTranslate()">Translate</button>
+        <button class="btn dim" onclick="animTranslate()">Animate</button>
+        <button class="btn red" onclick="resetTranslate()">Reset</button>
+      </div>
+      <canvas id="c4" width="700" height="320" style="width:100%"></canvas>
+      <div class="canvas-caption">Fig 4.1 — Original shape (dim) and translated shape (teal). Dashed arrow shows translation vector.</div>
+    </div>
+
+    <div class="section-label">4.6 &nbsp; Properties of Translation</div>
+    <table class="algo-table">
+      <tr><th>Property</th><th>Description</th></tr>
+      <tr><td>Type</td><td>Rigid body transformation (isometry) — preserves shape and size</td></tr>
+      <tr><td>Invertible?</td><td>Yes — inverse is translation by (−Tx, −Ty)</td></tr>
+      <tr><td>Commutative?</td><td>Yes — T(Tx1,Ty1) followed by T(Tx2,Ty2) = T(Tx1+Tx2, Ty1+Ty2)</td></tr>
+      <tr><td>Matrix form</td><td>Requires 3×3 homogeneous coordinates in 2D</td></tr>
+      <tr><td>Fixed points</td><td>None — every point moves</td></tr>
+    </table>
+
+    <div class="section-label">4.7 &nbsp; Result &amp; Discussion</div>
+    <p>The translation program successfully repositions all vertices of the polygon by the specified (Tx, Ty) offset. The shape's geometry — angles, side lengths, and orientation — remains completely unchanged. Using homogeneous coordinates enables translation to be expressed as a matrix multiplication, which is essential for composing multiple transformations efficiently in graphics pipelines (e.g., model-view-projection matrices in OpenGL).</p>
+
+    <div class="section-label">4.8 &nbsp; Conclusion</div>
+    <p>Translation is the simplest of the geometric transformations, yet it is foundational to all 2D and 3D graphics. Understanding translation in matrix form prepares the ground for rotation, scaling, and composite transformations studied in advanced computer graphics. The implementation is straightforward: a simple loop adding Tx and Ty to each coordinate pair.</p>
+  </div>
+
+  <!-- COMPARATIVE ANALYSIS -->
+  <div class="lab-section">
+    <div class="lab-header">
+      <div class="lab-num">Analysis</div>
+      <div class="lab-title">Comparative Analysis of Line Drawing Algorithms</div>
+    </div>
+
+    <div class="section-label">5.1 &nbsp; Time &amp; Space Complexity</div>
+    <table class="compare-table">
+      <tr>
+        <th>Algorithm</th>
+        <th>Time Complexity</th>
+        <th>Space Complexity</th>
+        <th>Arithmetic</th>
+      </tr>
+      <tr><td>Parametric</td><td>O(n)</td><td>O(1)</td><td class="bad">Float (+, ×, ÷)</td></tr>
+      <tr><td>DDA</td><td>O(n)</td><td>O(1)</td><td class="bad">Float (+, ÷)</td></tr>
+      <tr><td>Bresenham</td><td>O(n)</td><td>O(1)</td><td class="good">Integer (+, −, ≪)</td></tr>
+    </table>
+    <p>where <em>n = max(|dx|, |dy|)</em> is the number of pixel steps. All three algorithms are linear in the dominant axis length. Bresenham's constant-factor advantage comes from replacing float division/multiplication with integer addition and bit-shift operations, making it ~2–3× faster in practice on CPU and the preferred choice in hardware rasterizers.</p>
+
+    <div class="section-label">5.2 &nbsp; Accuracy Comparison</div>
+    <table class="algo-table">
+      <tr><th>Metric</th><th>Parametric</th><th>DDA</th><th>Bresenham</th></tr>
+      <tr><td>Pixel deviation (mean)</td><td>±0.5 px</td><td>±0.5 px</td><td>±0.0 px (exact)</td></tr>
+      <tr><td>Integer overflow risk</td><td rowspan="2">Low (floats)</td><td rowspan="2">Low (floats)</td><td>Possible if dx,dy &gt; 2¹⁵</td></tr>
+      <tr><td>Anti-aliasing support</td><td>Easily extended</td><td>Easily extended</td><td>Requires modification (Wu)</td></tr>
+      <tr><td>Vertical/horizontal lines</td><td>✓</td><td>✓</td><td>✓</td></tr>
+      <tr><td>Arbitrary octants</td><td>✓ (implicit)</td><td>✓ (via sign checks)</td><td>✓ (via sx, sy)</td></tr>
+    </table>
+
+    <div class="section-label">5.3 &nbsp; Cumulative Error Analysis</div>
+    <p>Both Parametric and DDA accumulate floating-point rounding errors as <strong>ε · n</strong> where ε ≈ 1×10⁻⁷ (single precision). After 10⁶ steps, worst-case drift reaches ~0.1 pixels — negligible for display purposes but problematic for precise CAD/CAM rasterization. Bresenham's integer-only accumulator <em>err</em> is <strong>exact</strong>: the chosen pixels always minimize the true Euclidean distance to the ideal line, provably optimal.</p>
+
+    <div class="section-label">5.4 &nbsp; Decision Parameter Derivation (Bresenham)</div>
+    <p>The decision parameter <em>p<sub>k</sub></em> at step <em>k</em> is derived from the difference between the two candidate pixel distances from the true line:</p>
+    <div class="result-box">
+      <strong>p<sub>k</sub> = 2·dy · x<sub>k</sub> − 2·dx · y<sub>k</sub> + 2·dy + dx · (2·y₁ − 1) − 2·dy · x₁</strong><br><br>
+      Simplified recurrence (for slope 0 &lt; m &lt; 1):<br>
+      <strong>p₀ = 2·dy − dx</strong><br>
+      p<sub>k+1</sub> = p<sub>k</sub> + 2·dy &nbsp;— if p<sub>k</sub> &lt; 0<br>
+      p<sub>k+1</sub> = p<sub>k</sub> + 2·dy − 2·dx &nbsp;— if p<sub>k</sub> ≥ 0
+    </div>
+    <p>This recurrence eliminates multiplication entirely, requiring only addition and comparison at each step — the hallmark of Bresenham's efficiency.</p>
+
+    <div class="section-label">5.5 &nbsp; Extension: Anti-Aliased Lines (Wu's Algorithm)</div>
+    <p>Bresenham's algorithm plots exactly one pixel per column (or row). For smoother visual appearance, Xiaolin Wu's algorithm (1991) draws <strong>two</strong> pixels per step with intensity proportional to coverage area — known as <em>anti-aliasing</em>. The brightness of each pixel is computed as:</p>
+    <div class="result-box">
+      End brightness = fractional part of the computed y-coordinate (or x)<br>
+      Adjacent pixel brightness = 1 − end brightness
+    </div>
+    <p>Wu's algorithm trades ≈2× more pixel writes for significantly reduced staircasing (jaggies). It is commonly used in modern 2D rendering libraries (e.g., Cairo, Skia) where smooth lines are required.</p>
+  </div>
+
+  <!-- 2D TRANSFORMATIONS SUMMARY -->
+  <div class="lab-section">
+    <div class="lab-header">
+      <div class="lab-num">Transform</div>
+      <div class="lab-title">2D Affine Transformations: A Unified View</div>
+    </div>
+
+    <div class="section-label">6.1 &nbsp; Transformation Matrices</div>
+    <p>All standard 2D affine transformations can be expressed as 3×3 homogeneous matrices. Composition is achieved by simple matrix multiplication:</p>
+    <table class="algo-table">
+      <tr><th>Transformation</th><th>Matrix (3×3)</th><th>Inverse</th></tr>
+      <tr><td>Translation</td><td>[1 0 Tx; 0 1 Ty; 0 0 1]</td><td>Translate by (−Tx, −Ty)</td></tr>
+      <tr><td>Rotation (θ)</td><td>[cosθ −sinθ 0; sinθ cosθ 0; 0 0 1]</td><td>Rotate by −θ</td></tr>
+      <tr><td>Scale (Sx, Sy)</td><td>[Sx 0 0; 0 Sy 0; 0 0 1]</td><td>Scale by (1/Sx, 1/Sy)</td></tr>
+      <tr><td>Shear (X, Y)</td><td>[1 Shx 0; Shy 1 0; 0 0 1]</td><td>Shear by (−Shx, −Shy)</td></tr>
+      <tr><td>Reflection (X-axis)</td><td>[1 0 0; 0 −1 0; 0 0 1]</td><td>Same (involution)</td></tr>
+    </table>
+    <p>The homogeneous form allows any sequence — e.g., <strong>Translate · Rotate · Scale</strong> — to be pre-multiplied into a single 3×3 matrix, eliminating per-vertex overhead. This is the mathematical foundation of the model-view-projection pipeline in OpenGL and DirectX.</p>
+
+    <div class="section-label">6.2 &nbsp; Composition Order Matters</div>
+    <div class="result-box">
+      <strong>Rotate then Translate</strong> vs <strong>Translate then Rotate</strong> produce different results.<br><br>
+      Example: Rotate a square 45°, then translate — the square moves along the rotated axes.<br>
+      Translate first, then rotate — the square orbits around the origin.
+    </div>
+    <p>In computer graphics, the standard convention is <strong>Scale → Rotate → Translate</strong> (SRT) when building a model matrix, applied right-to-left: P' = T · R · S · P.</p>
+  </div>
+
+  <!-- APPLICATIONS -->
+  <div class="lab-section">
+    <div class="lab-header">
+      <div class="lab-num">Use</div>
+      <div class="lab-title">Practical Applications in Computer Graphics</div>
+    </div>
+
+    <div class="section-label">7.1 &nbsp; Line Drawing</div>
+    <ul>
+      <li><strong>Vector graphics rendering</strong> — SVG, PDF, PostScript rasterizers use Bresenham-based algorithms to convert vector paths to pixel displays</li>
+      <li><strong>CAD software</strong> — AutoCAD, SolidWorks, and KiCad rely on integer line drawing for wireframe previews at interactive frame rates</li>
+      <li><strong>Game engines</strong> — Early 2D engines (e.g., Doom, Wolfenstein 3D) used Bresenham for raycasting and wall rendering</li>
+      <li><strong>Printer drivers</strong> — Laser and inkjet printer firmware implements Bresenham for nozzle/pin control</li>
+      <li><strong>LCD/OLED controllers</strong> — Embedded display drivers on microcontrollers often have Bresenham in silicon</li>
+    </ul>
+
+    <div class="section-label">7.2 &nbsp; Geometric Transformations</div>
+    <ul>
+      <li><strong>Computer animation</strong> — Translation is the fundamental operation for keyframe interpolation; position curves (splines) generate intermediate Tx, Ty values per frame</li>
+      <li><strong>GUI systems</strong> — Window managers apply translation matrices for window dragging, scrolling, and viewport panning</li>
+      <li><strong>Robotics &amp; vision</strong> — Image registration and stitching use 2D affine transforms (including translation) to align overlapping photos</li>
+      <li><strong>Geographic Information Systems (GIS)</strong> — Map panning and coordinate system transformations (e.g., from WGS84 to screen coordinates) rely on translation and scaling</li>
+    </ul>
+  </div>
+
+  <!-- REFERENCES -->
+  <div class="lab-section" style="border-bottom:none">
+    <div class="lab-header">
+      <div class="lab-num">Refs</div>
+      <div class="lab-title">References &amp; Further Reading</div>
+    </div>
+
+    <ol style="font-size:12.5px;line-height:2;color:var(--ink-light)">
+      <li>Hearn, D., Baker, M. P., &amp; Carithers, W. — <em>Computer Graphics with OpenGL</em>, 4th Ed., Pearson (2010). Chapters 3–5 cover line algorithms and 2D transformations in depth.</li>
+      <li>Bresenham, J. E. — "Algorithm for Computer Control of a Digital Plotter." <em>IBM Systems Journal</em>, 4(1):25–30 (1965). The original paper.</li>
+      <li>Foley, J. D., van Dam, A., Feiner, S. K., &amp; Hughes, J. F. — <em>Computer Graphics: Principles and Practice</em>, 3rd Ed., Addison-Wesley (2013). The canonical reference.</li>
+      <li>Wu, X. — "An Efficient Antialiasing Technique." <em>Computer Graphics</em> (ACM SIGGRAPH), 25(4):143–152 (1991).</li>
+      <li>Shirley, P. &amp; Marschner, S. — <em>Fundamentals of Computer Graphics</em>, 4th Ed., CRC Press (2016). Chapter 8 covers rasterization algorithms.</li>
+      <li>Wikipedia — <em>Bresenham's line algorithm</em> and <em>Digital differential analyzer (graphics algorithm)</em>. Detailed worked examples with interactive demos.</li>
+    </ol>
+  </div>
+
+</div><!-- end .page -->
+
+<script>
+function px(x,y,ctx,col){ctx.fillStyle=col;ctx.fillRect(x,y,2,2);}
+
+function clearC(id){
+  const c=document.getElementById(id);
+  const ctx=c.getContext('2d');
+  ctx.fillStyle='#0d0d1a';
+  ctx.fillRect(0,0,c.width,c.height);
+}
+['c1','c2','c3'].forEach(clearC);
+
+function drawLab1(){
+  clearC('c1');
+  const ctx=document.getElementById('c1').getContext('2d');
+  const x1=+document.getElementById('l1x1').value;
+  const y1=+document.getElementById('l1y1').value;
+  const x2=+document.getElementById('l1x2').value;
+  const y2=+document.getElementById('l1y2').value;
+  const col=document.getElementById('l1col').value;
+  const dx=x2-x1,dy=y2-y1;
+  const steps=Math.max(Math.abs(dx),Math.abs(dy));
+  const xi=dx/steps,yi=dy/steps;
+  let x=x1,y=y1;
+  for(let i=0;i<=steps;i++){px(Math.round(x),Math.round(y),ctx,col);x+=xi;y+=yi;}
+  ctx.fillStyle='rgba(255,255,255,0.5)';ctx.font='11px monospace';
+  ctx.fillText(`(${x1},${y1})`,x1+4,y1-6);ctx.fillText(`(${x2},${y2})`,x2-50,y2-6);
+}
+drawLab1();
+
+function drawLab2(){
+  clearC('c2');
+  const ctx=document.getElementById('c2').getContext('2d');
+  const x1=+document.getElementById('l2x1').value;
+  const y1=+document.getElementById('l2y1').value;
+  const x2=+document.getElementById('l2x2').value;
+  const y2=+document.getElementById('l2y2').value;
+  const col=document.getElementById('l2col').value;
+  const dx=x2-x1,dy=y2-y1;
+  const steps=Math.max(Math.abs(dx),Math.abs(dy));
+  const xi=dx/steps,yi=dy/steps;
+  let x=x1,y=y1;
+  for(let i=0;i<=steps;i++){px(Math.round(x),Math.round(y),ctx,col);x+=xi;y+=yi;}
+}
+drawLab2();
+
+function drawLab3(){
+  clearC('c3');
+  const ctx=document.getElementById('c3').getContext('2d');
+  let x0=+document.getElementById('l3x1').value;
+  let y0=+document.getElementById('l3y1').value;
+  const x1=+document.getElementById('l3x2').value;
+  const y1=+document.getElementById('l3y2').value;
+  const col=document.getElementById('l3col').value;
+  bres(ctx,x0,y0,x1,y1,col);
+}
+function bres(ctx,x0,y0,x1,y1,col){
+  let dx=Math.abs(x1-x0),dy=Math.abs(y1-y0);
+  let sx=x0<x1?1:-1,sy=y0<y1?1:-1,err=dx-dy;
+  while(true){
+    px(x0,y0,ctx,col);
+    if(x0===x1&&y0===y1)break;
+    let e2=2*err;
+    if(e2>-dy){err-=dy;x0+=sx;}
+    if(e2<dx){err+=dx;y0+=sy;}
+  }
+}
+drawLab3();
+
+let anim3=null;
+function animBresenham(){
+  if(anim3)clearTimeout(anim3);
+  clearC('c3');
+  const ctx=document.getElementById('c3').getContext('2d');
+  let x0=+document.getElementById('l3x1').value;
+  let y0=+document.getElementById('l3y1').value;
+  const x1=+document.getElementById('l3x2').value;
+  const y1=+document.getElementById('l3y2').value;
+  const col=document.getElementById('l3col').value;
+  let dx=Math.abs(x1-x0),dy=Math.abs(y1-y0);
+  let sx=x0<x1?1:-1,sy=y0<y1?1:-1,err=dx-dy;
+  let cx=x0,cy=y0;
+  function step(){
+    px(cx,cy,ctx,col);
+    if(cx===x1&&cy===y1)return;
+    let e2=2*err;
+    if(e2>-dy){err-=dy;cx+=sx;}
+    if(e2<dx){err+=dx;cy+=sy;}
+    anim3=setTimeout(step,3);
+  }
+  step();
+}
+
+// LAB 4 shapes
+const shapes={
+  square:[[100,90],[210,90],[210,200],[100,200]],
+  triangle:[[155,80],[240,210],[70,210]],
+  pentagon:(()=>{
+    const pts=[];const cx=155,cy=150,r=70;
+    for(let i=0;i<5;i++){const a=-Math.PI/2+i*2*Math.PI/5;pts.push([Math.round(cx+r*Math.cos(a)),Math.round(cy+r*Math.sin(a))]);}
+    return pts;
+  })()
+};
+let curShape=null,origPts=null;
+
+function getShape(){
+  const t=document.getElementById('shapeType').value;
+  return shapes[t].map(p=>[...p]);
+}
+
+function drawPoly4(ctx,pts,col,label,filled){
+  ctx.beginPath();
+  ctx.moveTo(pts[0][0],pts[0][1]);
+  for(let i=1;i<pts.length;i++)ctx.lineTo(pts[i][0],pts[i][1]);
+  ctx.closePath();
+  ctx.strokeStyle=col;ctx.lineWidth=2;ctx.stroke();
+  if(filled){ctx.fillStyle=col+'22';ctx.fill();}
+  pts.forEach(p=>{
+    ctx.beginPath();ctx.arc(p[0],p[1],3,0,Math.PI*2);
+    ctx.fillStyle=col;ctx.fill();
+  });
+  ctx.fillStyle=col;ctx.font='11px monospace';
+  ctx.fillText(label,pts[0][0]+4,pts[0][1]-8);
+}
+
+function redraw4(){
+  const c=document.getElementById('c4');
+  const ctx=c.getContext('2d');
+  ctx.fillStyle='#0d0d1a';ctx.fillRect(0,0,c.width,c.height);
+  // grid
+  ctx.strokeStyle='rgba(255,255,255,0.04)';ctx.lineWidth=0.5;
+  for(let x=0;x<c.width;x+=40){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,c.height);ctx.stroke();}
+  for(let y=0;y<c.height;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(c.width,y);ctx.stroke();}
+  if(!origPts)origPts=getShape();
+  drawPoly4(ctx,origPts,'#555','P (original)',true);
+  if(curShape&&JSON.stringify(curShape)!==JSON.stringify(origPts)){
+    // arrow
+    const ox=origPts[0][0],oy=origPts[0][1];
+    const nx=curShape[0][0],ny=curShape[0][1];
+    ctx.strokeStyle='rgba(77,182,172,0.4)';ctx.lineWidth=1;ctx.setLineDash([5,4]);
+    ctx.beginPath();ctx.moveTo(ox,oy);ctx.lineTo(nx,ny);ctx.stroke();
+    ctx.setLineDash([]);
+    const angle=Math.atan2(ny-oy,nx-ox);
+    ctx.fillStyle='rgba(77,182,172,0.6)';
+    ctx.beginPath();ctx.moveTo(nx,ny);
+    ctx.lineTo(nx-10*Math.cos(angle-0.4),ny-10*Math.sin(angle-0.4));
+    ctx.lineTo(nx-10*Math.cos(angle+0.4),ny-10*Math.sin(angle+0.4));
+    ctx.closePath();ctx.fill();
+    const tx=curShape[0][0]-origPts[0][0],ty=curShape[0][1]-origPts[0][1];
+    drawPoly4(ctx,curShape,'#4db6ac',`P' (+${tx},+${ty})`,true);
+  }
+}
+document.getElementById('shapeType').addEventListener('change',()=>{origPts=getShape();curShape=null;redraw4();});
+redraw4();
+
+function doTranslate(){
+  if(!origPts)origPts=getShape();
+  const tx=+document.getElementById('tx').value;
+  const ty=+document.getElementById('ty').value;
+  curShape=origPts.map(p=>[p[0]+tx,p[1]+ty]);
+  redraw4();
+}
+
+function resetTranslate(){origPts=getShape();curShape=null;redraw4();}
+
+let anim4=null;
+function animTranslate(){
+  if(anim4)clearInterval(anim4);
+  if(!origPts)origPts=getShape();
+  const tx=+document.getElementById('tx').value;
+  const ty=+document.getElementById('ty').value;
+  let step=0,total=40;
+  anim4=setInterval(()=>{
+    step++;const t=step/total;
+    curShape=origPts.map(p=>[Math.round(p[0]+tx*t),Math.round(p[1]+ty*t)]);
+    redraw4();
+    if(step>=total)clearInterval(anim4);
+  },20);
+}
+
+</script>
+</body>
+</html>

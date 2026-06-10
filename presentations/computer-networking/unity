@@ -1,0 +1,1383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 13: Ethernet Networks</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0f3460;
+            --secondary: #16213e;
+            --accent: #00d4ff;
+            --accent2: #00ff88;
+            --text: #e0e0e0;
+            --dark-bg: #0a1a2e;
+            --card-bg: rgba(15, 52, 96, 0.3);
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes floatHover {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes glowPulse {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(0, 212, 255, 0.4),
+                            0 0 40px rgba(0, 212, 255, 0.2);
+            }
+            50% {
+                box-shadow: 0 0 30px rgba(0, 212, 255, 0.6),
+                            0 0 60px rgba(0, 212, 255, 0.3);
+            }
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+
+        @keyframes textGlow {
+            0%, 100% { text-shadow: 0 0 10px rgba(0, 212, 255, 0.5); }
+            50% { text-shadow: 0 0 20px rgba(0, 212, 255, 0.8), 0 0 30px rgba(102, 51, 255, 0.5); }
+        }
+
+        @keyframes borderGlow {
+            0%, 100% { border-color: rgba(0, 212, 255, 0.5); }
+            50% { border-color: rgba(102, 51, 255, 0.8); }
+        }
+
+        @keyframes progressFill {
+            from { width: 0%; }
+            to { width: 100%; }
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(-45deg, var(--primary), var(--secondary), #0a3a52, #1a1a2e);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            color: var(--text);
+            min-height: 100vh;
+            line-height: 1.7;
+            font-size: 18px; /* Increased base font size */
+        }
+
+        /* Navigation Bar */
+        nav {
+            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 25%, #0a3a52 75%, #1a1a2e 100%);
+            padding: 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 8px 32px rgba(0, 212, 255, 0.3);
+            animation: slideInDown 0.8s ease-out;
+        }
+
+        nav::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        .nav-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .nav-brand {
+            color: var(--accent);
+            font-size: 1.6em; /* Increased font size */
+            font-weight: 700;
+            padding: 18px 0;
+            min-width: 280px;
+            animation: textGlow 2s ease-in-out infinite;
+            letter-spacing: 1px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .nav-link {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(102, 51, 255, 0.1));
+            color: var(--text);
+            border: 2px solid rgba(0, 212, 255, 0.3);
+            padding: 12px 20px; /* Increased padding */
+            font-size: 1.05em; /* Increased font size */
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 8px;
+            white-space: nowrap;
+            font-weight: 600;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 212, 255, 0.2);
+            transition: left 0.4s;
+            z-index: -1;
+        }
+
+        .nav-link:hover::before {
+            left: 0;
+        }
+
+        .nav-link:hover {
+            transform: translateY(-3px);
+            border-color: var(--accent);
+            color: var(--accent);
+            box-shadow: 0 8px 16px rgba(0, 212, 255, 0.2);
+        }
+
+        .nav-link.active {
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            color: var(--primary);
+            border-color: var(--accent2);
+            font-weight: 700;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+            animation: glowPulse 2s ease-in-out infinite;
+        }
+
+        /* Main Content */
+        .content-wrapper {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 50px 30px;
+        }
+
+        .section {
+            display: none;
+            animation: fadeInScale 0.6s ease-out;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        /* Title Section */
+        .title-section {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(102, 51, 255, 0.1));
+            border: 2px solid rgba(0, 212, 255, 0.3);
+            color: white;
+            padding: 100px 50px;
+            border-radius: 20px;
+            text-align: center;
+            margin-bottom: 50px;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .title-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.1) 0%, transparent 70%);
+            animation: floatHover 6s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        .title-section h1 {
+            font-size: 4em; /* Increased font size */
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: textGlow 2s ease-in-out infinite;
+            position: relative;
+            z-index: 1;
+            letter-spacing: 2px;
+        }
+
+        .title-section h2 {
+            font-size: 2.5em; /* Increased font size */
+            margin-bottom: 40px;
+            color: #b0e0ff;
+            font-weight: 300;
+            animation: slideInUp 0.8s ease-out 0.2s both;
+        }
+
+        .institute-info {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(102, 51, 255, 0.15));
+            padding: 30px;
+            border-radius: 12px;
+            margin: 40px auto;
+            border: 2px solid rgba(0, 212, 255, 0.4);
+            border-left: 5px solid var(--accent);
+            max-width: 600px;
+            animation: slideInUp 0.8s ease-out 0.4s both;
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 1;
+        }
+
+        .institute-info p {
+            font-size: 1.3em; /* Increased font size */
+            margin: 10px 0;
+            color: var(--text);
+        }
+
+        /* Team Section */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .team-member {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.08), rgba(102, 51, 255, 0.08));
+            padding: 30px;
+            border-radius: 15px;
+            border: 2px solid rgba(0, 212, 255, 0.3);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            border-left: 5px solid var(--accent);
+            backdrop-filter: blur(10px);
+            animation: fadeInScale 0.6s ease-out;
+        }
+
+        .team-member:nth-child(1) { animation-delay: 0s; }
+        .team-member:nth-child(2) { animation-delay: 0.1s; }
+        .team-member:nth-child(3) { animation-delay: 0.2s; }
+        .team-member:nth-child(4) { animation-delay: 0.3s; }
+        .team-member:nth-child(5) { animation-delay: 0.4s; }
+        .team-member:nth-child(6) { animation-delay: 0.5s; }
+        .team-member:nth-child(7) { animation-delay: 0.6s; }
+
+        .team-member:hover {
+            transform: translateY(-12px);
+            border-color: var(--accent2);
+            box-shadow: 0 20px 40px rgba(0, 212, 255, 0.2);
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(102, 51, 255, 0.15));
+        }
+
+        .team-member.leader {
+            border: 2px solid var(--accent2);
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.15), rgba(0, 212, 255, 0.15));
+            animation: glowPulse 2s ease-in-out infinite;
+        }
+
+        .leader-badge {
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            color: var(--primary);
+            padding: 12px 20px; /* Increased padding */
+            border-radius: 25px;
+            font-size: 1.1em; /* Increased font size */
+            font-weight: 700;
+            display: inline-block;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 12px rgba(0, 212, 255, 0.3);
+        }
+
+        .team-name {
+            font-size: 1.5em; /* Increased font size */
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 10px;
+        }
+
+        .team-id {
+            font-size: 1.2em; /* Increased font size */
+            color: #b0e0ff;
+        }
+
+        .teacher-info {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(102, 51, 255, 0.15));
+            padding: 40px;
+            border-radius: 15px;
+            border: 2px solid rgba(0, 212, 255, 0.4);
+            border-left: 5px solid var(--accent2);
+            margin-top: 50px;
+            text-align: center;
+            animation: fadeInScale 0.8s ease-out;
+            backdrop-filter: blur(10px);
+        }
+
+        .teacher-info h3 {
+            font-size: 1.6em; /* Increased font size */
+            color: var(--accent);
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .teacher-info p {
+            font-size: 1.3em; /* Increased font size */
+            color: var(--text);
+        }
+
+        /* Content Sections */
+        .section-title {
+            font-size: 3em; /* Increased font size */
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 50px 0 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid rgba(0, 212, 255, 0.5);
+            animation: slideInDown 0.6s ease-out;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+
+        .section-content {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.08), rgba(102, 51, 255, 0.08));
+            padding: 50px;
+            border-radius: 15px;
+            border: 2px solid rgba(0, 212, 255, 0.3);
+            margin-bottom: 40px;
+            backdrop-filter: blur(10px);
+            animation: slideInUp 0.6s ease-out 0.2s both;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .content-subsection {
+            margin: 40px 0;
+            animation: slideInUp 0.6s ease-out;
+        }
+
+        .content-subsection h3 {
+            font-size: 2em; /* Increased font size */
+            color: var(--accent);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 700;
+        }
+
+        .content-subsection h4 {
+            font-size: 1.6em; /* Increased font size */
+            color: var(--accent2);
+            margin: 25px 0 15px;
+            font-weight: 700;
+        }
+
+        .content-subsection p {
+            font-size: 1.3em; /* Increased font size */
+            line-height: 1.9;
+            color: #d0d0d0;
+            margin-bottom: 18px;
+        }
+
+        .content-subsection ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .content-subsection li {
+            font-size: 1.3em; /* Increased font size */
+            line-height: 1.9;
+            color: #d0d0d0;
+            margin: 15px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        .content-subsection li::before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: bold;
+            font-size: 1.5em; /* Increased font size */
+            animation: textGlow 2s ease-in-out infinite;
+        }
+
+        /* Info Cards */
+        .info-card {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(102, 51, 255, 0.1));
+            border: 2px solid rgba(0, 212, 255, 0.4);
+            border-left: 5px solid var(--accent);
+            padding: 30px;
+            border-radius: 12px;
+            margin: 30px 0;
+            transition: all 0.4s;
+            backdrop-filter: blur(10px);
+        }
+
+        .info-card:hover {
+            transform: translateX(8px);
+            border-color: var(--accent2);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.2);
+        }
+
+        .info-card h4 {
+            color: var(--accent2);
+            font-size: 1.5em; /* Increased font size */
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(255, 165, 0, 0.12), rgba(255, 215, 0, 0.08));
+            border: 2px solid rgba(255, 165, 0, 0.4);
+            border-left: 5px solid #ffa500;
+            padding: 30px;
+            border-radius: 12px;
+            margin: 30px 0;
+            transition: all 0.4s;
+            backdrop-filter: blur(10px);
+        }
+
+        .highlight-box:hover {
+            transform: translateX(8px);
+            box-shadow: 0 10px 30px rgba(255, 165, 0, 0.15);
+        }
+
+        .highlight-box h4 {
+            color: #ffb347;
+            font-size: 1.5em; /* Increased font size */
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        /* Tables */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            border-radius: 10px;
+            overflow: hidden;
+            font-size: 1.1em; /* Increased font size */
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        }
+
+        .data-table th {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--accent);
+            padding: 20px;
+            text-align: left;
+            font-weight: 700;
+            font-size: 1.2em; /* Increased font size */
+            border-bottom: 2px solid rgba(0, 212, 255, 0.5);
+            letter-spacing: 1px;
+        }
+
+        .data-table td {
+            padding: 18px 20px;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+            color: #d0d0d0;
+            font-size: 1.1em; /* Increased font size */
+            background: var(--card-bg);
+        }
+
+        .data-table tbody tr {
+            transition: all 0.3s;
+        }
+
+        .data-table tbody tr:hover {
+            background: rgba(0, 212, 255, 0.12);
+            transform: scale(1.01);
+        }
+
+        /* Emphasis */
+        .highlight {
+            background: linear-gradient(120deg, rgba(0, 212, 255, 0.25), rgba(0, 255, 136, 0.15));
+            padding: 4px 10px;
+            border-radius: 5px;
+            font-weight: 700;
+            color: var(--accent);
+            border-bottom: 2px solid var(--accent);
+            font-size: 1.1em; /* Increased font size */
+        }
+
+        strong {
+            color: var(--accent2);
+            font-weight: 700;
+            font-size: 1.05em; /* Increased font size */
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--accent2));
+            border-radius: 4px;
+            animation: progressFill 1s ease-out;
+        }
+
+        /* Frame Visualization */
+        .frame-visualization {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 30px 0;
+            justify-content: center;
+        }
+
+        .frame-field {
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            color: var(--primary);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            min-width: 120px;
+            font-weight: 700;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            font-size: 1.1em; /* Increased font size */
+        }
+
+        .frame-field:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 212, 255, 0.3);
+        }
+
+        .frame-field .tooltip {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            width: 200px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            z-index: 10;
+            font-weight: normal;
+            font-size: 1em; /* Increased font size */
+        }
+
+        .frame-field:hover .tooltip {
+            opacity: 1;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px 20px;
+            }
+
+            .nav-brand {
+                min-width: 100%;
+                text-align: center;
+            }
+
+            .nav-links {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .section-title {
+                font-size: 2.5em;
+            }
+
+            .content-subsection h3 {
+                font-size: 1.8em;
+            }
+
+            .team-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-content {
+                padding: 30px;
+            }
+
+            .title-section {
+                padding: 60px 30px;
+            }
+
+            .title-section h1 {
+                font-size: 3em;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                font-size: 16px;
+            }
+
+            .content-wrapper {
+                padding: 25px 15px;
+            }
+
+            .section-content {
+                padding: 25px;
+            }
+
+            .content-subsection p,
+            .content-subsection li {
+                font-size: 1.2em;
+            }
+
+            .nav-link {
+                padding: 10px 12px;
+                font-size: 1em;
+            }
+
+            .title-section {
+                padding: 40px 20px;
+            }
+
+            .title-section h1 {
+                font-size: 2.2em;
+            }
+
+            .title-section h2 {
+                font-size: 1.5em;
+            }
+
+            .section-title {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <div class="nav-brand">Chapter 13: Ethernet Networks</div>
+            <div class="nav-links">
+                <button class="nav-link active" onclick="switchSection('intro', this)"><i class="fas fa-home"></i> Home</button>
+                <button class="nav-link" onclick="switchSection('team', this)"><i class="fas fa-users"></i> Team</button>
+                <button class="nav-link" onclick="switchSection('q1', this)"><i class="fas fa-network-wired"></i> IEEE 802.3</button>
+                <button class="nav-link" onclick="switchSection('q2', this)"><i class="fas fa-code"></i> Frame</button>
+                <button class="nav-link" onclick="switchSection('q3', this)"><i class="fas fa-project-diagram"></i> Topology</button>
+                <button class="nav-link" onclick="switchSection('q4', this)"><i class="fas fa-broadcast-tower"></i> Addressing</button>
+                <button class="nav-link" onclick="switchSection('q5', this)"><i class="fas fa-tachometer-alt"></i> Speed</button>
+                <button class="nav-link" onclick="switchSection('q6', this)"><i class="fas fa-exchange-alt"></i> Hub vs Switch</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Content -->
+    <div class="content-wrapper">
+        <!-- Introduction Section -->
+        <div class="section active" id="intro">
+            <div class="title-section">
+                <h1>Wired LANs – Ethernet</h1>
+                <h2>IEEE 802.3 Standard & Network Architecture</h2>
+                <div class="institute-info">
+                    <p><strong>School of Science & Technology</strong></p>
+                    <p>Bangladesh Open University (BOU) <br>Made by Ibrahim Pavel</p>
+                </div>
+            </div>
+            
+            <div class="section-content">
+                <h2 class="section-title">Presentation Overview</h2>
+                <div class="content-subsection">
+                    <h3><i class="fas fa-list-ol"></i> Topics Covered</h3>
+                    <p>This presentation explores the fundamental concepts of Ethernet networks, covering the IEEE 802.3 standard, frame structure, network topologies, addressing methods, and performance comparisons.</p>
+                    
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 100%"></div>
+                    </div>
+                    
+                    <div class="frame-visualization">
+                        <div class="frame-field">
+                            IEEE 802.3
+                            <div class="tooltip">Standard for Ethernet networks</div>
+                        </div>
+                        <div class="frame-field">
+                            Frame Structure
+                            <div class="tooltip">Ethernet frame components</div>
+                        </div>
+                        <div class="frame-field">
+                            Topologies
+                            <div class="tooltip">Physical vs Logical</div>
+                        </div>
+                        <div class="frame-field">
+                            Addressing
+                            <div class="tooltip">Unicast, Multicast, Broadcast</div>
+                        </div>
+                        <div class="frame-field">
+                            Speed Evolution
+                            <div class="tooltip">10Mbps to 1Gbps</div>
+                        </div>
+                        <div class="frame-field">
+                            Switching
+                            <div class="tooltip">Hub vs Switch</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Team Section -->
+        <div class="section" id="team">
+            <h2 class="section-title">Team Information</h2>
+            
+            <div class="section-content">
+                <h3 style="text-align: center; font-size: 2em; color: var(--accent); margin-bottom: 40px; letter-spacing: 2px;">TEAM CIPHER SQUAD(AURA)💎</h3>
+                
+                <div class="team-grid">
+                    <div class="team-member leader">
+                        <div class="leader-badge">Team Leader</div>
+                        <div class="team-name">🐐Ibrahim Pavel 🐎</div>
+                        <div class="team-id">ID: 20-0-52-801-004</div>
+                    </div>
+                    
+                    <div class="team-member">
+                        <div class="team-name">🦁A.B.M. Anowar Hossen Sohag</div>
+                        <div class="team-id">ID: 20-0-52-801-042</div>
+                    </div>
+                    
+                    <div class="team-member">
+                        <div class="team-name">🐥Safkat Jamil Imon</div>
+                        <div class="team-id">ID: 20-0-52-801-061</div>
+                    </div>
+                    
+                    <div class="team-member">
+                        <div class="team-name">🦋Md Al Amin Miah</div>
+                        <div class="team-id">ID: 20-0-52-801-009</div>
+                    </div>
+                    
+                    <div class="team-member">
+                        <div class="team-name">🦯Abdullah Al Mamun</div>
+                        <div class="team-id">ID: 20-0-52-801-038</div>
+                    </div>
+                    
+                    <div class="team-member">
+                        <div class="team-name">🦜Nazmul Huda</div>
+                        <div class="team-id">ID: 20-0-52-801-031</div>
+                    </div>
+                    
+                    <div class="team-member">
+                        <div class="team-name">😎S.M. Mozammel Hossain Imon</div>
+                        <div class="team-id">ID: 20-0-52-801-033</div>
+                    </div>
+                </div>
+
+                <div class="teacher-info">
+                    <h3>Course Instructor</h3>
+                    <p><strong>Dr. Mehedi Hasan Talukder
+                       <br> Professor</strong><br> – Adjunct Faculty <br>SST,BOU</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Q1 -->
+        <div class="section" id="q1">
+            <h2 class="section-title">Q1: IEEE 802.3 Standard & MAC Sublayer</h2>
+            
+            <div class="section-content">
+                <div class="content-subsection">
+                    <h3><i class="fas fa-file-alt"></i> Overview of IEEE 802.3</h3>
+                    <p>The <span class="highlight">IEEE 802.3 standard</span> defines comprehensive specifications for Ethernet networks, governing how data is transmitted across local area networks (LANs). This standard encompasses two critical layers of network communication.</p>
+                </div>
+
+                <div class="info-card">
+                    <h4><i class="fas fa-layer-group"></i> Core Layers Defined by IEEE 802.3</h4>
+                    <ul>
+                        <li><strong>Physical Layer:</strong> Specifies how data is converted into electrical signals and transmitted through physical media</li>
+                        <li><strong>Data Link Layer (MAC Sublayer):</strong> Manages network access control and ensures orderly data transmission among multiple devices</li>
+                    </ul>
+                </div>
+
+                <div class="content-subsection">
+                    <h3><i class="fas fa-tasks"></i> MAC Sublayer: Function and Purpose</h3>
+                    <p>The Media Access Control (MAC) sublayer serves as the traffic management system for Ethernet networks. It coordinates device access to the shared communication medium, preventing data collisions and ensuring fair network utilization.</p>
+                </div>
+
+                <div class="content-subsection">
+                    <h4><i class="fas fa-traffic-light"></i> CSMA/CD Protocol Framework</h4>
+                    <p>The MAC sublayer implements <span class="highlight">CSMA/CD</span> (Carrier Sense Multiple Access with Collision Detection), a fundamental protocol that manages network access:</p>
+                </div>
+
+                <div class="info-card">
+                    <h4><i class="fas fa-search"></i> Carrier Sense (CS)</h4>
+                    <p>Devices monitor the network medium before transmission. Each device verifies that no other device is currently transmitting before initiating data transfer.</p>
+                </div>
+
+                <div class="info-card">
+                    <h4><i class="fas fa-users"></i> Multiple Access (MA)</h4>
+                    <p>All devices share equal rights to network access. The protocol ensures equitable medium utilization without centralized control of transmission authority.</p>
+                </div>
+
+                <div class="info-card">
+                    <h4><i class="fas fa-exclamation-triangle"></i> Collision Detection (CD)</h4>
+                    <p>The system continuously monitors for simultaneous transmissions. When two devices transmit concurrently, the collision is immediately detected and both transmissions are terminated.</p>
+                </div>
+
+                <div class="highlight-box">
+                    <h4><i class="fas fa-cogs"></i> Collision Resolution Procedure</h4>
+                    <ul>
+                        <li>Both transmitting devices immediately cease transmission upon collision detection</li>
+                        <li>A jam signal is broadcast to notify all network devices of the collision event</li>
+                        <li>Each device implements exponential backoff, waiting a random duration before retry</li>
+                        <li>Transmission is attempted again after the random backoff interval</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Q2 -->
+        <div class="section" id="q2">
+            <h2 class="section-title">Q2: Ethernet Frame Structure</h2>
+            
+            <div class="section-content">
+                <p style="font-size: 1.3em; color: #d0d0d0; margin-bottom: 25px;">The Ethernet frame consists of seven distinct components, each serving a specific function in reliable data delivery.</p>
+
+                <div class="frame-visualization">
+                    <div class="frame-field">
+                        Preamble
+                        <div class="tooltip">7 bytes - Synchronizes receiving stations</div>
+                    </div>
+                    <div class="frame-field">
+                        SFD
+                        <div class="tooltip">1 byte - Start Frame Delimiter</div>
+                    </div>
+                    <div class="frame-field">
+                        Destination
+                        <div class="tooltip">6 bytes - MAC address of destination</div>
+                    </div>
+                    <div class="frame-field">
+                        Source
+                        <div class="tooltip">6 bytes - MAC address of source</div>
+                    </div>
+                    <div class="frame-field">
+                        Type/Length
+                        <div class="tooltip">2 bytes - Protocol type or frame length</div>
+                    </div>
+                    <div class="frame-field">
+                        Data
+                        <div class="tooltip">46-1500 bytes - Payload data</div>
+                    </div>
+                    <div class="frame-field">
+                        FCS
+                        <div class="tooltip">4 bytes - Frame Check Sequence (CRC)</div>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <h4><i class="fas fa-sync-alt"></i> 1. Preamble (7 bytes)</h4>
+                    <p><strong>Pattern:</strong> Binary sequence 10101010 repeated seven times</p>
+                    <p><strong>Function:</strong> Enables receiver clock synchronization with sender timing</p>
+                </div>
+
+                <div class="info-card">
+                    <h4><i class="fas fa-flag"></i> 2. Start Frame Delimiter (SFD) (1 byte)</h4>
+                    <p><strong>Pattern:</strong> 10101011</p>
+                    <p><strong>Function:</strong> Marks the definitive beginning of the data frame</p>
+                </div>
+
+                <div class="info-card">
+                    <h4><i class="fas fa-location-arrow"></i> 3. Destination Address (6 bytes)</h4>
+                    <p><strong>Content:</strong> 48-bit MAC address of the recipient device</p>
+                    <p><strong>Example:</strong> 00:1A:2B:3C:4D:5E</p>
+                </div>
+
+                <div class="info-card">
+                    <h4><i class="fas fa-user"></i> 4. Source Address (6 bytes)</h4>
+                    <p><strong>Content:</strong> 48-bit MAC address of the transmitting device</p>
+                    <p><strong>Example:</strong> A1:B2:C3:D4:E5:F6</p>
+                </div>
+
+                <div class="info-card">
+                    <h4><i class="fas fa-ruler"></i> 5. Length/Type Field (2 bytes)</h4>
+                    <p><strong>Content:</strong> Specifies either frame data length or protocol type</p>
+                    <p><strong>Function:</strong> Enables receiver interpretation of frame content</p>
+                </div>
+
+                <div class="info-card">
+                    <h4><i class="fas fa-database"></i> 6. Data and Padding (46-1500 bytes)</h4>
+                    <p><strong>Content:</strong> Payload data from upper-layer protocols</p>
+                    <p><strong>Minimum Length:</strong> 46 bytes (padding added if necessary)</p>
+                </div>
+
+                <div class="info-card">
+                    <h4><i class="fas fa-shield-alt"></i> 7. Frame Check Sequence (CRC) (4 bytes)</h4>
+                    <p><strong>Content:</strong> 32-bit cyclic redundancy check value</p>
+                    <p><strong>Function:</strong> Enables detection of transmission errors</p>
+                </div>
+
+                <div class="highlight-box">
+                    <h4><i class="fas fa-info-circle"></i> Frame Structure Significance</h4>
+                    <ul>
+                        <li>Minimum total frame size: 64 bytes (essential for collision detection)</li>
+                        <li>Maximum frame size: 1518 bytes (including headers and CRC)</li>
+                        <li>Preamble and SFD provide timing synchronization</li>
+                        <li>CRC ensures data integrity verification</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Q3 -->
+        <div class="section" id="q3">
+            <h2 class="section-title">Q3: Physical vs Logical Topology</h2>
+            
+            <div class="section-content">
+                <div class="content-subsection">
+                    <h3><i class="fas fa-project-diagram"></i> Topology Classifications</h3>
+                    <p>Network topology can be analyzed from two distinct perspectives: the physical arrangement of hardware and the logical flow of data communication. These perspectives often differ in modern Ethernet implementations.</p>
+                </div>
+
+                <div class="info-card">
+                    <h4><i class="fas fa-star"></i> Physical Topology: Star Configuration</h4>
+                    <p><strong>Definition:</strong> The actual spatial arrangement of network devices and cabling</p>
+                    <ul>
+                        <li>Centralized connection architecture with dedicated links to each device</li>
+                        <li>Enhanced reliability: individual device failures do not affect remaining network</li>
+                        <li>Simplified troubleshooting and device addition procedures</li>
+                        <li>Predominant topology in contemporary network deployments</li>
+                    </ul>
+                </div>
+
+                <div class="info-card">
+                    <h4><i class="fas fa-bus"></i> Logical Topology: Bus Configuration</h4>
+                    <p><strong>Definition:</strong> The conceptual path data follows through the network</p>
+                    <ul>
+                        <li>Data transmission occurs on a shared medium accessible to all devices</li>
+                        <li>Broadcast transmissions reach all network participants simultaneously</li>
+                        <li>CSMA/CD protocol assumes shared medium access model</li>
+                        <li>Maintains backward compatibility with legacy Ethernet implementations</li>
+                    </ul>
+                </div>
+
+                <div class="highlight-box">
+                    <h4><i class="fas fa-lightbulb"></i> Topology Divergence Explanation</h4>
+                    <p>Modern Ethernet networks employ physical star topology with central switches while maintaining logical bus topology semantics. This hybrid design achieves reliability benefits while preserving protocol compatibility.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Q4 -->
+        <div class="section" id="q4">
+            <h2 class="section-title">Q4: Addressing Types in Ethernet</h2>
+            
+            <div class="section-content">
+                <div class="content-subsection">
+                    <h3><i class="fas fa-address-card"></i> MAC Address Classification</h3>
+                    <p>Ethernet supports three distinct addressing modes, each serving specific communication requirements within local area networks.</p>
+                </div>
+
+                <div class="info-card">
+                    <h4><i class="fas fa-user"></i> Unicast Addressing (One-to-One)</h4>
+                    <p><strong>Definition:</strong> Communication between a single sender and single recipient</p>
+                    <p><strong>Example MAC:</strong> 00:1A:2B:3C:4D:5E</p>
+                    <p><strong>Identification:</strong> Last bit of first octet = 0</p>
+                    <p><strong>Applications:</strong> Web browsing, email, file transfers</p>
+                </div>
+
+                <div class="info-card">
+                    <h4><i class="fas fa-users"></i> Multicast Addressing (One-to-Many)</h4>
+                    <p><strong>Definition:</strong> Communication from one sender to designated group</p>
+                    <p><strong>Example MAC:</strong> 01:00:5E:00:00:01</p>
+                    <p><strong>Identification:</strong> Last bit of first octet = 1</p>
+                    <p><strong>Applications:</strong> Video streaming, live conferences, group distribution</p>
+                </div>
+
+                <div class="info-card">
+                    <h4><i class="fas fa-globe"></i> Broadcast Addressing (One-to-All)</h4>
+                    <p><strong>Definition:</strong> Communication from sender to all devices on network</p>
+                    <p><strong>Example MAC:</strong> FF:FF:FF:FF:FF:FF</p>
+                    <p><strong>Identification:</strong> All bits set to 1 (hexadecimal F)</p>
+                    <p><strong>Applications:</strong> DHCP requests, ARP queries, network discovery</p>
+                </div>
+
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Addressing Type</th>
+                            <th>Recipient Count</th>
+                            <th>Typical Use Case</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Unicast</strong></td>
+                            <td>Single device</td>
+                            <td>Web browsing, email, file transfer</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Multicast</strong></td>
+                            <td>Specific group</td>
+                            <td>Video streaming, multimedia conferencing</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Broadcast</strong></td>
+                            <td>All devices</td>
+                            <td>DHCP, ARP, network-wide announcements</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Q5 -->
+        <div class="section" id="q5">
+            <h2 class="section-title">Q5: Ethernet Speed Evolution and Comparison</h2>
+            
+            <div class="section-content">
+                <div class="content-subsection">
+                    <h3><i class="fas fa-chart-line"></i> Ethernet Standard Evolution</h3>
+                    <p>Ethernet technology has evolved through multiple generations, each providing significant improvements in transmission speed and capabilities.</p>
+                </div>
+
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>10 Mbps Ethernet</th>
+                            <th>100 Mbps Fast Ethernet</th>
+                            <th>1 Gbps Gigabit Ethernet</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Transmission Speed</strong></td>
+                            <td>10 Megabits/sec</td>
+                            <td>100 Megabits/sec (10x faster)</td>
+                            <td>1000 Megabits/sec (100x faster)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Encoding Method</strong></td>
+                            <td>Manchester</td>
+                            <td>4B/5B</td>
+                            <td>8B/10B</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Physical Topology</strong></td>
+                            <td>Bus or Star</td>
+                            <td>Star only</td>
+                            <td>Star only</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Cable Types</strong></td>
+                            <td>Coaxial, UTP Cat 3</td>
+                            <td>UTP Cat 5, Fiber optic</td>
+                            <td>UTP Cat 5e/6, Fiber optic</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Maximum Distance</strong></td>
+                            <td>500m (coax), 100m (UTP)</td>
+                            <td>100m (UTP), 2 km (fiber)</td>
+                            <td>100m (UTP), 5 km (fiber)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Deployment Era</strong></td>
+                            <td>1980s–1990s</td>
+                            <td>1995–2005</td>
+                            <td>1999–Present</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="content-subsection">
+                    <h3><i class="fas fa-code"></i> Encoding Methodologies</h3>
+                </div>
+
+                <div class="info-card">
+                    <h4><i class="fas fa-wave-square"></i> Manchester Encoding (10 Mbps)</h4>
+                    <p>Each data bit requires two signal transitions. Provides excellent clock recovery but limits throughput due to increased signaling overhead.</p>
+                </div>
+
+                <div class="info-card">
+                    <h4><i class="fas fa-exchange-alt"></i> 4B/5B Encoding (100 Mbps)</h4>
+                    <p>Every four data bits are encoded as five signal bits, improving efficiency while maintaining clock recovery capability.</p>
+                </div>
+
+                <div class="info-card">
+                    <h4><i class="fas fa-bolt"></i> 8B/10B Encoding (1 Gbps)</h4>
+                    <p>Eight data bits encoded as ten signal bits provides optimal efficiency for high-speed transmission while preserving DC balance.</p>
+                </div>
+
+                <div class="highlight-box">
+                    <h4><i class="fas fa-cable"></i> Transmission Media Characteristics</h4>
+                    <ul>
+                        <li><strong>Unshielded Twisted Pair (UTP):</strong> Standard cabling, 100m distance, cost-effective</li>
+                        <li><strong>Fiber Optic Cables:</strong> Light-based transmission, 5+ km distance, immune to interference</li>
+                    </ul>
+                </div>
+
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Speed Standard</th>
+                            <th>Current Status</th>
+                            <th>Common Applications</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>10 Mbps</td>
+                            <td>Obsolete</td>
+                            <td>Legacy systems only</td>
+                        </tr>
+                        <tr>
+                            <td>100 Mbps</td>
+                            <td>Declining use</td>
+                            <td>Small office networks</td>
+                        </tr>
+                        <tr>
+                            <td>1 Gbps</td>
+                            <td>Industry standard</td>
+                            <td>Enterprise networks, data centers</td>
+                        </tr>
+                        <tr>
+                            <td>10 Gbps+</td>
+                            <td>Emerging</td>
+                            <td>High-performance data centers</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Q6 -->
+        <div class="section" id="q6">
+            <h2 class="section-title">Q6: Standard Ethernet vs Switched Ethernet Architecture</h2>
+            
+            <div class="section-content">
+                <div class="content-subsection">
+                    <h3><i class="fas fa-balance-scale"></i> Comparative Analysis: Hubs and Switches</h3>
+                    <p>The evolution from hub-based to switch-based architecture represents a fundamental advancement in network design. Both serve as connection points but operate according to distinctly different principles.</p>
+                </div>
+
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Characteristic</th>
+                            <th>Hub (Standard Ethernet)</th>
+                            <th>Switch (Switched Ethernet)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>OSI Layer</strong></td>
+                            <td>Physical Layer (Layer 1)</td>
+                            <td>Data Link Layer (Layer 2)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Intelligence Level</strong></td>
+                            <td>Passive repeater device</td>
+                            <td>Active forwarding device</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Forwarding Logic</strong></td>
+                            <td>Broadcasts to all ports</td>
+                            <td>Unicast to specific port</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Collision Behavior</strong></td>
+                            <td>Frequent collisions</td>
+                            <td>Eliminated through port isolation</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Bandwidth Distribution</strong></td>
+                            <td>Shared equally</td>
+                            <td>Dedicated per port</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Full-Duplex Operation</strong></td>
+                            <td>Not supported</td>
+                            <td>Fully supported</td>
+                        </tr>
+                        <tr>
+                            <td><strong>CSMA/CD Requirement</strong></td>
+                            <td>Essential</td>
+                            <td>Not required</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="content-subsection">
+                    <h3><i class="fas fa-hub"></i> Hub Operating Principle</h3>
+                    <p>Network hubs function as simple repeater devices at the physical layer. When receiving data on one port, hubs amplify and retransmit the signal to all other ports simultaneously.</p>
+                </div>
+
+                <div class="info-card">
+                    <h4><i class="fas fa-exclamation-circle"></i> Hub Limitations</h4>
+                    <ul>
+                        <li>Entire network bandwidth shared across all connected devices</li>
+                        <li>All devices exist in single collision domain</li>
+                        <li>Frequent collision events require CSMA/CD resolution</li>
+                        <li>Performance degradation with additional network users</li>
+                    </ul>
+                </div>
+
+                <div class="content-subsection">
+                    <h3><i class="fas fa-switch"></i> Switch Operating Principle</h3>
+                    <p>Network switches operate intelligently at the data link layer, making forwarding decisions based on destination MAC addresses. Switches maintain dynamic MAC address tables enabling intelligent frame delivery.</p>
+                </div>
+
+                <div class="info-card">
+                    <h4><i class="fas fa-check-circle"></i> Switch Advantages</h4>
+                    <ul>
+                        <li>Each port constitutes independent collision domain</li>
+                        <li>Dedicated bandwidth available to each connected device</li>
+                        <li>Full-duplex communication eliminates collision possibility</li>
+                        <li>MAC address learning enables intelligent forwarding</li>
+                        <li>Scalable architecture supporting network growth</li>
+                    </ul>
+                </div>
+
+                <div class="content-subsection">
+                    <h3><i class="fas fa-rocket"></i> Performance Enhancement Mechanisms</h3>
+                </div>
+
+                <div class="highlight-box">
+                    <h4><i class="fas fa-sitemap"></i> Microsegmentation</h4>
+                    <p>Each switch port represents an independent collision domain, eliminating shared medium contention and allowing simultaneous transmission across multiple ports.</p>
+                </div>
+
+                <div class="highlight-box">
+                    <h4><i class="fas fa-arrows-alt-h"></i> Full-Duplex Communication</h4>
+                    <p>Switched networks enable simultaneous sending and receiving on each port, effectively doubling available bandwidth compared to shared hub architectures.</p>
+                </div>
+
+                <div class="highlight-box">
+                    <h4><i class="fas fa-hdd"></i> Intelligent Buffering</h4>
+                    <p>Switches employ memory buffers to temporarily store frames when destination ports are busy, ensuring reliable delivery and eliminating data loss.</p>
+                </div>
+
+                <div class="info-card">
+                    <h4><i class="fas fa-chart-bar"></i> Performance Comparison Example</h4>
+                    <p><strong>Hub-Based Network (10 devices):</strong> 100 Mbps shared = ~10 Mbps per device</p>
+                    <p><strong>Switch-Based Network (10 devices):</strong> 100 Mbps per port × 10 = 1000 Mbps total capacity with full 100 Mbps dedicated per device</p>
+                </div>
+
+                <div class="highlight-box">
+                    <h4><i class="fas fa-building"></i> Contemporary Network Architecture</h4>
+                    <p>Network switches have become the universal standard for modern Ethernet implementations. Hub technology is considered obsolete. All modern deployments should utilize switches to ensure optimal performance, scalability, and reliability.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchSection(sectionId, element) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Show selected section
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                targetSection.classList.add('active');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            // Update nav buttons
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+            });
+            element.classList.add('active');
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Home') {
+                const homeBtn = document.querySelectorAll('.nav-link')[0];
+                switchSection('intro', homeBtn);
+            }
+        });
+
+        // Add animation to cards when they come into view
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+        
+        // Observe all cards for animation
+        document.querySelectorAll('.info-card, .highlight-box, .team-member').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            observer.observe(card);
+        });
+    </script>
+</body>
+</html>

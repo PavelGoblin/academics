@@ -1,0 +1,451 @@
+
+
+## 🔰 ১. প্রোগ্রামের গঠন (Structure)
+
+### ✅ C:
+
+```c
+#include <stdio.h>
+
+int main() {
+    printf("Hello, World!");
+    return 0;
+}
+```
+
+### ✅ C#:
+
+```csharp
+using System;
+
+class Program {
+    static void Main() {
+        Console.WriteLine("Hello, World!");
+    }
+}
+```
+
+### ✨ তুলনা:
+
+| বিষয়        | C                    | C#                    |
+| ----------- | -------------------- | --------------------- |
+| Entry Point | `main()`             | `Main()` (capital M)  |
+| Header File | `#include <stdio.h>` | `using System;`       |
+| Output      | `printf()`           | `Console.WriteLine()` |
+| Return      | `return 0;` দিতে হয়  | না দিলেও চলে          |
+
+---
+
+## 🔰 ২. ভেরিয়েবল ডিক্লারেশন (Variable Declaration)
+
+### ✅ C:
+
+```c
+int x = 10;
+float y = 5.5;
+char ch = 'A';
+```
+
+### ✅ C#:
+
+```csharp
+int x = 10;
+float y = 5.5f; // f না দিলে error
+char ch = 'A';
+```
+
+### ✨ পার্থক্য:
+
+* C# এ `float` দিলে `f` suffix দিতে হয়, যেমন: `5.5f`.
+* C# টাইপ-সেইফ ও অবজেক্ট-ওরিয়েন্টেড।
+
+---
+
+## 🔰 ৩. কন্ডিশন (if-else)
+
+### ✅ C:
+
+```c
+if(x > 5) {
+    printf("Boro");
+} else {
+    printf("Chhoto");
+}
+```
+
+### ✅ C#:
+
+```csharp
+if(x > 5) {
+    Console.WriteLine("Boro");
+} else {
+    Console.WriteLine("Chhoto");
+}
+```
+
+---
+
+## 🔰 ৪. লুপ (Looping)
+
+### ✅ C:
+
+```c
+for(int i=0; i<5; i++) {
+    printf("%d\n", i);
+}
+```
+
+### ✅ C#:
+
+```csharp
+for(int i=0; i<5; i++) {
+    Console.WriteLine(i);
+}
+```
+
+✅ `while` ও `do-while` C#-এও একইভাবে কাজ করে।
+
+---
+
+## 🔰 ৫. ফাংশন / মেথড (Functions / Methods)
+
+### ✅ C:
+
+```c
+int add(int a, int b) {
+    return a + b;
+}
+```
+
+### ✅ C#:
+
+```csharp
+int Add(int a, int b) {
+    return a + b;
+}
+```
+
+### ✨ Note:
+
+* C# এ মেথড ক্লাসের ভিতরে থাকতে হয়।
+* নামের ক্ষেত্রে C# এ CamelCase বা PascalCase বেশি ইউজ হয়।
+
+---
+
+## 🔰 ৬. ইনপুট / আউটপুট (I/O)
+
+### ✅ C:
+
+```c
+int x;
+scanf("%d", &x);
+```
+
+### ✅ C#:
+
+```csharp
+int x = Convert.ToInt32(Console.ReadLine());
+```
+
+---
+
+## 🔰 ৭. ক্লাস এবং অবজেক্ট (Object-Oriented Part)
+
+C তে OOP নেই, কিন্তু C# পুরোপুরি OOP:
+
+### ✅ C# ক্লাস:
+
+```csharp
+class Student {
+    public string Name;
+    public int Age;
+
+    public void Show() {
+        Console.WriteLine($"Name: {Name}, Age: {Age}");
+    }
+}
+```
+
+### ✅ ইউজ করা:
+
+```csharp
+Student s1 = new Student();
+s1.Name = "Pavel";
+s1.Age = 22;
+s1.Show();
+```
+
+---
+
+## 🔰 ৮. অ্যারে ও লুপ (Array & Loop)
+
+### ✅ C:
+
+```c
+int arr[3] = {1, 2, 3};
+for(int i=0; i<3; i++) {
+    printf("%d\n", arr[i]);
+}
+```
+
+### ✅ C#:
+
+```csharp
+int[] arr = {1, 2, 3};
+foreach(int item in arr) {
+    Console.WriteLine(item);
+}
+```
+
+---
+
+## 🔰 ৯. কমন ডাটাটাইপ (C vs C#)
+
+| টাইপ      | C                            | C#                        |
+| --------- | ---------------------------- | ------------------------- |
+| Integer   | int                          | int                       |
+| Float     | float                        | float                     |
+| Double    | double                       | double                    |
+| Character | char                         | char                      |
+| String    | char array (`char name[10]`) | `string` (Built-in class) |
+| Boolean   | নেই                          | `bool` (true/false)       |
+
+---
+
+## 🔰 ১০. কিছু গুরুত্বপূর্ণ পার্থক্য
+
+| বিষয়                 | C                            | C#                          |
+| -------------------- | ---------------------------- | --------------------------- |
+| Procedural           | হ্যাঁ                           | না (OOP-based)              |
+| Header File          | `#include`                   | `using`                     |
+| Manual Memory Manage | Yes (`malloc`, `free`)       | না (Garbage Collector)      |
+| Platform             | Low-level, embedded friendly | High-level, .NET platform   |
+| GUI Support          | নেই                          | Windows Forms, WPF, Xamarin |
+| Exception Handling   | নেই                          | আছে (`try-catch`)          |
+
+---
+
+
+
+OOPS Part:
+
+## 🔰 ১. ক্লাস (Class) এবং অবজেক্ট (Object)
+
+### 🧠 সংজ্ঞা:
+
+* **Class:** কাঠামো / ব্লুপ্রিন্ট
+* **Object:** ক্লাস থেকে তৈরি বাস্তব রূপ
+
+### ✅ উদাহরণ:
+
+```csharp
+class Student {
+    public string Name;
+    public int Age;
+
+    public void ShowInfo() {
+        Console.WriteLine($"Name: {Name}, Age: {Age}");
+    }
+}
+
+class Program {
+    static void Main() {
+        Student s1 = new Student(); // object তৈরি
+        s1.Name = "Pavel";
+        s1.Age = 22;
+        s1.ShowInfo();
+    }
+}
+```
+
+📌 এখানে `Student` হচ্ছে class, আর `s1` হচ্ছে object।
+
+---
+
+## 🔰 ২. কনস্ট্রাক্টর (Constructor)
+
+### 🧠 কাজ:
+
+Object তৈরি হওয়ার সময় যেটা **অটোমেটিক কল** হয়।
+
+### ✅ উদাহরণ:
+
+```csharp
+class Student {
+    public string Name;
+    public int Age;
+
+    public Student(string name, int age) {  // Constructor
+        Name = name;
+        Age = age;
+    }
+
+    public void ShowInfo() {
+        Console.WriteLine($"Name: {Name}, Age: {Age}");
+    }
+}
+
+class Program {
+    static void Main() {
+        Student s1 = new Student("Siam", 18);
+        s1.ShowInfo();
+    }
+}
+```
+
+---
+
+## 🔰 ৩. ইনক্যাপসুলেশন (Encapsulation)
+
+### 🧠 কাজ:
+
+ডেটা গোপন রেখে সেটার ওপর নিয়ন্ত্রণ রাখা। (private + public method)
+
+### ✅ উদাহরণ:
+
+```csharp
+class BankAccount {
+    private int balance = 0;
+
+    public void Deposit(int amount) {
+        if (amount > 0)
+            balance += amount;
+    }
+
+    public void ShowBalance() {
+        Console.WriteLine($"Balance: {balance}");
+    }
+}
+```
+
+---
+
+## 🔰 ৪. ইনহেরিটেন্স (Inheritance)
+
+### 🧠 কাজ:
+
+একটি ক্লাস অন্য ক্লাস থেকে বৈশিষ্ট্য **উত্তরাধিকারসূত্রে পায়**।
+
+### ✅ উদাহরণ:
+
+```csharp
+class Animal {
+    public void Sound() {
+        Console.WriteLine("Animal sound");
+    }
+}
+
+class Dog : Animal {
+    public void Bark() {
+        Console.WriteLine("Dog barks");
+    }
+}
+
+class Program {
+    static void Main() {
+        Dog d = new Dog();
+        d.Sound();  // base class এর method
+        d.Bark();   // child class এর method
+    }
+}
+```
+
+---
+
+## 🔰 ৫. পলিমরফিজম (Polymorphism)
+
+### 🧠 মানে:
+
+একটি জিনিস অনেকভাবে কাজ করতে পারে।
+
+### ✅ উদাহরণ (Method Overriding):
+
+```csharp
+class Animal {
+    public virtual void Sound() {
+        Console.WriteLine("Animal sound");
+    }
+}
+
+class Cat : Animal {
+    public override void Sound() {
+        Console.WriteLine("Meow");
+    }
+}
+
+class Program {
+    static void Main() {
+        Animal a = new Cat();  // Parent type, child object
+        a.Sound(); // Output: Meow
+    }
+}
+```
+
+---
+
+## 🔰 ৬. অ্যাবস্ট্রাকশন (Abstraction)
+
+### 🧠 কাজ:
+
+প্রয়োজনীয় জিনিস দেখানো, অপ্রয়োজনীয় গোপন রাখা।
+
+### ✅ উদাহরণ (Abstract Class):
+
+```csharp
+abstract class Shape {
+    public abstract void Draw();
+}
+
+class Circle : Shape {
+    public override void Draw() {
+        Console.WriteLine("Drawing Circle");
+    }
+}
+
+class Program {
+    static void Main() {
+        Shape s = new Circle();
+        s.Draw();  // Output: Drawing Circle
+    }
+}
+```
+
+---
+
+## 🔰 ৭. ইন্টারফেস (Interface)
+
+### 🧠 কাজ:
+
+একটি চুক্তির মতো। যেই class implement করবে, তাকে সব method define করতেই হবে।
+
+### ✅ উদাহরণ:
+
+```csharp
+interface IAnimal {
+    void Speak();
+}
+
+class Cow : IAnimal {
+    public void Speak() {
+        Console.WriteLine("Hum hum");
+    }
+}
+```
+
+---
+
+## 🔚 উপসংহার (Summary):
+
+| টপিক          | ব্যাখ্যা                              |
+| ------------- | ---------------------------------  |
+| Class         | ব্লুপ্রিন্ট / কাঠামো                    |
+| Object        | ক্লাস থেকে তৈরি বস্তু                   |
+| Constructor   | Object তৈরি হলে যেটা চলেই           |
+| Encapsulation | প্রোপার্টি গোপন + নিয়ন্ত্রণ               |
+| Inheritance   | বৈশিষ্ট্য উত্তরাধিকার                    |
+| Polymorphism  | একই method → আলাদা আচরণ         |
+| Abstraction   | দরকারি জিনিস সামনে, বাকিটা লুকানো   |
+| Interface     | সম্পূর্ণ Abstract + চুক্তি               |
+
+---
+

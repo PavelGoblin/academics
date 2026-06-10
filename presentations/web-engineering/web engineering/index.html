@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cookies & Sessions — High-Level Design</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --navy:#0a0e27; --navy2:#111638; --navy3:#1a2040;
+  --b:#004D9D; --b2:#0066cc; --b3:#3399ff;
+  --r:#A50044; --r2:#cc0055; --r3:#ff3377;
+  --g:#FFCD00; --g2:#ffd633; --g3:#ffe680;
+  --text:#e8ecf4; --text2:#8892b0; --text3:#4a5278;
+  --inv:#ffffff; --inv-dim:rgba(255,255,255,0.06);
+  --glass:rgba(255,255,255,0.04); --glass-border:rgba(255,255,255,0.08);
+  --nav-bg:rgba(10,14,39,0.85);
+  --radius:16px; --radius-lg:24px;
+}
+[data-theme="navy"]{--navy:#0a0e27;--navy2:#111638;--navy3:#1a2040;--b:#004D9D;--b2:#0066cc;--b3:#3399ff;--r:#A50044;--r2:#cc0055;--r3:#ff3377;--g:#FFCD00;--g2:#ffd633;--g3:#ffe680}
+[data-theme="midnight"]{--navy:#0d0d2b;--navy2:#151540;--navy3:#1f1f55;--b:#7c3aed;--b2:#8b5cf6;--b3:#a78bfa;--r:#0d9488;--r2:#14b8a6;--r3:#2dd4bf;--g:#fbbf24;--g2:#fcd34d;--g3:#fde68a}
+[data-theme="forest"]{--navy:#0a1a0f;--navy2:#0f2415;--navy3:#16301e;--b:#059669;--b2:#10b981;--b3:#34d399;--r:#b45309;--r2:#d97706;--r3:#f59e0b;--g:#fbbf24;--g2:#fcd34d;--g3:#fde68a}
+[data-theme="sunset"]{--navy:#1a0a0a;--navy2:#2a1010;--navy3:#3a1818;--b:#dc2626;--b2:#ef4444;--b3:#f87171;--r:#ea580c;--r2:#f97316;--r3:#fb923c;--g:#fbbf24;--g2:#fcd34d;--g3:#fde68a}
+[data-theme="ocean"]{--navy:#05101a;--navy2:#091c2e;--navy3:#0e2842;--b:#0891b2;--b2:#06b6d4;--b3:#22d3ee;--r:#0284c7;--r2:#0ea5e9;--r3:#38bdf8;--g:#facc15;--g2:#fde047;--g3:#fef08a}
+[data-theme="rose"]{--navy:#1a0510;--navy2:#2e091c;--navy3:#420e28;--b:#db2777;--b2:#ec4899;--b3:#f472b6;--r:#9333ea;--r2:#a855f7;--r3:#c084fc;--g:#fbbf24;--g2:#fcd34d;--g3:#fde68a}
+[data-theme="mono"]{--navy:#0a0a0a;--navy2:#1a1a1a;--navy3:#2a2a2a;--b:#6b7280;--b2:#9ca3af;--b3:#d1d5db;--r:#4b5563;--r2:#6b7280;--r3:#9ca3af;--g:#e5e7eb;--g2:#f3f4f6;--g3:#f9fafb}
+[data-theme="cyber"]{--navy:#0a0a14;--navy2:#0f0f1f;--navy3:#14142a;--b:#00ff41;--b2:#39ff14;--b3:#7dff73;--r:#ff003c;--r2:#ff3366;--r3:#ff6699;--g:#00ffff;--g2:#33ffff;--g3:#66ffff}
+[data-theme="snow"]{--navy:#f0f2f5;--navy2:#ffffff;--navy3:#e4e7eb;--b:#2563eb;--b2:#3b82f6;--b3:#60a5fa;--r:#dc2626;--r2:#ef4444;--r3:#f87171;--g:#d97706;--g2:#f59e0b;--g3:#fbbf24;--text:#1e293b;--text2:#475569;--text3:#94a3b8;--inv:#1e293b;--inv-dim:rgba(0,0,0,0.06);--glass:rgba(255,255,255,0.8);--glass-border:rgba(0,0,0,0.08);--nav-bg:rgba(240,242,245,0.9)}
+body{font-family:'Inter',sans-serif;background:var(--navy);color:var(--text);overflow-x:hidden;cursor:default;transition:background 0.5s,color 0.5s}
+::selection{background:var(--b3);color:#fff}
+
+/* ===== CANVAS BG ===== */
+#particleCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
+
+/* ===== PROGRESS BAR ===== */
+#progressBar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--b),var(--r),var(--g));z-index:1000;transition:width 0.1s;width:0%}
+
+/* ===== NAV ===== */
+.top-nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 32px;display:flex;justify-content:space-between;align-items:center;transition:all 0.4s}
+.top-nav.scrolled{background:var(--nav-bg);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--glass-border)}
+.top-nav .logo{font-weight:800;font-size:15px;background:linear-gradient(135deg,var(--b3),var(--r3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-0.5px}
+.top-nav .links{display:flex;gap:8px}
+.top-nav .links a{text-decoration:none;font-size:12px;font-weight:500;color:var(--text2);padding:6px 12px;border-radius:8px;transition:all 0.3s;cursor:pointer}
+.top-nav .links a:hover{color:var(--inv);background:var(--glass)}
+.top-nav .links a.active{color:var(--inv);background:rgba(0,77,157,0.2)}
+#autoPlayBtn{background:var(--glass);border:1px solid var(--glass-border);color:var(--text2);padding:6px 14px;border-radius:8px;cursor:pointer;font-size:12px;font-family:'Inter',sans-serif;transition:all 0.3s}
+#autoPlayBtn:hover{color:var(--inv);border-color:var(--g);background:rgba(255,205,0,0.1)}
+.nav-btn{background:var(--glass);border:1px solid var(--glass-border);color:var(--text2);padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;font-family:'Inter',sans-serif;transition:all 0.3s;line-height:1}
+.nav-btn:hover{color:var(--inv);border-color:var(--b2);background:rgba(0,102,204,0.1)}
+
+/* ===== THEME SWITCHER ===== */
+.theme-palette{position:fixed;top:70px;right:16px;z-index:200;display:none;flex-wrap:wrap;gap:6px;padding:12px;background:var(--nav-bg);border:1px solid var(--glass-border);border-radius:14px;backdrop-filter:blur(24px);max-width:220px}
+.theme-palette.open{display:flex}
+.theme-swatch{width:36px;height:36px;border-radius:10px;border:2px solid transparent;cursor:pointer;transition:all 0.2s;position:relative}
+.theme-swatch:hover{transform:scale(1.15);border-color:rgba(255,255,255,0.3)}
+.theme-swatch.active{border-color:#fff;box-shadow:0 0 12px rgba(255,255,255,0.15)}
+.theme-swatch .tooltip{position:absolute;top:-28px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.9);color:#fff;padding:3px 8px;border-radius:6px;font-size:9px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity 0.2s}
+.theme-swatch:hover .tooltip{opacity:1}
+
+/* ===== HERO ===== */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 24px;position:relative;z-index:1}
+.hero h1{font-size:clamp(40px,5.5vw,80px);font-weight:900;letter-spacing:-3px;color:var(--inv);line-height:1.05;text-shadow:0 0 80px rgba(0,102,204,0.3)}
+.hero h1 .gtext{background:linear-gradient(135deg,#60a5fa,#f472b6,#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero .tagline{font-size:clamp(16px,1.4vw,22px);color:var(--text2);max-width:640px;margin:20px auto 36px;line-height:1.6}
+.hero .meta{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
+.hero .meta>div{padding:14px 28px;background:var(--glass);border:1px solid var(--glass-border);border-radius:12px;backdrop-filter:blur(12px);transition:all 0.3s}
+.hero .meta>div:hover{background:var(--inv-dim);transform:translateY(-2px)}
+.hero .meta .lbl{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;font-weight:600}
+.hero .meta .val{font-size:15px;color:var(--inv);font-weight:600;margin-top:3px}
+.scroll-hint{position:absolute;bottom:36px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--text3);font-size:11px;animation:floatDown 2.5s ease-in-out infinite;z-index:1}
+@keyframes floatDown{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(10px)}}
+.scroll-hint svg{filter:drop-shadow(0 0 6px rgba(255,205,0,0.3))}
+.hero-glow{position:absolute;width:600px;height:600px;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:0}
+.hero-glow.g1{background:rgba(0,77,157,0.15);top:-200px;right:-100px}
+.hero-glow.g2{background:rgba(165,0,68,0.1);bottom:-200px;left:-100px}
+
+/* ===== SECTIONS ===== */
+section{padding:100px 24px;max-width:1120px;margin:0 auto;position:relative;z-index:1}
+section h2{font-size:clamp(30px,2.8vw,48px);font-weight:800;letter-spacing:-1.5px;margin-bottom:10px;color:var(--inv)}
+section h2 .hl{background:linear-gradient(135deg,var(--b3),var(--r3));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+section>.sub{font-size:16px;color:var(--text2);margin-bottom:36px;max-width:620px;line-height:1.6}
+.section-label{display:inline-flex;padding:5px 14px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:12px;background:var(--glass);border:1px solid var(--glass-border);color:var(--text2)}
+
+/* ===== GLASS CARD ===== */
+.glass-card{background:var(--glass);border:1px solid var(--glass-border);border-radius:var(--radius-lg);padding:28px;backdrop-filter:blur(12px);transition:all 0.4s cubic-bezier(0.23,1,0.32,1)}
+.glass-card:hover{background:var(--inv-dim);border-color:var(--glass-border);transform:translateY(-4px)}
+.glass-card .icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:14px;background:var(--glass);border:1px solid var(--glass-border)}
+.glass-card h4{font-size:17px;font-weight:700;margin-bottom:8px;color:var(--inv)}
+.glass-card p{font-size:13px;color:var(--text2);line-height:1.6}
+
+/* ===== GRID ===== */
+.grid{display:grid;gap:16px;margin-top:10px}
+.g2{grid-template-columns:1fr 1fr}
+.g3{grid-template-columns:1fr 1fr 1fr}
+
+/* ===== INTERACTIVE TABS ===== */
+.tabs-wrap{background:var(--glass);border:1px solid var(--glass-border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:20px}
+.tabs-header{display:flex;border-bottom:1px solid var(--glass-border)}
+.tab{flex:1;padding:16px 20px;text-align:center;cursor:pointer;font-weight:600;font-size:13px;color:var(--text2);transition:all 0.3s;background:transparent;border:none;font-family:'Inter',sans-serif;position:relative}
+.tab:hover{color:var(--inv);background:var(--inv-dim)}
+.tab.active{color:var(--inv);background:rgba(0,77,157,0.12)}
+.tab.active::after{content:'';position:absolute;bottom:0;left:25%;width:50%;height:2px;background:linear-gradient(90deg,var(--b),var(--r));border-radius:2px}
+.tab-panel{display:none;padding:24px}
+.tab-panel.active{display:block;animation:fadeSlide 0.4s ease}
+@keyframes fadeSlide{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* ===== VISUAL ARCHITECTURE DIAGRAM ===== */
+.arch{display:flex;align-items:center;justify-content:center;gap:24px;padding:24px 0;flex-wrap:wrap}
+.arch-box{padding:20px 28px;border-radius:var(--radius);text-align:center;min-width:160px}
+.arch-box h5{font-size:14px;font-weight:700;margin-bottom:6px}
+.arch-box p{font-size:11px;color:var(--text2);line-height:1.4}
+.arch-box.client{background:rgba(0,77,157,0.12);border:1px solid rgba(0,102,204,0.2)}
+.arch-box.client h5{color:var(--b3)}
+.arch-box.server{background:rgba(165,0,68,0.12);border:1px solid rgba(204,0,85,0.2)}
+.arch-box.server h5{color:var(--r3)}
+.arch-arrow{font-size:28px;color:var(--text3);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:0.4}50%{opacity:1}}
+.arch-label{font-size:11px;color:var(--text3);margin-top:6px;letter-spacing:0.5px}
+
+/* ===== DATA FLOW ROW ===== */
+.flow-row{display:flex;align-items:center;gap:8px;justify-content:center;flex-wrap:wrap;padding:12px 0}
+.flow-node{padding:8px 18px;border-radius:10px;font-size:12px;font-weight:600;background:var(--glass);border:1px solid var(--glass-border);color:var(--text2)}
+.flow-node.active{background:rgba(0,102,204,0.15);border-color:rgba(0,102,204,0.3);color:var(--b3)}
+.flow-node.server{background:rgba(165,0,68,0.12);border-color:rgba(204,0,85,0.2);color:var(--r3)}
+.flow-arr{color:var(--text3);font-size:14px}
+
+/* ===== COMPARE SIDES ===== */
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:10px}
+.cmp-side{padding:28px;border-radius:var(--radius-lg);border:1px solid var(--glass-border);background:var(--glass);backdrop-filter:blur(8px)}
+.cmp-side h4{font-size:18px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.cmp-side ul{list-style:none}
+.cmp-side ul li{padding:7px 0;font-size:13px;line-height:1.5;padding-left:22px;position:relative;color:var(--text2)}
+.cmp-side ul li::before{content:'\2713';position:absolute;left:0;font-weight:700;font-size:14px}
+.cmp-c h4{color:var(--b3)}.cmp-c ul li::before{color:var(--b3)}
+.cmp-s h4{color:var(--r3)}.cmp-s ul li::before{color:var(--r3)}
+
+/* ===== STEPPER ===== */
+.stepper{display:flex;flex-direction:column;gap:8px}
+.step{display:flex;gap:16px;align-items:flex-start;padding:16px 20px;background:var(--glass);border:1px solid var(--glass-border);border-radius:14px;transition:all 0.4s;cursor:default}
+.step:hover{background:var(--inv-dim);transform:translateX(8px)}
+.step .s-num{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--b),var(--r));color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.step .s-text{font-size:13px;color:var(--text2);line-height:1.5}
+.step .s-text strong{color:var(--text)}
+.step.highlight{border-color:rgba(255,205,0,0.3);background:rgba(255,205,0,0.04)}
+
+/* ===== STORAGE TABLE ===== */
+.tw{width:100%;overflow-x:auto;border-radius:var(--radius-lg);border:1px solid var(--glass-border);background:var(--glass)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead th{background:rgba(255,255,255,0.03);padding:14px 18px;text-align:left;font-weight:700;font-size:12px;color:var(--text);border-bottom:1px solid var(--glass-border);letter-spacing:0.3px}
+tbody td{padding:12px 18px;border-bottom:1px solid rgba(255,255,255,0.03);color:var(--text2)}
+tbody tr:hover{background:rgba(255,255,255,0.02)}
+tbody td:first-child{font-weight:600;color:var(--text)}
+
+/* ===== INSIGHT ===== */
+.insight{padding:18px 22px;margin-top:18px;border-radius:12px;background:rgba(255,205,0,0.04);border:1px solid rgba(255,205,0,0.12);font-size:13px;line-height:1.5;color:var(--text2)}
+.insight strong{color:var(--g)}
+
+/* ===== CODE ===== */
+.code-block{background:rgba(0,0,0,0.3);border:1px solid var(--glass-border);border-radius:12px;padding:16px;font-family:'Courier New',monospace;font-size:12px;line-height:1.6;color:#c9d1d9;overflow-x:auto;margin:6px 0}
+.code-block .k{color:#ff7b72}.code-block .s{color:#a5d6ff}.code-block .c{color:#8b949e}.code-block .f{color:#d2a8ff}.code-block .v{color:#79c0ff}.code-block .n{color:#7ee787}
+
+/* ===== TAG ===== */
+.tg{display:inline-block;padding:2px 8px;border-radius:5px;font-size:10px;font-weight:600;margin:1px;background:var(--glass);border:1px solid var(--glass-border)}
+.tg-b{color:var(--b3);border-color:rgba(0,102,204,0.2);background:rgba(0,102,204,0.08)}
+.tg-r{color:var(--r3);border-color:rgba(204,0,85,0.2);background:rgba(204,0,85,0.08)}
+.tg-g{color:var(--g);border-color:rgba(255,205,0,0.2);background:rgba(255,205,0,0.08)}
+.tg-grn{color:#7ee787;border-color:rgba(126,231,135,0.2);background:rgba(126,231,135,0.08)}
+
+/* ===== THEME DEMO ===== */
+.demo-wrap{padding:40px;text-align:center;border-radius:var(--radius-lg);border:1px solid var(--glass-border);background:var(--glass);backdrop-filter:blur(8px);transition:all 0.5s}
+.demo-wrap.dark{background:rgba(0,0,0,0.4);border-color:rgba(255,255,255,0.05)}
+.demo-wrap h3{font-size:18px;margin-bottom:8px;color:var(--inv)}
+.demo-wrap p{font-size:13px;color:var(--text2);margin-bottom:20px;line-height:1.5}
+.tgl{display:inline-flex;align-items:center;gap:4px;background:rgba(0,0,0,0.3);border:1px solid var(--glass-border);border-radius:40px;padding:4px;cursor:pointer}
+.tgl .opt{padding:10px 24px;border-radius:30px;font-size:13px;font-weight:600;transition:all 0.3s;border:none;background:transparent;cursor:pointer;font-family:'Inter',sans-serif;color:var(--text2)}
+.tgl .opt.active{background:linear-gradient(135deg,var(--b),var(--b2));color:#fff;box-shadow:0 4px 20px rgba(0,77,157,0.4)}
+.demo-code{font-size:11px;color:var(--text3);margin-top:16px;padding:10px 16px;background:rgba(0,0,0,0.2);border-radius:8px;display:inline-block;border:1px solid var(--glass-border)}
+
+/* ===== CARD WITH 3D TILT ===== */
+.tilt-card{transform-style:preserve-3d;perspective:1000px}
+
+/* ===== SCROLL REVEAL ===== */
+.reveal{opacity:0;transform:translateY(40px);transition:all 0.8s cubic-bezier(0.23,1,0.32,1)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* ===== PARALLAX SEPARATOR ===== */
+.sep{height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.06),transparent);max-width:1120px;margin:0 auto}
+
+/* ===== THANK YOU ===== */
+.thank-you{text-align:center;padding:120px 24px;position:relative;z-index:1;background:linear-gradient(180deg,transparent,rgba(0,77,157,0.06))}
+.thank-you h2{font-size:clamp(32px,4vw,64px);font-weight:900;color:var(--inv);letter-spacing:-2px;margin-bottom:12px}
+.thank-you p{color:var(--text2);font-size:16px}
+.thank-you .glow{width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(0,102,204,0.1),transparent);position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none}
+
+/* ===== LIVE INDICATOR ===== */
+.live-indicator{position:fixed;bottom:24px;right:24px;z-index:100;display:flex;align-items:center;gap:8px;padding:8px 16px;background:var(--glass);border:1px solid var(--glass-border);border-radius:40px;backdrop-filter:blur(12px);font-size:11px;color:var(--text3)}
+.live-indicator .dot{width:6px;height:6px;border-radius:50%;background:#7ee787;animation:pulseDot 2s infinite}
+@keyframes pulseDot{0%,100%{opacity:1}50%{opacity:0.3}}
+
+/* ===== SECTION COUNTER ===== */
+.section-counter{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:100;padding:6px 16px;background:var(--glass);border:1px solid var(--glass-border);border-radius:40px;backdrop-filter:blur(12px);font-size:11px;color:var(--text3);font-feature-settings:"tnum"}
+.section-counter span{color:var(--text);font-weight:600}
+
+/* ===== KEYBOARD HINT ===== */
+.kbd-hint{position:fixed;bottom:24px;left:24px;z-index:100;display:flex;gap:6px;align-items:center;padding:6px 14px;background:var(--glass);border:1px solid var(--glass-border);border-radius:40px;backdrop-filter:blur(12px);font-size:10px;color:var(--text3)}
+.kbd-hint kbd{padding:2px 6px;border-radius:4px;background:rgba(255,255,255,0.06);font-family:'Inter',sans-serif;font-size:10px;color:var(--text2);border:1px solid var(--glass-border)}
+
+/* ===== SNOW THEME OVERRIDES ===== */
+[data-theme="snow"] .hero-glow.g1{background:rgba(37,99,235,0.08)}
+[data-theme="snow"] .hero-glow.g2{background:rgba(220,38,38,0.05)}
+[data-theme="snow"] .hero{background:linear-gradient(135deg,#f0f2f5,#ffffff)}
+[data-theme="snow"] .hero h1{text-shadow:0 0 80px rgba(37,99,235,0.15)}
+[data-theme="snow"] .scroll-hint svg{filter:none}
+[data-theme="snow"] .thank-you{background:linear-gradient(180deg,transparent,rgba(37,99,235,0.04))}
+[data-theme="snow"] .thank-you .glow{background:radial-gradient(circle,rgba(37,99,235,0.06),transparent)}
+[data-theme="snow"] .tgl{background:rgba(0,0,0,0.08)}
+[data-theme="snow"] .code-block{background:rgba(0,0,0,0.05);color:#1e293b}
+[data-theme="snow"] .demo-code{background:rgba(0,0,0,0.04)}
+[data-theme="snow"] .sep{background:linear-gradient(90deg,transparent,rgba(0,0,0,0.06),transparent)}
+[data-theme="snow"] .demo-wrap.dark{background:rgba(0,0,0,0.6);border-color:rgba(255,255,255,0.1)}
+[data-theme="snow"] .demo-wrap.dark h3{color:#fff}
+[data-theme="snow"] .demo-wrap.dark p{color:rgba(255,255,255,0.6)}
+
+@media(max-width:700px){
+  .g2,.g3,.cmp,.tabs-header{grid-template-columns:1fr;flex-direction:column}
+  .top-nav .links{display:none}
+  .section-counter,.kbd-hint,.live-indicator{display:none}
+  .arch{flex-direction:column;gap:12px}
+  .arch-arrow{transform:rotate(90deg)}
+  section{padding:60px 16px}
+}
+</style>
+</head>
+<body>
+
+<div id="progressBar"></div>
+<canvas id="particleCanvas"></canvas>
+
+<!-- NAV -->
+<nav class="top-nav" id="topNav">
+  <div class="logo">COOKIES &amp; SESSIONS</div>
+  <div class="links">
+    <a onclick="goTo(1)">Q1</a>
+    <a onclick="goTo(2)">Q2</a>
+    <a onclick="goTo(3)">Q3</a>
+    <a onclick="goTo(4)">Q4</a>
+    <a onclick="goTo(5)">Q5</a>
+    <button class="nav-btn" onclick="toggleFullscreen()" title="Fullscreen">&#9974;</button>
+    <button class="nav-btn" onclick="toggleThemePalette()" title="Color Themes" id="themeBtn">&#127912;</button>
+    <button id="autoPlayBtn" onclick="toggleAutoPlay()">&#9654; Present</button>
+  </div>
+</nav>
+
+<!-- THEME PALETTE -->
+<div class="theme-palette" id="themePalette">
+  <div class="theme-swatch active" data-theme="navy" onclick="setColorTheme('navy')" style="background:linear-gradient(135deg,#004D9D,#A50044)"><span class="tooltip">Barca</span></div>
+  <div class="theme-swatch" data-theme="midnight" onclick="setColorTheme('midnight')" style="background:linear-gradient(135deg,#7c3aed,#0d9488)"><span class="tooltip">Midnight</span></div>
+  <div class="theme-swatch" data-theme="forest" onclick="setColorTheme('forest')" style="background:linear-gradient(135deg,#059669,#b45309)"><span class="tooltip">Forest</span></div>
+  <div class="theme-swatch" data-theme="sunset" onclick="setColorTheme('sunset')" style="background:linear-gradient(135deg,#dc2626,#ea580c)"><span class="tooltip">Sunset</span></div>
+  <div class="theme-swatch" data-theme="ocean" onclick="setColorTheme('ocean')" style="background:linear-gradient(135deg,#0891b2,#0284c7)"><span class="tooltip">Ocean</span></div>
+  <div class="theme-swatch" data-theme="rose" onclick="setColorTheme('rose')" style="background:linear-gradient(135deg,#db2777,#9333ea)"><span class="tooltip">Rose</span></div>
+  <div class="theme-swatch" data-theme="mono" onclick="setColorTheme('mono')" style="background:linear-gradient(135deg,#6b7280,#4b5563)"><span class="tooltip">Monochrome</span></div>
+  <div class="theme-swatch" data-theme="cyber" onclick="setColorTheme('cyber')" style="background:linear-gradient(135deg,#00ff41,#ff003c)"><span class="tooltip">Cyber</span></div>
+  <div class="theme-swatch" data-theme="snow" onclick="setColorTheme('snow')" style="background:linear-gradient(135deg,#ffffff,#e4e7eb);border-color:rgba(0,0,0,0.1)"><span class="tooltip">Snow White</span></div>
+</div>
+
+<!-- HERO -->
+<div class="hero" id="sec0">
+  <div class="hero-glow g1"></div>
+  <div class="hero-glow g2"></div>
+  <h1>Cookies &amp; Sessions<br><span class="gtext">in Web Engineering</span></h1>
+  <p class="tagline">An interactive deep-dive into HTTP state management — exploring 5 fundamental questions with architectural diagrams, flowcharts, and live demonstrations.</p>
+  <div class="meta">
+    <div><div class="lbl">Presented by</div><div class="val">Mohammad Ibrahim</div></div>
+    <div><div class="lbl">Course</div><div class="val">Web Engineering (Ch 1, 2, 6)</div></div>
+    <div><div class="lbl">Instructor</div><div class="val" id="instructorName">Mir Md. Kawsur</div></div>
+    <div><div class="lbl">Date</div><div class="val">June 2026</div></div>
+  </div>
+  <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;justify-content:center;">
+    <button onclick="toggleBio()" id="bioToggleBtn" style="background:var(--glass);border:1px solid var(--glass-border);color:var(--text2);padding:8px 20px;border-radius:8px;cursor:pointer;font-size:12px;font-family:'Inter',sans-serif;transition:all 0.3s;">&#128100; About the Instructor</button>
+  </div>
+  <div id="instructorBio" style="margin-top:16px;padding:20px 28px;background:var(--glass);border:1px solid var(--glass-border);border-radius:14px;backdrop-filter:blur(12px);max-width:600px;display:none;text-align:left">
+    <div style="display:flex;align-items:flex-start;gap:14px;">
+      <div style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--b),var(--r));display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff;flex-shrink:0;">&#127891;</div>
+      <div>
+        <div style="font-weight:700;font-size:15px;color:var(--inv);">Mir Md. Kawsur</div>
+        <div style="font-size:12px;color:var(--text2);margin-top:2px;">Lecturer, Faculty — Dept. of Computer Science</div>
+        <div style="font-size:12px;color:var(--text2);">Adjunct Faculty, School of Science &amp; Technology, BOU</div>
+        <div style="font-size:12px;color:var(--text3);margin-top:8px;line-height:1.5;">Passionate about coding, teaching, and spreading tech knowledge. Mir Md Kawsur, born in Dhaka, Bangladesh, completed his bachelor's and master's in computer science at American International University-Bangladesh (AIUB). With an unwavering love for coding, he embarked on a career as a programmer before transitioning to the fulfilling world of teaching.</div>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <svg width="20" height="28" viewBox="0 0 20 28" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="2"><rect x="2" y="2" width="16" height="24" rx="8"/><circle cx="10" cy="9" r="2.5" fill="rgba(255,255,255,0.2)"/></svg>
+    Scroll to explore
+  </div>
+</div>
+
+<!-- ===== Q1 ===== -->
+<section id="sec1">
+  <div class="reveal"><span class="section-label">Question 1</span></div>
+  <h2 class="reveal">Cookie <span class="hl">vs</span> Session</h2>
+  <p class="sub reveal">Visual difference — the fundamental architectural distinction in web state management
+
+  <div class="tabs-wrap reveal">
+    <div class="tabs-header">
+      <button class="tab active" onclick="switchTab('q1',0)">Architecture</button>
+      <button class="tab" onclick="switchTab('q1',1)">Analogy</button>
+      <button class="tab" onclick="switchTab('q1',2)">Comparison Table</button>
+      <button class="tab" onclick="switchTab('q1',3)">Summary</button>
+    </div>
+
+    <!-- Tab 0: Architecture Diagram -->
+    <div class="tab-panel active" id="q1p0">
+      <div class="arch">
+        <div class="arch-box client">
+          <div style="font-size:40px;margin-bottom:8px">&#127760;</div>
+          <h5>Client (Browser)</h5>
+          <p>Stores Cookies locally<br>~4KB per cookie<br>Visible to JS &amp; user</p>
+        </div>
+        <div style="text-align:center">
+          <div class="arch-arrow">&#8594;</div>
+          <div class="arch-label">HTTP Request</div>
+          <div class="arch-arrow" style="animation-delay:0.5s">&#8592;</div>
+          <div class="arch-label">Set-Cookie Header</div>
+        </div>
+        <div class="arch-box server">
+          <div style="font-size:40px;margin-bottom:8px">&#128421;</div>
+          <h5>Server</h5>
+          <p>Stores Session data<br>Redis / Memory / DB<br>Only SID in cookie</p>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px">
+        <div class="glass-card" style="text-align:center;padding:24px">
+          <div style="font-size:32px;margin-bottom:8px">&#127873;</div>
+          <h4>Cookie</h4>
+          <p>Data stored on the client. Browser sends cookie with every request to the domain.</p>
+          <div class="code-block" style="text-align:left;margin-top:12px"><span class="c">// Client-side storage</span><br><span class="k">Set-Cookie</span>: session_id=abc123; <span class="v">Secure</span>; <span class="v">HttpOnly</span></div>
+        </div>
+        <div class="glass-card" style="text-align:center;padding:24px">
+          <div style="font-size:32px;margin-bottom:8px">&#128274;</div>
+          <h4>Session</h4>
+          <p>Data stored on the server. Only a Session ID travels to the client via cookie.</p>
+          <div class="code-block" style="text-align:left;margin-top:12px"><span class="c">// Server-side storage</span><br>redis.<span class="f">set</span>(<span class="s">"session:abc123"</span>, user_data)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 1: Analogy -->
+    <div class="tab-panel" id="q1p1">
+      <div class="cmp">
+        <div class="cmp-side cmp-c" style="text-align:center;">
+          <div style="font-size:56px;margin-bottom:14px">&#128218;</div>
+          <h4 style="justify-content:center">Library Card</h4>
+          <p style="font-size:14px;color:var(--text2);line-height:1.7;">The librarian issues a membership card. You <strong>write your name on it</strong> and present it each time you borrow a book. The card stays with <strong>you</strong> (the client). If lost, the librarian no longer recognizes you — <span style="color:var(--b3)">the data goes with it.</span></p>
+        </div>
+        <div class="cmp-side cmp-s" style="text-align:center;">
+          <div style="font-size:56px;margin-bottom:14px">&#127974;</div>
+          <h4 style="justify-content:center">Bank Locker</h4>
+          <p style="font-size:14px;color:var(--text2);line-height:1.7;">The bank gives you a <strong>locker key</strong> (Session ID). Your valuables stay in the <strong>bank's vault</strong> (server). You carry the key, but the contents remain secure. Even if the key is lost, <span style="color:var(--r3)">the vault stays locked.</span></p>
+        </div>
+      </div>
+      <div class="insight"><strong>&#128161; Key Insight:</strong> LOCATION is the fundamental difference — client-side (cookie) vs server-side (session). This single architectural choice determines everything else: security, size limit, lifetime control, and blocking behavior.</div>
+    </div>
+
+    <!-- Tab 2: Table -->
+    <div class="tab-panel" id="q1p2">
+      <div class="tw">
+        <table>
+          <thead><tr><th>Dimension</th><th style="color:var(--b3)">Cookie</th><th style="color:var(--r3)">Session</th></tr></thead>
+          <tbody>
+            <tr><td>Storage Location</td><td>Client (Browser)</td><td>Server (Memory / Redis / DB)</td></tr>
+            <tr><td>Size Limit</td><td>~4KB per cookie</td><td>Virtually unlimited</td></tr>
+            <tr><td>Data Visibility</td><td>Visible to user / JS</td><td>Hidden (only Session ID exposed)</td></tr>
+            <tr><td>Security</td><td>Vulnerable to XSS &amp; CSRF</td><td>More secure — data never leaves server</td></tr>
+            <tr><td>Lifetime Control</td><td>Expires / Max-Age attribute</td><td>Server timeout (configurable)</td></tr>
+            <tr><td>User Can Block</td><td>Yes — browser settings</td><td>No — transparent to client</td></tr>
+            <tr><td>Performance Cost</td><td>No server resources</td><td>Uses server memory / storage</td></tr>
+            <tr><td>Best For</td><td>Preferences, tracking, analytics</td><td>Authentication, sensitive data</td></tr>
+            <tr><td>Analogy</td><td>Library card (data on you)</td><td>Bank locker (data in vault)</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Tab 3: Summary -->
+    <div class="tab-panel" id="q1p3">
+      <div class="g2 grid">
+        <div class="glass-card">
+          <div class="icon" style="color:var(--b3);border-color:rgba(0,102,204,0.2)">&#127873;</div>
+          <h4>Cookie Characteristics</h4>
+          <p>Client-side, ~4KB limit, visible, less secure, configurable lifetime, can be blocked, no server cost. Best for UI preferences, tracking, and non-sensitive data.</p>
+        </div>
+        <div class="glass-card">
+          <div class="icon" style="color:var(--r3);border-color:rgba(204,0,85,0.2)">&#128274;</div>
+          <h4>Session Characteristics</h4>
+          <p>Server-side, unlimited, hidden, more secure, server-controlled lifetime, cannot be blocked, uses server resources. Best for auth tokens, payments, personal data.</p>
+        </div>
+      </div>
+      <div class="insight"><strong>&#9888; Rule of Thumb:</strong> If the data fits on a cookie AND is not sensitive — use a cookie. If the data is sensitive OR exceeds 4KB — use a session.</div>
+    </div>
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<!-- ===== Q2 ===== -->
+<section id="sec2">
+  <div class="reveal"><span class="section-label">Question 2</span></div>
+  <h2 class="reveal">Facebook <span class="hl">&amp;</span> Google</h2>
+  <p class="sub reveal">How two tech giants manage billions of sessions and cookies — with fundamentally different consistency strategies at planetary scale.
+
+  <div class="tabs-wrap reveal">
+    <div class="tabs-header">
+      <button class="tab active" onclick="switchTab('q2',0)">Facebook</button>
+      <button class="tab" onclick="switchTab('q2',1)">Google</button>
+      <button class="tab" onclick="switchTab('q2',2)">Face-off</button>
+    </div>
+
+    <div class="tab-panel active" id="q2p0">
+      <div class="g2 grid">
+        <div class="glass-card">
+          <div class="icon" style="color:var(--b3);border-color:rgba(0,102,204,0.2)">&#127873;</div>
+          <h4>Cookies</h4>
+          <p><span class="tg tg-b">c_user</span> Encrypted User ID<br><span class="tg tg-b">xs</span> Session + CSRF token<br><span class="tg tg-b">datr</span> Browser fingerprint<br><span class="tg tg-b">presence</span> Messenger online status<br><br>All auth cookies: <span class="tg tg-grn">Secure</span> <span class="tg tg-grn">HttpOnly</span> <span class="tg tg-grn">SameSite=Lax</span></p>
+        </div>
+        <div class="glass-card">
+          <div class="icon" style="color:var(--r3);border-color:rgba(204,0,85,0.2)">&#9881;</div>
+          <h4>Infrastructure</h4>
+          <p><strong>TAO:</strong> Custom distributed data store — <span style="color:var(--g)">eventual consistency</span><br><strong>Memcache:</strong> Ultra-fast session caching layer<br><strong>Global replication:</strong> US, Europe, Asia data centers<br><strong>30-day session timeout</strong> &bull; Login alerts &bull; 2FA &bull; Device tracking</p>
+        </div>
+      </div>
+      <div class="insight">Facebook serves <strong>3+ billion users</strong> using <strong>eventual consistency</strong> (TAO) — data is written fast and propagated asynchronously. Your feed may not be identical across data centers, but it's available everywhere instantly.</div>
+    </div>
+
+    <div class="tab-panel" id="q2p1">
+      <div class="g2 grid">
+        <div class="glass-card">
+          <div class="icon" style="color:var(--b3);border-color:rgba(0,102,204,0.2)">&#127873;</div>
+          <h4>Cookies</h4>
+          <p><span class="tg tg-b">SID / HSID</span> Cross-service auth for *.google.com<br>One login powers: Gmail, YouTube, Drive, Maps, Calendar, Photos, Android<br><span class="tg tg-b">Access Token</span> Short-lived (~1 hour)<br><span class="tg tg-b">Refresh Token</span> Long-lived, revocable<br><span style="color:var(--g);font-weight:600">Passkeys (FIDO2):</span> Passwordless biometric login</p>
+        </div>
+        <div class="glass-card">
+          <div class="icon" style="color:var(--r3);border-color:rgba(204,0,85,0.2)">&#9881;</div>
+          <h4>Infrastructure</h4>
+          <p><strong>Spanner:</strong> Globally distributed SQL database — <span style="color:var(--g)">strong consistency</span><br><strong>ACID transactions</strong> across all regions<br><strong>99.999%</strong> availability SLA<br><strong>OAuth 2.0 + OpenID Connect</strong> for delegated auth<br><strong>Advanced Protection Program</strong> for high-risk users</p>
+        </div>
+      </div>
+      <div class="insight">Google serves <strong>1+ billion users</strong> using <strong>strong consistency</strong> (Spanner) — ACID transactions across all data centers. Your Gmail inbox looks the same whether you're in New York or Tokyo.</div>
+    </div>
+
+    <div class="tab-panel" id="q2p2">
+      <div class="cmp">
+        <div class="cmp-side cmp-c">
+          <h4>&#9889; Facebook — TAO</h4>
+          <ul>
+            <li><strong>Consistency:</strong> Eventual</li>
+            <li><strong>Speed:</strong> Very fast writes</li>
+            <li><strong>Data:</strong> May lag across regions (~seconds)</li>
+            <li><strong>Scale:</strong> 3B+ users</li>
+            <li><strong>Architecture:</strong> Social graph + cache</li>
+            <li><strong>Best for:</strong> Feed, messaging, likes</li>
+          </ul>
+        </div>
+        <div class="cmp-side cmp-s">
+          <h4>&#128269; Google — Spanner</h4>
+          <ul>
+            <li><strong>Consistency:</strong> Strong (ACID)</li>
+            <li><strong>Speed:</strong> Slightly slower writes</li>
+            <li><strong>Data:</strong> Always consistent globally</li>
+            <li><strong>Scale:</strong> 1B+ users</li>
+            <li><strong>Architecture:</strong> SQL + TrueTime API</li>
+            <li><strong>Best for:</strong> Email, cloud storage, payments</li>
+          </ul>
+        </div>
+      </div>
+      <div class="insight"><strong>&#9888; Fundamental Trade-off:</strong> Facebook chose <strong>eventual consistency</strong> (TAO) for maximum write speed and global scale. Google chose <strong>strong consistency</strong> (Spanner) for data accuracy across all services. Neither is wrong — they optimized for different products. Facebook needs you to post a status instantly; Google needs your bank transaction to be correct everywhere.</div>
+    </div>
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<!-- ===== Q3 ===== -->
+<section id="sec3">
+  <div class="reveal"><span class="section-label">Question 3</span></div>
+  <h2 class="reveal">"<span class="hl">Remember Me</span>" Implementation</h2>
+  <p class="sub reveal">Step-by-step architectural deep-dive: how persistent authentication works — from login credentials to cryptographic token rotation.
+
+  <div class="stepper reveal">
+    <div class="step"><div class="s-num">1</div><div class="s-text">User submits <strong>email + password</strong> with <strong>"Remember Me"</strong> checkbox checked</div></div>
+    <div class="step"><div class="s-num">2</div><div class="s-text">Server <strong>validates credentials</strong> against hashed password in database</div></div>
+    <div class="step"><div class="s-num">3</div><div class="s-text">Server generates a <strong>cryptographically random 256-bit token</strong></div></div>
+    <div class="step"><div class="s-num">4</div><div class="s-text">Token is <strong>SHA-256 hashed</strong> and stored in database — NEVER store the raw token!</div></div>
+    <div class="step"><div class="s-num">5</div><div class="s-text">Original (unhashed) token is sent as a <strong>persistent cookie</strong> with Max-Age=30 days<br><span class="code-block" style="margin:6px 0;font-size:11px"><span class="k">Set-Cookie</span>: remember_token=abc123...; <span class="v">Max-Age</span>=<span class="n">2592000</span>; <span class="v">Secure</span>; <span class="v">HttpOnly</span>; <span class="v">SameSite</span>=<span class="s">Lax</span>; <span class="v">Path</span>=<span class="s">/</span></span></div></div>
+    <div class="step"><div class="s-num">6</div><div class="s-text">User closes browser — <strong>cookie persists</strong> because Max-Age is set (unlike session cookies that die on close)</div></div>
+    <div class="step"><div class="s-num">7</div><div class="s-text">Next visit: browser <strong>automatically sends</strong> the remember_token cookie with the request</div></div>
+    <div class="step"><div class="s-num">8</div><div class="s-text">Server <strong>hashes the received token</strong> and looks up the hash in the database</div></div>
+    <div class="step"><div class="s-num">9</div><div class="s-text">If valid and not expired — <strong>auto-login the user</strong> by creating a new session</div></div>
+    <div class="step highlight"><div class="s-num" style="background:linear-gradient(135deg,var(--g),#ff8c00);color:#000">10</div><div class="s-text"><strong style="color:var(--g);">TOKEN ROTATION:</strong> Delete old token from DB, generate a new 256-bit token, hash it, store the hash, set a new cookie. This limits damage if a token is ever stolen — it works only until the <em>real</em> user visits the site and triggers rotation.</div></div>
+  </div>
+
+  <div class="g2 grid reveal" style="margin-top:16px">
+    <div class="glass-card">
+      <div class="icon" style="color:var(--g);border-color:rgba(255,205,0,0.2)">&#128737;</div>
+      <h4>Security Best Practices</h4>
+      <p><span class="tg tg-grn">&#10003;</span> SHA-256 hash tokens before storage<br><span class="tg tg-grn">&#10003;</span> Use <span class="tg tg-grn">Secure</span> <span class="tg tg-grn">HttpOnly</span> <span class="tg tg-grn">SameSite=Lax</span><br><span class="tg tg-grn">&#10003;</span> Token rotation on every use<br><span class="tg tg-grn">&#10003;</span> Short expiry (30 days)<br><span class="tg tg-grn">&#10003;</span> Rate-limit token validation</p>
+    </div>
+    <div class="glass-card">
+      <div class="icon" style="color:var(--r3);border-color:rgba(204,0,85,0.2)">&#9888;</div>
+      <h4>Common Mistakes</h4>
+      <p><span class="tg tg-r">&#10007;</span> Storing raw token in DB<br><span class="tg tg-r">&#10007;</span> No token rotation<br><span class="tg tg-r">&#10007;</span> Very long expiry (1 year+)<br><span class="tg tg-r">&#10007;</span> Missing Secure/HttpOnly flags<br><span class="tg tg-r">&#10007;</span> Predictable token generation</p>
+    </div>
+  </div>
+
+  <div class="insight reveal"><strong>&#9888 CRITICAL:</strong> Token rotation (step 10) is the single most important security practice in "Remember Me" implementations. It ensures that even if a persistent token is stolen via XSS or leaked traffic, it becomes invalid the next time the legitimate user visits the site. <strong>Always rotate on every use.</strong></div>
+</section>
+
+<div class="sep"></div>
+
+<!-- ===== Q4 ===== -->
+<section id="sec4">
+  <div class="reveal"><span class="section-label">Question 4</span></div>
+  <h2 class="reveal">Logout from <span class="hl">Specific Device</span></h2>
+  <p class="sub reveal">How selective session termination works — terminate only the compromised device without affecting any other active sessions.
+
+  <div class="g2 grid reveal">
+    <div class="glass-card">
+      <div class="icon" style="color:var(--g);border-color:rgba(255,205,0,0.2)">&#128161;</div>
+      <h4>Core Principle</h4>
+      <p>Each device is issued a <strong>UNIQUE Session ID (SID)</strong>. The server maintains a session store mapping SID to user data. Since each device's SID is independent, the server can selectively invalidate individual sessions.</p>
+      <p style="margin-top:12px;"><strong style="color:var(--g);">Scenario:</strong> Your phone is lost/stolen. You log into a desktop browser, go to Security Settings, and terminate only the phone session. Laptop and desktop sessions continue unaffected.</p>
+    </div>
+    <div class="glass-card">
+      <div class="icon" style="color:var(--g);border-color:rgba(255,205,0,0.2)">&#128736;</div>
+      <h4>Implementation Options</h4>
+      <p><span class="tg tg-grn">&#10003;</span> <strong>A. DB Flag</strong> — Set <code>active=FALSE</code> (Recommended)<br><span class="tg tg-grn">&#10003;</span> <strong>B. Delete Record</strong> — <code>DELETE FROM sessions WHERE id='...'</code><br><span class="tg tg-g">&#9888;</span> <strong>C. Blacklist</strong> — Add SID to revoked list (adds latency)<br><span class="tg tg-r">&#10007;</span> <strong>D. Client-side only</strong> — Deleting cookie on lost device is NOT sufficient</p>
+    </div>
+  </div>
+
+  <div class="cmp reveal" style="margin-top:14px">
+    <div class="cmp-side cmp-c">
+      <h4>&#128295; Workflow</h4>
+      <ul>
+        <li><strong>1.</strong> User navigates to Security &rarr; Active Sessions</li>
+        <li><strong>2.</strong> Dashboard displays all devices with metadata:<br><span style="color:var(--text3);font-size:12px;">"iPhone 15 — New York — Active 2 min ago"</span><br><span style="color:var(--text3);font-size:12px;">"Chrome 125/Win — San Francisco — 1 hr ago"</span><br><span style="color:var(--text3);font-size:12px;">"Safari/macOS — Tokyo — 2 days ago"</span></li>
+        <li><strong>3.</strong> User clicks "Log Out" next to the iPhone entry</li>
+        <li><strong>4.</strong> Server executes: <span class="code-block" style="display:inline;padding:2px 8px;font-size:11px">DELETE FROM sessions WHERE user_id=42 AND device_id='iphone_15'</span></li>
+        <li><strong>5.</strong> iPhone's next request gets <strong>401 Unauthorized</strong></li>
+        <li><strong>6.</strong> Laptop and desktop sessions remain fully active</li>
+      </ul>
+    </div>
+    <div class="cmp-side cmp-s">
+      <h4>&#9888; Why Client-Only Fails</h4>
+      <ul>
+        <li>Clearing the cookie on the <strong>lost device</strong> only works <em>if</em> that device makes a request</li>
+        <li>If the device is offline (stolen, turned off), the <strong>cookie is never cleared</strong></li>
+        <li>An attacker with physical access can still use the stored session</li>
+        <li>The session remains valid on the server indefinitely</li>
+        <li><strong style="color:var(--g);">Server-side invalidation</strong> is the only reliable approach:<br><span class="tg tg-grn">&#10003;</span> Immediate effect worldwide<br><span class="tg tg-grn">&#10003;</span> Works even if device is offline<br><span class="tg tg-grn">&#10003;</span> Independent per session</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="insight reveal"><strong>&#128161; Key Takeaway:</strong> Each device = unique SID. Server-side deletion = immediate, global, irreversible. Client-side cookie clearing on a lost/offline device is useless. Always implement server-side session management with a visible "Active Sessions" dashboard.</div>
+</section>
+
+<div class="sep"></div>
+
+<!-- ===== Q5 ===== -->
+<section id="sec5">
+  <div class="reveal"><span class="section-label">Question 5</span></div>
+  <h2 class="reveal">Theme: <span class="hl">Cookie or Session?</span></h2>
+  <p class="sub reveal">Should a user's dark/light mode preference be stored in a cookie or a server-side session? Click the toggle below to try a live implementation.
+
+  <div class="g3 grid reveal">
+    <div class="glass-card">
+      <div class="icon" style="color:var(--b3);border-color:rgba(0,102,204,0.2)">1</div>
+      <h4>Non-Sensitive Data</h4>
+      <p>Theme preference has <strong>zero security risk</strong>. It's a "T-shirt color, not an ATM PIN." No passwords, no personal information — just a CSS display preference.</p>
+    </div>
+    <div class="glass-card">
+      <div class="icon" style="color:var(--r3);border-color:rgba(204,0,85,0.2)">2</div>
+      <h4>Needs Persistence</h4>
+      <p>Session cookies <strong>delete on browser close</strong>. A user would lose their dark mode preference every single time they restart the browser. Persistent cookie (Max-Age=1yr) <strong>survives restarts and reboots</strong>.</p>
+    </div>
+    <div class="glass-card">
+      <div class="icon" style="color:var(--g);border-color:rgba(255,205,0,0.2)">3</div>
+      <h4>Client-Side = Faster</h4>
+      <p><strong>Cookie:</strong> JS reads &rarr; applies CSS class &rarr; <strong style="color:#7ee787;">&lt;1ms</strong><br><strong>Session:</strong> HTTP request &rarr; server reads DB &rarr; renders HTML &rarr; <strong style="color:#ff7b72;">50-500ms</strong> + flash of unstyled light mode on every page load</p>
+    </div>
+  </div>
+
+  <div class="reveal" style="margin-top:20px">
+    <div class="demo-wrap" id="themeDemoWrap">
+      <h3>Live Interactive Demo</h3>
+      <p>This toggle uses a persistent cookie to remember your theme preference across browser sessions. Close and reopen the page — the preference persists.</p>
+      <div class="tgl" id="themeTgl">
+        <button class="opt active" onclick="setTheme('light')">&#9728; Light Mode</button>
+        <button class="opt" onclick="setTheme('dark')">&#127769; Dark Mode</button>
+      </div>
+      <div class="demo-code" id="themeCodeDisplay">document.cookie = "theme=light; max-age=31536000; path=/"</div>
+      <div style="margin-top:16px;font-size:12px;color:var(--text3)">
+        Current cookie value: <span id="cookieDisplay" style="color:var(--text);font-weight:600">none</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="insight reveal" style="margin-top:16px"><strong>&#128161; Golden Rule:</strong> Use <strong style="color:var(--b3);">cookies</strong> or <strong style="color:var(--b3);">localStorage</strong> for UI preferences (theme, language, layout, font size). Use <strong style="color:var(--r3);">server sessions</strong> for sensitive data (auth tokens, payment info, personal data). When in doubt, choose the more secure option — <strong style="color:var(--r3);">sessions</strong>.</div>
+</section>
+
+<div class="sep"></div>
+
+<!-- ===== STORAGE COMPARISON ===== -->
+<section>
+  <div class="reveal"><span class="section-label">Reference</span></div>
+  <h2 class="reveal">Storage <span class="hl">Comparison</span></h2>
+  <p class="sub reveal">Side-by-side evaluation of all four browser storage mechanisms for theme preference storage.
+
+  <div class="tw reveal">
+    <table>
+      <thead><tr><th>Criterion</th><th style="color:var(--b3)">Cookie</th><th style="color:var(--r3)">Session</th><th>localStorage</th><th>sessionStorage</th></tr></thead>
+      <tbody>
+        <tr><td>Persistence</td><td><span style="color:#7ee787;">Configurable</span></td><td><span style="color:#ff7b72;">Dies on close</span></td><td><span style="color:#7ee787;">Until cleared</span></td><td><span style="color:#ff7b72;">Tab close</span></td></tr>
+        <tr><td>Server Load</td><td><span style="color:#7ee787;">None</span></td><td><span style="color:#ff7b72;">Uses resources</span></td><td><span style="color:#7ee787;">None</span></td><td><span style="color:#7ee787;">None</span></td></tr>
+        <tr><td>JS Access</td><td>HttpOnly blocks</td><td>Server-only</td><td><span style="color:#7ee787;">Always</span></td><td><span style="color:#7ee787;">Always</span></td></tr>
+        <tr><td>Size Limit</td><td>~4KB</td><td>Unlimited</td><td>~5-10MB</td><td>~5-10MB</td></tr>
+        <tr><td>Auto-sent</td><td><span style="color:#7ee787;">Yes</span></td><td><span style="color:#7ee787;">Via SID</span></td><td>No</td><td>No</td></tr>
+        <tr><td style="font-weight:700;color:var(--g);">Best for Theme</td><td><span class="tg tg-grn">&#9733; Excellent</span></td><td><span class="tg tg-r">Poor</span></td><td><span class="tg tg-grn">&#9733; Excellent</span></td><td><span class="tg tg-g">Fair</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<!-- ===== SUMMARY ===== -->
+<section>
+  <div class="reveal"><span class="section-label">Summary</span></div>
+  <h2 class="reveal">All 5 Questions — <span class="hl">Answered</span></h2>
+  <div class="grid reveal" style="margin-top:16px">
+    <div class="glass-card" style="border-left:3px solid var(--b3);">
+      <h4>Q1: Cookie vs Session</h4>
+      <p>Cookie = <strong>client storage</strong> (browser, ~4KB, visible) | Session = <strong>server storage</strong> (Redis/DB, unlimited, hidden). Location determines everything: security, size, lifetime, blocking.</p>
+    </div>
+    <div class="glass-card" style="border-left:3px solid var(--r3);">
+      <h4>Q2: Facebook &amp; Google</h4>
+      <p>Facebook uses <strong>TAO + Memcache</strong> (eventual consistency for 3B+ users). Google uses <strong>Spanner + OAuth 2.0</strong> (strong ACID consistency for 1B+ users). Different trade-offs for different products.</p>
+    </div>
+    <div class="glass-card" style="border-left:3px solid var(--g);">
+      <h4>Q3: Remember Me</h4>
+      <p>Hash token (SHA-256) &rarr; store hash in DB &rarr; persistent cookie (30-day Max-Age) &rarr; <strong style="color:var(--g);">TOKEN ROTATION</strong> on every use — the most critical security practice.</p>
+    </div>
+    <div class="glass-card" style="border-left:3px solid var(--b3);">
+      <h4>Q4: Device Logout</h4>
+      <p>Each device = <strong>unique Session ID</strong>. Server deletes/invalidates specific SID. Client-only clearing on a lost/offline device is insufficient — always invalidate server-side.</p>
+    </div>
+    <div class="glass-card" style="border-left:3px solid var(--r3);grid-column:1/-1;">
+      <h4>Q5: Theme Storage</h4>
+      <p>Use <strong style="color:var(--b3);">COOKIE</strong> or <strong style="color:var(--b3);">localStorage</strong>. <strong style="color:var(--r3);">NOT server session.</strong> Non-sensitive, needs persistence across restarts, client-side is instant, no server load, SPA-friendly.</p>
+    </div>
+  </div>
+  <div class="insight reveal"><strong>&#128161; Final Best Practices:</strong> Always use <span class="tg tg-grn">Secure</span> <span class="tg tg-grn">HttpOnly</span> <span class="tg tg-grn">SameSite=Lax</span> on authentication cookies. Hash tokens before DB storage. Rotate tokens on every use. Give users a visible session management dashboard. When in doubt about where to store data, choose the more secure option — <strong style="color:var(--r3);">sessions</strong>.</div>
+</section>
+
+<!-- ===== THANK YOU ===== -->
+<div class="thank-you">
+  <div class="glow"></div>
+  <h2 class="reveal">Thank You</h2>
+  <p class="reveal">Questions, feedback, and discussion are welcome.</p>
+</div>
+
+<!-- BOTTOM INDICATORS -->
+<div class="section-counter" id="sectionCounter">Section <span id="secNum">1</span>/6</div>
+<div class="kbd-hint"><kbd>&larr;</kbd> <kbd>&rarr;</kbd> navigate &nbsp;&middot;&nbsp; <kbd>Space</kbd> next</div>
+<div class="live-indicator"><span class="dot"></span> Interactive</div>
+
+<script>
+// ===== PARTICLE NETWORK CANVAS =====
+const canvas = document.getElementById('particleCanvas');
+const ctx = canvas.getContext('2d');
+let W, H;
+
+function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+resize(); window.addEventListener('resize', resize);
+
+const particles = [];
+const PARTICLE_COUNT = 80;
+const CONNECTION_DIST = 150;
+
+class Particle {
+  constructor() { this.reset(); }
+  reset() {
+    this.x = Math.random() * W;
+    this.y = Math.random() * H;
+    this.vx = (Math.random() - 0.5) * 0.5;
+    this.vy = (Math.random() - 0.5) * 0.5;
+    this.r = Math.random() * 2 + 1;
+  }
+  update() {
+    this.x += this.vx; this.y += this.vy;
+    if(this.x < 0 || this.x > W) this.vx *= -1;
+    if(this.y < 0 || this.y > H) this.vy *= -1;
+  }
+  draw() {
+    ctx.beginPath(); ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(255,255,255,0.3)'; ctx.fill();
+  }
+}
+
+for(let i = 0; i < PARTICLE_COUNT; i++) particles.push(new Particle());
+
+function drawParticles() {
+  ctx.clearRect(0, 0, W, H);
+  particles.forEach(p => { p.update(); p.draw(); });
+  for(let i = 0; i < particles.length; i++) {
+    for(let j = i+1; j < particles.length; j++) {
+      const dx = particles[i].x - particles[j].x;
+      const dy = particles[i].y - particles[j].y;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      if(dist < CONNECTION_DIST) {
+        ctx.beginPath();
+        ctx.moveTo(particles[i].x, particles[i].y);
+        ctx.lineTo(particles[j].x, particles[j].y);
+        ctx.strokeStyle = `rgba(255,255,255,${0.08 * (1 - dist/CONNECTION_DIST)})`;
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+      }
+    }
+  }
+  requestAnimationFrame(drawParticles);
+}
+drawParticles();
+
+// ===== SECTION TRACKING =====
+const sections = ['sec0','sec1','sec2','sec3','sec4','sec5'];
+let currentSection = 0;
+
+function updateSectionTracking() {
+  let active = 0;
+  sections.forEach((id, i) => {
+    const el = document.getElementById(id);
+    if(!el) return;
+    const rect = el.getBoundingClientRect();
+    if(rect.top <= window.innerHeight/2) active = i;
+  });
+  currentSection = active;
+  document.getElementById('secNum').textContent = Math.max(1, active);
+  document.querySelectorAll('.top-nav .links a').forEach((a, i) => {
+    a.classList.toggle('active', i === active-1);
+  });
+}
+
+// ===== PROGRESS BAR =====
+function updateProgress() {
+  const scrollTop = window.scrollY;
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+  const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+  document.getElementById('progressBar').style.width = progress + '%';
+}
+
+// ===== SCROLL EVENTS =====
+window.addEventListener('scroll', () => {
+  updateSectionTracking();
+  updateProgress();
+  document.getElementById('topNav').classList.toggle('scrolled', window.scrollY > 80);
+});
+
+// ===== SCROLL REVEAL =====
+const revealObserver = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+// ===== TAB SYSTEM =====
+function switchTab(group, idx) {
+  document.querySelectorAll(`#${group === 'q1' ? 'sec1' : 'sec2'} .tab`).forEach((t,i) => t.classList.toggle('active', i===idx));
+  document.querySelectorAll(`[id^="${group}p"]`).forEach((p,i) => p.classList.toggle('active', i===idx));
+}
+
+// ===== INSTRUCTOR BIO TOGGLE =====
+function toggleBio() {
+  const bio = document.getElementById('instructorBio');
+  const btn = document.getElementById('bioToggleBtn');
+  const isOpen = bio.style.display === 'block';
+  bio.style.display = isOpen ? 'none' : 'block';
+  btn.innerHTML = isOpen ? '&#128100; About the Instructor' : '&#128100; Hide Instructor Bio';
+}
+
+// ===== GO TO SECTION =====
+function goTo(n) {
+  const el = document.getElementById('sec' + n);
+  if(el) el.scrollIntoView({ behavior: 'smooth' });
+}
+
+// ===== KEYBOARD NAVIGATION =====
+document.addEventListener('keydown', (e) => {
+  if(e.key === 'ArrowRight' || e.key === ' ' || e.key === 'ArrowDown') {
+    e.preventDefault();
+    const next = Math.min(currentSection + 1, sections.length - 1);
+    document.getElementById(sections[next]).scrollIntoView({ behavior: 'smooth' });
+  }
+  if(e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+    e.preventDefault();
+    const prev = Math.max(currentSection - 1, 0);
+    document.getElementById(sections[prev]).scrollIntoView({ behavior: 'smooth' });
+  }
+});
+
+// ===== FULLSCREEN =====
+function toggleFullscreen() {
+  if(!document.fullscreenElement) {
+    document.documentElement.requestFullscreen();
+  } else {
+    document.exitFullscreen();
+  }
+}
+
+// ===== THEME PALETTE =====
+function toggleThemePalette() {
+  document.getElementById('themePalette').classList.toggle('open');
+}
+document.addEventListener('click', (e) => {
+  const p = document.getElementById('themePalette');
+  if(p.classList.contains('open') && !e.target.closest('#themeBtn') && !e.target.closest('.theme-palette')) {
+    p.classList.remove('open');
+  }
+});
+
+function setColorTheme(name) {
+  document.documentElement.setAttribute('data-theme', name);
+  document.cookie = "color_theme=" + name + "; path=/; max-age=31536000; SameSite=Lax";
+  document.querySelectorAll('.theme-swatch').forEach(s => s.classList.toggle('active', s.dataset.theme === name));
+  // Update particle colors
+  setTimeout(() => { document.getElementById('themePalette').classList.remove('open'); }, 200);
+  // Refresh tilt colors
+}
+
+// ===== LOAD SAVED COLOR THEME =====
+(function() {
+  const match = document.cookie.match(/(?:^|;\s*)color_theme=([^;]*)/);
+  if(match) setColorTheme(match[1]);
+})();
+
+// ===== AUTO-PLAY =====
+let autoPlayInterval = null;
+function toggleAutoPlay() {
+  const btn = document.getElementById('autoPlayBtn');
+  if(autoPlayInterval) {
+    clearInterval(autoPlayInterval); autoPlayInterval = null;
+    btn.textContent = '\u25B6 Present';
+    return;
+  }
+  btn.textContent = '\u25A0 Stop';
+  autoPlayInterval = setInterval(() => {
+    const next = currentSection + 1;
+    if(next >= sections.length) {
+      clearInterval(autoPlayInterval); autoPlayInterval = null;
+      btn.textContent = '\u25B6 Present';
+      return;
+    }
+    document.getElementById(sections[next]).scrollIntoView({ behavior: 'smooth' });
+  }, 8000);
+}
+
+// ===== THEME DEMO =====
+function setTheme(t) {
+  document.querySelectorAll('#themeTgl .opt').forEach(o => o.classList.toggle('active', o.textContent.toLowerCase().includes(t)));
+  const wrap = document.getElementById('themeDemoWrap');
+  if(t === 'dark') {
+    wrap.classList.add('dark');
+    wrap.style.borderColor = 'rgba(255,255,255,0.1)';
+    document.cookie = "theme=dark; path=/; max-age=31536000; SameSite=Lax";
+  } else {
+    wrap.classList.remove('dark');
+    wrap.style.borderColor = '';
+    document.cookie = "theme=light; path=/; max-age=31536000; SameSite=Lax";
+  }
+  document.getElementById('themeCodeDisplay').textContent = `document.cookie = "theme=${t}; max-age=31536000; path=/"`;
+  document.getElementById('cookieDisplay').textContent = t;
+}
+
+// ===== LOAD SAVED THEME =====
+(function() {
+  const match = document.cookie.match(/(?:^|;\s*)theme=([^;]*)/);
+  if(match) setTheme(match[1]);
+  else document.getElementById('cookieDisplay').textContent = 'none (set below)';
+})();
+
+// ===== INITIAL TRACKING =====
+updateSectionTracking();
+updateProgress();
+
+// ===== 3D TILT ON CARDS =====
+document.querySelectorAll('.glass-card').forEach(card => {
+  card.addEventListener('mousemove', (e) => {
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const rotateX = (y - centerY) / centerY * -6;
+    const rotateY = (x - centerX) / centerX * 6;
+    card.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px)`;
+  });
+  card.addEventListener('mouseleave', () => {
+    card.style.transform = '';
+  });
+});
+</script>
+</body>
+</html>

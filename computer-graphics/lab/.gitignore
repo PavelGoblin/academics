@@ -1,0 +1,32 @@
+# Compiled executables
+*.exe
+*.o
+*.obj
+
+# IDE/Editor files - user-specific only
+*.cbp
+*.layout
+*.depend
+*.user
+*.suo
+.vs/
+.vscode/*.sublime*
+.idea/
+*.swp
+*.swo
+*.code-workspace
+
+# Build directories
+bin/
+obj/
+
+# User files
+cb/
+
+# Python
+__pycache__/
+*.pyc
+
+# OS files
+Thumbs.db
+.DS_Store
