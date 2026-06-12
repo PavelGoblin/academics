@@ -3,422 +3,111 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Computer Graphics Lab Report — Labs 01–04</title>
+<title>Computer Graphics Lab Report — Labs 01–12</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=IM+Fell+English:ital@0;1&display=swap');
-
   :root {
-    --ink: #1a1a1a;
-    --ink-light: #444;
-    --ink-faint: #888;
-    --paper: #f9f6ef;
-    --paper-dark: #ede9df;
-    --rule: #c8c0b0;
-    --accent: #1a3a5c;
-    --accent2: #8b1a1a;
-    --code-bg: #1e1e2e;
-    --code-fg: #cdd6f4;
-    --kw: #89b4fa;
-    --fn: #a6e3a1;
-    --cm: #6c7086;
-    --num: #fab387;
-    --str: #f38ba8;
-    --canvas-bg: #0d0d1a;
+    --ink:#1a1a1a;--ink-light:#444;--ink-faint:#888;--paper:#f9f6ef;--paper-dark:#ede9df;
+    --rule:#c8c0b0;--accent:#1a3a5c;--accent2:#8b1a1a;--code-bg:#1e1e2e;--code-fg:#cdd6f4;
+    --kw:#89b4fa;--fn:#a6e3a1;--cm:#6c7086;--num:#fab387;--str:#f38ba8;--canvas-bg:#0d0d1a;
   }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    font-family: 'Courier Prime', monospace;
-    background: #d4cfc5;
-    color: var(--ink);
-    min-height: 100vh;
-    padding: 2rem 1rem;
-  }
-
-  .page {
-    background: var(--paper);
-    max-width: 860px;
-    margin: 0 auto;
-    box-shadow: 0 4px 40px rgba(0,0,0,0.25), 0 1px 4px rgba(0,0,0,0.1);
-    border-radius: 2px;
-  }
-
-  /* ── COVER PAGE ── */
-  .cover {
-    padding: 60px 80px 50px;
-    border-bottom: 3px double var(--rule);
-    text-align: center;
-    position: relative;
-  }
-  .cover::before {
-    content: '';
-    display: block;
-    height: 4px;
-    background: repeating-linear-gradient(90deg, var(--accent) 0 60%, var(--accent2) 60% 100%);
-    margin-bottom: 40px;
-  }
-  .university-logo {
-    font-family: 'IM Fell English', serif;
-    font-size: 13px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--ink-faint);
-    margin-bottom: 6px;
-  }
-  .university-name {
-    font-family: 'IM Fell English', serif;
-    font-size: 22px;
-    color: var(--accent);
-    margin-bottom: 4px;
-    letter-spacing: 1px;
-  }
-  .dept {
-    font-size: 12px;
-    color: var(--ink-faint);
-    margin-bottom: 36px;
-    letter-spacing: 1px;
-  }
-  .cover-divider {
-    border: none;
-    border-top: 1px solid var(--rule);
-    margin: 0 auto 36px;
-    width: 60%;
-  }
-  .course-tag {
-    display: inline-block;
-    background: var(--accent);
-    color: #fff;
-    font-size: 11px;
-    letter-spacing: 3px;
-    padding: 4px 14px;
-    text-transform: uppercase;
-    margin-bottom: 20px;
-  }
-  .report-title {
-    font-family: 'IM Fell English', serif;
-    font-size: 30px;
-    color: var(--ink);
-    line-height: 1.3;
-    margin-bottom: 8px;
-  }
-  .report-subtitle {
-    font-size: 13px;
-    color: var(--ink-faint);
-    margin-bottom: 40px;
-    font-style: italic;
-  }
-  .meta-table {
-    width: 100%;
-    max-width: 440px;
-    margin: 0 auto;
-    border-collapse: collapse;
-    font-size: 13px;
-  }
-  .meta-table td {
-    padding: 7px 12px;
-    border: 0.5px solid var(--rule);
-  }
-  .meta-table td:first-child {
-    color: var(--ink-faint);
-    width: 140px;
-    background: var(--paper-dark);
-    font-size: 11px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-  }
-  .meta-table td:last-child { color: var(--ink); font-weight: 700; }
-  .cover-footer {
-    margin-top: 44px;
-    font-size: 11px;
-    color: var(--ink-faint);
-    letter-spacing: 2px;
-    text-transform: uppercase;
-  }
-
-  /* ── LAB SECTION ── */
-  .lab-section {
-    padding: 50px 80px;
-    border-bottom: 1px solid var(--rule);
-  }
-  .lab-section:last-child { border-bottom: none; }
-
-  .lab-header {
-    display: flex;
-    align-items: baseline;
-    gap: 16px;
-    margin-bottom: 28px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid var(--ink);
-  }
-  .lab-num {
-    font-family: 'IM Fell English', serif;
-    font-size: 11px;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    color: var(--accent2);
-    white-space: nowrap;
-  }
-  .lab-title {
-    font-family: 'IM Fell English', serif;
-    font-size: 20px;
-    color: var(--accent);
-  }
-
-  .section-label {
-    font-size: 10px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--accent2);
-    margin-bottom: 6px;
-    margin-top: 22px;
-    font-weight: 700;
-  }
-  .section-label:first-of-type { margin-top: 0; }
-
-  p, li {
-    font-size: 13.5px;
-    line-height: 1.8;
-    color: var(--ink-light);
-  }
-  ul, ol { padding-left: 22px; margin-top: 4px; }
-  li { margin-bottom: 3px; }
-  strong { color: var(--ink); font-weight: 700; }
-
-  /* ── CANVAS AREA ── */
-  .canvas-wrapper {
-    margin: 16px 0;
-    background: var(--canvas-bg);
-    border-radius: 4px;
-    padding: 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  .canvas-controls {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    align-items: center;
-  }
-  .ctrl-label {
-    font-size: 11px;
-    color: #888;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-  }
-  .ctrl-label input[type=number] {
-    width: 60px;
-    background: #2a2a3e;
-    border: 0.5px solid #444;
-    color: #eee;
-    padding: 3px 6px;
-    font-family: 'Courier Prime', monospace;
-    font-size: 12px;
-    border-radius: 3px;
-  }
-  .ctrl-label input[type=color] {
-    width: 36px;
-    height: 26px;
-    padding: 1px;
-    border: 0.5px solid #444;
-    background: none;
-    cursor: pointer;
-    border-radius: 3px;
-  }
-  .btn {
-    background: var(--accent);
-    color: #fff;
-    border: none;
-    padding: 5px 14px;
-    font-family: 'Courier Prime', monospace;
-    font-size: 11px;
-    letter-spacing: 1px;
-    cursor: pointer;
-    border-radius: 2px;
-    text-transform: uppercase;
-  }
-  .btn:hover { background: #254d7a; }
-  .btn.red { background: var(--accent2); }
-  .btn.red:hover { background: #a02020; }
-  .btn.dim { background: #3a3a5a; }
-  .btn.dim:hover { background: #4a4a6a; }
-  canvas {
-    display: block;
-    border-radius: 2px;
-    cursor: crosshair;
-  }
-  .canvas-caption {
-    font-size: 11px;
-    color: #666;
-    text-align: center;
-    font-style: italic;
-  }
-
-  /* ── CODE BLOCK ── */
-  .code-block {
-    background: var(--code-bg);
-    border-radius: 4px;
-    padding: 18px 20px;
-    margin: 12px 0;
-    overflow-x: auto;
-    border-left: 3px solid var(--accent);
-  }
-  .code-block pre {
-    font-family: 'Courier Prime', monospace;
-    font-size: 12.5px;
-    line-height: 1.75;
-    color: var(--code-fg);
-    white-space: pre;
-  }
-  .kw { color: var(--kw); }
-  .fn { color: var(--fn); }
-  .cm { color: var(--cm); font-style: italic; }
-  .num { color: var(--num); }
-  .str { color: var(--str); }
-  .pp { color: #f9e2af; }
-
-  /* ── ALGO TABLE ── */
-  .algo-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 12.5px;
-    margin: 10px 0;
-  }
-  .algo-table th {
-    background: var(--accent);
-    color: #fff;
-    padding: 7px 12px;
-    text-align: left;
-    font-size: 11px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-  }
-  .algo-table td {
-    padding: 7px 12px;
-    border-bottom: 0.5px solid var(--rule);
-    color: var(--ink-light);
-    vertical-align: top;
-  }
-  .algo-table tr:nth-child(even) td { background: var(--paper-dark); }
-  .algo-table td:first-child { color: var(--ink); font-weight: 700; width: 110px; }
-
-  /* ── RESULT BOX ── */
-  .result-box {
-    background: var(--paper-dark);
-    border: 0.5px solid var(--rule);
-    border-left: 3px solid var(--accent2);
-    padding: 12px 16px;
-    margin: 12px 0;
-    font-size: 13px;
-    color: var(--ink-light);
-    line-height: 1.7;
-  }
-
-  /* ── COMPARISON TABLE ── */
-  .compare-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 12.5px;
-    margin: 10px 0;
-  }
-  .compare-table th {
-    background: var(--paper-dark);
-    padding: 8px 12px;
-    text-align: center;
-    border: 0.5px solid var(--rule);
-    font-size: 11px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    color: var(--ink);
-  }
-  .compare-table td {
-    padding: 7px 12px;
-    border: 0.5px solid var(--rule);
-    color: var(--ink-light);
-    text-align: center;
-  }
-  .compare-table td:first-child { text-align: left; font-weight: 700; color: var(--ink); }
-  .good { color: #2a7a2a; }
-  .bad { color: #8b1a1a; }
-
-  .toc { padding: 36px 80px; border-bottom: 1px solid var(--rule); }
-  .toc-title { font-family: 'IM Fell English', serif; font-size: 16px; color: var(--accent); margin-bottom: 14px; }
-  .toc-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    font-size: 13px;
-    padding: 5px 0;
-    border-bottom: 1px dotted var(--rule);
-    color: var(--ink-light);
-  }
-  .toc-item span:last-child { color: var(--ink-faint); font-size: 11px; }
-
-  @media print {
-    body { background: white; padding: 0; }
-    .page { box-shadow: none; max-width: 100%; }
-    .btn { display: none; }
-    canvas { break-inside: avoid; }
-    .lab-section { break-inside: avoid; page-break-before: always; }
-    .cover { page-break-after: always; }
-  }
-
-  .print-btn {
-    position: fixed;
-    bottom: 24px;
-    right: 24px;
-    background: var(--accent);
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    font-family: 'Courier Prime', monospace;
-    font-size: 12px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    cursor: pointer;
-    border-radius: 2px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.3);
-    z-index: 999;
-  }
-  .print-btn:hover { background: #254d7a; }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Courier Prime',monospace;background:#d4cfc5;color:var(--ink);min-height:100vh;padding:2rem 1rem;}
+  .page{background:var(--paper);max-width:860px;margin:0 auto;box-shadow:0 4px 40px rgba(0,0,0,.25);border-radius:2px;}
+  .cover{padding:60px 80px 50px;border-bottom:3px double var(--rule);text-align:center;position:relative;}
+  .cover::before{content:'';display:block;height:4px;background:repeating-linear-gradient(90deg,var(--accent) 0 60%,var(--accent2) 60% 100%);margin-bottom:40px;}
+  .university-logo{font-family:'IM Fell English',serif;font-size:13px;letter-spacing:3px;text-transform:uppercase;color:var(--ink-faint);margin-bottom:6px;}
+  .university-name{font-family:'IM Fell English',serif;font-size:22px;color:var(--accent);margin-bottom:4px;letter-spacing:1px;}
+  .dept{font-size:12px;color:var(--ink-faint);margin-bottom:36px;letter-spacing:1px;}
+  .cover-divider{border:none;border-top:1px solid var(--rule);margin:0 auto 36px;width:60%;}
+  .course-tag{display:inline-block;background:var(--accent);color:#fff;font-size:11px;letter-spacing:3px;padding:4px 14px;text-transform:uppercase;margin-bottom:20px;}
+  .report-title{font-family:'IM Fell English',serif;font-size:30px;color:var(--ink);line-height:1.3;margin-bottom:8px;}
+  .report-subtitle{font-size:13px;color:var(--ink-faint);margin-bottom:40px;font-style:italic;}
+  .meta-table{width:100%;max-width:440px;margin:0 auto;border-collapse:collapse;font-size:13px;}
+  .meta-table td{padding:7px 12px;border:.5px solid var(--rule);}
+  .meta-table td:first-child{color:var(--ink-faint);width:140px;background:var(--paper-dark);font-size:11px;letter-spacing:1px;text-transform:uppercase;}
+  .meta-table td:last-child{color:var(--ink);font-weight:700;}
+  .cover-footer{margin-top:44px;font-size:11px;color:var(--ink-faint);letter-spacing:2px;text-transform:uppercase;}
+  .lab-section{padding:50px 80px;border-bottom:1px solid var(--rule);}
+  .lab-section:last-child{border-bottom:none;}
+  .lab-header{display:flex;align-items:baseline;gap:16px;margin-bottom:28px;padding-bottom:10px;border-bottom:2px solid var(--ink);}
+  .lab-num{font-family:'IM Fell English',serif;font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--accent2);white-space:nowrap;}
+  .lab-title{font-family:'IM Fell English',serif;font-size:20px;color:var(--accent);}
+  .section-label{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--accent2);margin-bottom:6px;margin-top:22px;font-weight:700;}
+  .section-label:first-of-type{margin-top:0;}
+  p,li{font-size:13.5px;line-height:1.8;color:var(--ink-light);}
+  ul,ol{padding-left:22px;margin-top:4px;}li{margin-bottom:3px;}
+  strong{color:var(--ink);font-weight:700;}
+  .canvas-wrapper{margin:16px 0;background:var(--canvas-bg);border-radius:4px;padding:16px;display:flex;flex-direction:column;gap:10px;}
+  .canvas-controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;}
+  .ctrl-label{font-size:11px;color:#888;display:flex;align-items:center;gap:4px;}
+  .ctrl-label input[type=number]{width:60px;background:#2a2a3e;border:.5px solid #444;color:#eee;padding:3px 6px;font-family:'Courier Prime',monospace;font-size:12px;border-radius:3px;}
+  .ctrl-label input[type=color]{width:36px;height:26px;padding:1px;border:.5px solid #444;background:none;cursor:pointer;border-radius:3px;}
+  .ctrl-label select{background:#2a2a3e;border:.5px solid #444;color:#eee;padding:3px 6px;font-family:'Courier Prime',monospace;font-size:12px;border-radius:3px;}
+  .btn{background:var(--accent);color:#fff;border:none;padding:5px 14px;font-family:'Courier Prime',monospace;font-size:11px;letter-spacing:1px;cursor:pointer;border-radius:2px;text-transform:uppercase;}
+  .btn:hover{background:#254d7a;}.btn.red{background:var(--accent2);}.btn.red:hover{background:#a02020;}
+  .btn.dim{background:#3a3a5a;}.btn.dim:hover{background:#4a4a6a;}
+  canvas{display:block;border-radius:2px;cursor:crosshair;}
+  .canvas-caption{font-size:11px;color:#666;text-align:center;font-style:italic;}
+  .code-block{background:var(--code-bg);border-radius:4px;padding:18px 20px;margin:12px 0;overflow-x:auto;border-left:3px solid var(--accent);}
+  .code-block pre{font-family:'Courier Prime',monospace;font-size:12.5px;line-height:1.75;color:var(--code-fg);white-space:pre;}
+  .kw{color:var(--kw);}.fn{color:var(--fn);}.cm{color:var(--cm);font-style:italic;}
+  .num{color:var(--num);}.str{color:var(--str);}.pp{color:#f9e2af;}
+  .algo-table{width:100%;border-collapse:collapse;font-size:12.5px;margin:10px 0;}
+  .algo-table th{background:var(--accent);color:#fff;padding:7px 12px;text-align:left;font-size:11px;letter-spacing:1px;text-transform:uppercase;}
+  .algo-table td{padding:7px 12px;border-bottom:.5px solid var(--rule);color:var(--ink-light);vertical-align:top;}
+  .algo-table tr:nth-child(even) td{background:var(--paper-dark);}
+  .algo-table td:first-child{color:var(--ink);font-weight:700;width:110px;}
+  .result-box{background:var(--paper-dark);border:.5px solid var(--rule);border-left:3px solid var(--accent2);padding:12px 16px;margin:12px 0;font-size:13px;color:var(--ink-light);line-height:1.7;}
+  .compare-table{width:100%;border-collapse:collapse;font-size:12.5px;margin:10px 0;}
+  .compare-table th{background:var(--paper-dark);padding:8px 12px;text-align:center;border:.5px solid var(--rule);font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--ink);}
+  .compare-table td{padding:7px 12px;border:.5px solid var(--rule);color:var(--ink-light);text-align:center;}
+  .compare-table td:first-child{text-align:left;font-weight:700;color:var(--ink);}
+  .good{color:#2a7a2a;}.bad{color:#8b1a1a;}
+  .toc{padding:36px 80px;border-bottom:1px solid var(--rule);}
+  .toc-title{font-family:'IM Fell English',serif;font-size:16px;color:var(--accent);margin-bottom:14px;}
+  .toc-item{display:flex;justify-content:space-between;align-items:baseline;font-size:13px;padding:5px 0;border-bottom:1px dotted var(--rule);color:var(--ink-light);}
+  .toc-item span:last-child{color:var(--ink-faint);font-size:11px;}
+  @media print{body{background:white;padding:0;}.page{box-shadow:none;max-width:100%;}.btn{display:none;}canvas{break-inside:avoid;}.lab-section{break-inside:avoid;page-break-before:always;}.cover{page-break-after:always;}}
+  .print-btn{position:fixed;bottom:24px;right:24px;background:var(--accent);color:white;border:none;padding:10px 20px;font-family:'Courier Prime',monospace;font-size:12px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;border-radius:2px;box-shadow:0 2px 12px rgba(0,0,0,.3);z-index:999;}
+  .print-btn:hover{background:#254d7a;}
 </style>
 </head>
 <body>
-
-<button class="print-btn" onclick="window.print()">⎙ Print / PDF</button>
-<a href="https://github.com/PavelGoblin/computer-graphics-lab" style="position:fixed;bottom:70px;right:24px;background:#1a3a5c;color:white;border:none;padding:10px 20px;font-family:'Courier Prime',monospace;font-size:12px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;border-radius:2px;box-shadow:0 2px 12px rgba(0,0,0,0.3);z-index:999;text-decoration:none" target="_blank">⟨ View on GitHub</a>
-
+<button class="print-btn" onclick="window.print()">&#9998; Print / PDF</button>
 <div class="page">
-
-  <!-- COVER -->
   <div class="cover">
     <div class="university-logo">Laboratory Report</div>
     <div class="university-name">Bangladesh Open University</div>
-    <div class="dept">School of Science and Technology &nbsp;·&nbsp; Department of CSE</div>
+    <div class="dept">School of Science and Technology &middot; Department of CSE</div>
     <hr class="cover-divider">
-    <div class="course-tag">CSE41P8 &nbsp;·&nbsp; Computer Graphics</div>
-    <div class="report-title">Lab Reports:<br>Lines &amp; Geometric Translation</div>
-    <div class="report-subtitle">Labs 01 through 04 — Line Drawing Algorithms &amp; 2D Transformations</div>
+    <div class="course-tag">CSE41P8 &middot; Computer Graphics</div>
+    <div class="report-title">Lab Reports:<br>Lines, Transformations &amp; Curves</div>
+    <div class="report-subtitle">Labs 01 through 12 &mdash; Line Drawing, 2D/3D Transformations, Clipping &amp; Curves</div>
     <table class="meta-table">
       <tr><td>Student Name</td><td>Pavel</td></tr>
       <tr><td>Student ID</td><td>20-0-52-801-04</td></tr>
-      <tr><td>Program</td><td>B.Sc. in CSE &nbsp;(4th Year, 1st Semester)</td></tr>
+      <tr><td>Program</td><td>B.Sc. in CSE (4th Year, 1st Semester)</td></tr>
       <tr><td>Session</td><td>231 Term</td></tr>
-      <tr><td>Labs Covered</td><td>01, 02, 03, 04</td></tr>
-      <tr><td>Language</td><td>C &nbsp;(OpenGL / BGI)</td></tr>
+      <tr><td>Labs Covered</td><td>01 through 12</td></tr>
+      <tr><td>Language</td><td>C (OpenGL / BGI)</td></tr>
     </table>
-    <div class="cover-footer">Computer Graphics Laboratory &nbsp;·&nbsp; BOU CSE</div>
+    <div class="cover-footer">Computer Graphics Laboratory &middot; BOU CSE</div>
   </div>
-
-  <!-- TOC -->
   <div class="toc">
     <div class="toc-title">Table of Contents</div>
-    <div class="toc-item"><span>Lab 01 — Drawing a Straight Line (Parametric)</span><span>Pg 01</span></div>
-    <div class="toc-item"><span>Lab 02 — DDA Line Drawing Algorithm</span><span>Pg 02</span></div>
-    <div class="toc-item"><span>Lab 03 — Bresenham's Line Drawing Algorithm</span><span>Pg 03</span></div>
-    <div class="toc-item"><span>Lab 04 — Geometric Translation (2D)</span><span>Pg 04</span></div>
+    <div class="toc-item"><span>Lab 01 &mdash; Drawing a Straight Line (Parametric)</span><span>01</span></div>
+    <div class="toc-item"><span>Lab 02 &mdash; DDA Line Drawing Algorithm</span><span>02</span></div>
+    <div class="toc-item"><span>Lab 03 &mdash; Bresenham's Line Drawing Algorithm</span><span>03</span></div>
+    <div class="toc-item"><span>Lab 04 &mdash; Geometric Translation (2D)</span><span>04</span></div>
+    <div class="toc-item"><span>Lab 05 &mdash; Midpoint Circle Algorithm</span><span>05</span></div>
+    <div class="toc-item"><span>Lab 06 &mdash; 2D Rotation</span><span>06</span></div>
+    <div class="toc-item"><span>Lab 07 &mdash; 2D Scaling</span><span>07</span></div>
+    <div class="toc-item"><span>Lab 08 &mdash; 3D Rotation (Arbitrary Axis)</span><span>08</span></div>
+    <div class="toc-item"><span>Lab 09 &mdash; Cohen-Sutherland Line Clipping</span><span>09</span></div>
+    <div class="toc-item"><span>Lab 10 &mdash; Sutherland-Hodgman Polygon Clipping</span><span>10</span></div>
+    <div class="toc-item"><span>Lab 11 &mdash; Bezier Curve</span><span>11</span></div>
+    <div class="toc-item"><span>Lab 12 &mdash; B-Spline Curve</span><span>12</span></div>
   </div>
 
   <!-- LAB 01 -->
@@ -427,46 +116,29 @@
       <div class="lab-num">Lab 01</div>
       <div class="lab-title">Drawing a Straight Line using C Program</div>
     </div>
-
-    <div class="section-label">1.1 &nbsp; Objective</div>
-    <p>To write a C program that draws a straight line on the screen using the basic parametric line equation, utilizing the <code>putpixel()</code> function available in BGI graphics (Turbo C / DevC++ with WinBGIm) or equivalent OpenGL primitive.</p>
-
-    <div class="section-label">1.2 &nbsp; Theory</div>
-    <p>A line segment between two points P₁(x₁, y₁) and P₂(x₂, y₂) can be described using the parametric form:</p>
+    <div class="section-label">1.1 Objective</div>
+    <p>To write a C program that draws a straight line on the screen using the basic parametric line equation, utilizing the <code>putpixel()</code> function available in BGI graphics.</p>
+    <div class="section-label">1.2 Theory</div>
+    <p>A line segment between two points P1(x1, y1) and P2(x2, y2) can be described using the parametric form:</p>
     <div class="result-box">
-      <strong>x(t) = x₁ + t · (x₂ − x₁)</strong><br>
-      <strong>y(t) = y₁ + t · (y₂ − y₁)</strong><br>
-      where t ∈ [0, 1], sampled at intervals of 1 / max(|Δx|, |Δy|)
+      <strong>x(t) = x1 + t &middot; (x2 - x1)</strong><br>
+      <strong>y(t) = y1 + t &middot; (y2 - y1)</strong><br>
+      where t &in; [0, 1], sampled at intervals of 1 / max(|dx|, |dy|)
     </div>
-    <p>The number of steps is set to <strong>max(|Δx|, |Δy|)</strong> to ensure no pixel gaps along either axis. At each step, the floating-point coordinates are rounded to the nearest integer before calling <code>putpixel()</code>.</p>
-
-    <div class="section-label">1.3 &nbsp; Algorithm Steps</div>
-    <ol>
-      <li>Input two endpoints: (x1, y1) and (x2, y2)</li>
-      <li>Compute dx = x2 − x1 and dy = y2 − y1</li>
-      <li>Compute steps = max(|dx|, |dy|)</li>
-      <li>Compute xInc = dx / steps and yInc = dy / steps</li>
-      <li>Initialize x = x1, y = y1</li>
-      <li>Loop i from 0 to steps: plot pixel at (round(x), round(y)), then x += xInc, y += yInc</li>
-    </ol>
-
-    <div class="section-label">1.4 &nbsp; Source Code</div>
+    <div class="section-label">1.3 Source Code</div>
     <div class="code-block"><pre><span class="pp">#include &lt;stdio.h&gt;
 #include &lt;graphics.h&gt;
 #include &lt;math.h&gt;</span>
 
 <span class="kw">void</span> <span class="fn">drawLine</span>(<span class="kw">int</span> x1, <span class="kw">int</span> y1, <span class="kw">int</span> x2, <span class="kw">int</span> y2) {
-    <span class="kw">int</span> dx = x2 - x1;
-    <span class="kw">int</span> dy = y2 - y1;
-    <span class="kw">int</span> steps = (abs(dx) > abs(dy)) ? abs(dx) : abs(dy);
+    <span class="kw">int</span> dx = x2 - x1, dy = y2 - y1;
+    <span class="kw">int</span> steps = (abs(dx) &gt; abs(dy)) ? abs(dx) : abs(dy);
     <span class="kw">float</span> xInc = (<span class="kw">float</span>)dx / steps;
     <span class="kw">float</span> yInc = (<span class="kw">float</span>)dy / steps;
     <span class="kw">float</span> x = x1, y = y1;
-    <span class="kw">int</span> i;
-    <span class="kw">for</span> (i = <span class="num">0</span>; i <= steps; i++) {
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt;= steps; i++) {
         putpixel((<span class="kw">int</span>)round(x), (<span class="kw">int</span>)round(y), WHITE);
-        x += xInc;
-        y += yInc;
+        x += xInc; y += yInc;
     }
 }
 
@@ -474,12 +146,10 @@
     <span class="kw">int</span> gd = DETECT, gm;
     initgraph(&amp;gd, &amp;gm, <span class="str">""</span>);
     <span class="fn">drawLine</span>(<span class="num">50</span>, <span class="num">50</span>, <span class="num">350</span>, <span class="num">200</span>);
-    getch();
-    closegraph();
+    getch(); closegraph();
     <span class="kw">return</span> <span class="num">0</span>;
 }</pre></div>
-
-    <div class="section-label">1.5 &nbsp; Interactive Simulation</div>
+    <div class="section-label">1.4 Interactive Simulation</div>
     <div class="canvas-wrapper">
       <div class="canvas-controls">
         <span class="ctrl-label">x1 <input type="number" id="l1x1" value="50"></span>
@@ -491,14 +161,10 @@
         <button class="btn red" onclick="clearC('c1')">Clear</button>
       </div>
       <canvas id="c1" width="700" height="280" style="width:100%"></canvas>
-      <div class="canvas-caption">Fig 1.1 — Straight line plotted using parametric method</div>
+      <div class="canvas-caption">Fig 1.1 - Straight line plotted using parametric method</div>
     </div>
-
-    <div class="section-label">1.6 &nbsp; Result &amp; Discussion</div>
-    <p>The program successfully draws a straight line between any two given points. The parametric approach works for all slopes including vertical lines (Δx = 0) and horizontal lines (Δy = 0). The line appears continuous with no visible pixel gaps because the step count equals the dominant delta. This method uses floating-point arithmetic, making it slightly slower than integer-only methods.</p>
-
-    <div class="section-label">1.7 &nbsp; Conclusion</div>
-    <p>The parametric straight-line algorithm is conceptually simple and handles all cases correctly. However, it relies on floating-point operations and rounding, which introduces overhead. This motivates more efficient algorithms such as DDA and Bresenham, explored in subsequent labs.</p>
+    <div class="section-label">1.5 Result</div>
+    <p>The program successfully draws a straight line between any two given points. The parametric approach works for all slopes including vertical and horizontal lines.</p>
   </div>
 
   <!-- LAB 02 -->
@@ -507,46 +173,28 @@
       <div class="lab-num">Lab 02</div>
       <div class="lab-title">Line Drawing using DDA Algorithm</div>
     </div>
-
-    <div class="section-label">2.1 &nbsp; Objective</div>
+    <div class="section-label">2.1 Objective</div>
     <p>To implement the Digital Differential Analyzer (DDA) algorithm in C for rasterizing a line segment between two given endpoints on a pixel grid.</p>
-
-    <div class="section-label">2.2 &nbsp; Theory</div>
-    <p>The DDA algorithm is based on the differential equation of a line. Given slope <strong>m = dy/dx</strong>, the algorithm samples at unit intervals along the dominant axis and computes the other coordinate by accumulation:</p>
+    <div class="section-label">2.2 Theory</div>
     <div class="result-box">
-      <strong>Case |dx| ≥ |dy| (shallow):</strong> x increments by 1, y += m (slope)<br>
-      <strong>Case |dy| &gt; |dx| (steep):</strong> y increments by 1, x += 1/m<br><br>
+      <strong>Case |dx| >= |dy| (shallow):</strong> x increments by 1, y += m (slope)<br>
+      <strong>Case |dy| > |dx| (steep):</strong> y increments by 1, x += 1/m<br><br>
       Generalized: steps = max(|dx|,|dy|), xInc = dx/steps, yInc = dy/steps
     </div>
-    <p>DDA improves on the brute parametric method by always incrementing the dominant axis by exactly 1, reducing the number of float operations. However, cumulative float rounding errors can accumulate over long lines.</p>
-
-    <div class="section-label">2.3 &nbsp; Algorithm Steps</div>
-    <ol>
-      <li>Read endpoints (x1, y1) and (x2, y2)</li>
-      <li>Calculate dx = x2 − x1, dy = y2 − y1</li>
-      <li>Set steps = max(|dx|, |dy|)</li>
-      <li>xInc = dx / steps &nbsp;·&nbsp; yInc = dy / steps</li>
-      <li>Initialize x = x1, y = y1</li>
-      <li>For i = 0 to steps: putpixel(round(x), round(y)); x += xInc; y += yInc</li>
-    </ol>
-
-    <div class="section-label">2.4 &nbsp; Source Code</div>
+    <div class="section-label">2.3 Source Code</div>
     <div class="code-block"><pre><span class="pp">#include &lt;stdio.h&gt;
 #include &lt;graphics.h&gt;
 #include &lt;math.h&gt;</span>
 
 <span class="kw">void</span> <span class="fn">DDA</span>(<span class="kw">int</span> x1, <span class="kw">int</span> y1, <span class="kw">int</span> x2, <span class="kw">int</span> y2) {
-    <span class="kw">int</span> dx = x2 - x1;
-    <span class="kw">int</span> dy = y2 - y1;
-    <span class="kw">int</span> steps = (abs(dx) > abs(dy)) ? abs(dx) : abs(dy);
+    <span class="kw">int</span> dx = x2 - x1, dy = y2 - y1;
+    <span class="kw">int</span> steps = (abs(dx) &gt; abs(dy)) ? abs(dx) : abs(dy);
     <span class="kw">float</span> xInc = (<span class="kw">float</span>)dx / steps;
     <span class="kw">float</span> yInc = (<span class="kw">float</span>)dy / steps;
     <span class="kw">float</span> x = x1, y = y1;
-    <span class="kw">int</span> i;
-    <span class="kw">for</span> (i = <span class="num">0</span>; i <= steps; i++) {
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt;= steps; i++) {
         putpixel((<span class="kw">int</span>)round(x), (<span class="kw">int</span>)round(y), CYAN);
-        x += xInc;
-        y += yInc;
+        x += xInc; y += yInc;
     }
 }
 
@@ -554,12 +202,10 @@
     <span class="kw">int</span> gd = DETECT, gm;
     initgraph(&amp;gd, &amp;gm, <span class="str">""</span>);
     <span class="fn">DDA</span>(<span class="num">40</span>, <span class="num">200</span>, <span class="num">360</span>, <span class="num">60</span>);
-    getch();
-    closegraph();
+    getch(); closegraph();
     <span class="kw">return</span> <span class="num">0</span>;
 }</pre></div>
-
-    <div class="section-label">2.5 &nbsp; Interactive Simulation</div>
+    <div class="section-label">2.4 Interactive Simulation</div>
     <div class="canvas-wrapper">
       <div class="canvas-controls">
         <span class="ctrl-label">x1 <input type="number" id="l2x1" value="40"></span>
@@ -571,14 +217,10 @@
         <button class="btn red" onclick="clearC('c2')">Clear</button>
       </div>
       <canvas id="c2" width="700" height="280" style="width:100%"></canvas>
-      <div class="canvas-caption">Fig 2.1 — DDA line drawing output</div>
+      <div class="canvas-caption">Fig 2.1 - DDA line drawing output</div>
     </div>
-
-    <div class="section-label">2.6 &nbsp; Result &amp; Discussion</div>
-    <p>The DDA algorithm correctly rasterizes lines of all slopes. The output is visually identical to the parametric method. DDA is marginally more systematic — it always advances by exactly 1 unit along the dominant axis — but still depends on floating-point arithmetic. Rounding errors become noticeable only for extremely long lines (&gt;1000 pixels).</p>
-
-    <div class="section-label">2.7 &nbsp; Conclusion</div>
-    <p>DDA is an improvement over the naive parametric approach in terms of systematic step control. However, the floating-point dependency remains a limitation. Bresenham's algorithm (Lab 03) eliminates this by using only integers.</p>
+    <div class="section-label">2.5 Result</div>
+    <p>The DDA algorithm correctly rasterizes lines of all slopes. It advances by exactly 1 unit along the dominant axis but still depends on floating-point arithmetic.</p>
   </div>
 
   <!-- LAB 03 -->
@@ -587,48 +229,30 @@
       <div class="lab-num">Lab 03</div>
       <div class="lab-title">Line Drawing using Bresenham's Algorithm</div>
     </div>
-
-    <div class="section-label">3.1 &nbsp; Objective</div>
-    <p>To implement Bresenham's Line Drawing Algorithm in C, which uses only integer arithmetic (no floating-point operations) to determine pixel positions along a rasterized line.</p>
-
-    <div class="section-label">3.2 &nbsp; Theory</div>
-    <p>Bresenham's algorithm (1965) uses a <strong>decision parameter</strong> <em>p</em> derived from the line equation to decide, at each step, whether the next pixel should stay at the same y level or increment y by 1. The key insight is that all quantities can be maintained as integers:</p>
+    <div class="section-label">3.1 Objective</div>
+    <p>To implement Bresenham's Line Drawing Algorithm in C, using only integer arithmetic to determine pixel positions along a rasterized line.</p>
+    <div class="section-label">3.2 Theory</div>
     <div class="result-box">
-      <strong>Initial decision parameter:</strong> p₀ = 2·dy − dx<br><br>
-      <strong>If p &lt; 0:</strong> plot (x+1, y), update p = p + 2·dy<br>
-      <strong>If p ≥ 0:</strong> plot (x+1, y+1), update p = p + 2·dy − 2·dx<br><br>
+      <strong>Initial decision parameter:</strong> p0 = 2*dy - dx<br><br>
+      <strong>If p < 0:</strong> plot (x+1, y), update p = p + 2*dy<br>
+      <strong>If p >= 0:</strong> plot (x+1, y+1), update p = p + 2*dy - 2*dx<br><br>
       For general octants: use sign(dx) and sign(dy) to handle all directions.
     </div>
-    <p>This algorithm runs faster than DDA because it avoids all floating-point operations and uses only addition and comparison — operations that are very fast on hardware.</p>
-
-    <div class="section-label">3.3 &nbsp; Algorithm Steps (General — All Octants)</div>
-    <ol>
-      <li>Compute dx = |x2−x1|, dy = |y2−y1|</li>
-      <li>Set sx = sign(x2−x1), sy = sign(y2−y1)</li>
-      <li>Initialize err = dx − dy</li>
-      <li>Loop: plot (x, y); if reached endpoint, break</li>
-      <li>e2 = 2·err; if e2 &gt; −dy: err −= dy; x += sx</li>
-      <li>if e2 &lt; dx: err += dx; y += sy</li>
-    </ol>
-
-    <div class="section-label">3.4 &nbsp; Source Code</div>
+    <div class="section-label">3.3 Source Code</div>
     <div class="code-block"><pre><span class="pp">#include &lt;stdio.h&gt;
 #include &lt;graphics.h&gt;
 #include &lt;stdlib.h&gt;</span>
 
 <span class="kw">void</span> <span class="fn">Bresenham</span>(<span class="kw">int</span> x1, <span class="kw">int</span> y1, <span class="kw">int</span> x2, <span class="kw">int</span> y2) {
-    <span class="kw">int</span> dx = abs(x2 - x1);
-    <span class="kw">int</span> dy = abs(y2 - y1);
+    <span class="kw">int</span> dx = abs(x2 - x1), dy = abs(y2 - y1);
     <span class="kw">int</span> sx = (x1 &lt; x2) ? <span class="num">1</span> : -<span class="num">1</span>;
     <span class="kw">int</span> sy = (y1 &lt; y2) ? <span class="num">1</span> : -<span class="num">1</span>;
     <span class="kw">int</span> err = dx - dy;
-    <span class="kw">int</span> e2;
-
     <span class="kw">while</span> (<span class="num">1</span>) {
         putpixel(x1, y1, YELLOW);
         <span class="kw">if</span> (x1 == x2 &amp;&amp; y1 == y2) <span class="kw">break</span>;
-        e2 = <span class="num">2</span> * err;
-        <span class="kw">if</span> (e2 > -dy) { err -= dy; x1 += sx; }
+        <span class="kw">int</span> e2 = <span class="num">2</span> * err;
+        <span class="kw">if</span> (e2 &gt; -dy) { err -= dy; x1 += sx; }
         <span class="kw">if</span> (e2 &lt;  dx) { err += dx; y1 += sy; }
     }
 }
@@ -637,12 +261,10 @@
     <span class="kw">int</span> gd = DETECT, gm;
     initgraph(&amp;gd, &amp;gm, <span class="str">""</span>);
     <span class="fn">Bresenham</span>(<span class="num">30</span>, <span class="num">220</span>, <span class="num">380</span>, <span class="num">50</span>);
-    getch();
-    closegraph();
+    getch(); closegraph();
     <span class="kw">return</span> <span class="num">0</span>;
 }</pre></div>
-
-    <div class="section-label">3.5 &nbsp; Interactive Simulation</div>
+    <div class="section-label">3.4 Interactive Simulation</div>
     <div class="canvas-wrapper">
       <div class="canvas-controls">
         <span class="ctrl-label">x1 <input type="number" id="l3x1" value="30"></span>
@@ -655,29 +277,16 @@
         <button class="btn red" onclick="clearC('c3')">Clear</button>
       </div>
       <canvas id="c3" width="700" height="280" style="width:100%"></canvas>
-      <div class="canvas-caption">Fig 3.1 — Bresenham's algorithm output (click Animate to see pixel-by-pixel plotting)</div>
+      <div class="canvas-caption">Fig 3.1 - Bresenham's algorithm (click Animate for pixel-by-pixel)</div>
     </div>
-
-    <div class="section-label">3.6 &nbsp; Comparison: DDA vs Bresenham</div>
+    <div class="section-label">3.5 DDA vs Bresenham</div>
     <table class="compare-table">
-      <tr>
-        <th>Property</th>
-        <th>DDA</th>
-        <th>Bresenham</th>
-      </tr>
+      <tr><th>Property</th><th>DDA</th><th>Bresenham</th></tr>
       <tr><td>Arithmetic type</td><td class="bad">Floating-point</td><td class="good">Integer only</td></tr>
       <tr><td>Speed</td><td>Moderate</td><td class="good">Faster</td></tr>
-      <tr><td>Accuracy</td><td>Round-off errors possible</td><td class="good">Exact</td></tr>
+      <tr><td>Accuracy</td><td>Round-off errors</td><td class="good">Exact</td></tr>
       <tr><td>Hardware suitability</td><td>Less suitable</td><td class="good">Very suitable</td></tr>
-      <tr><td>Complexity</td><td>Simple</td><td>Slightly complex</td></tr>
-      <tr><td>Memory usage</td><td>More (floats)</td><td class="good">Less (ints)</td></tr>
     </table>
-
-    <div class="section-label">3.7 &nbsp; Result &amp; Discussion</div>
-    <p>Bresenham's algorithm produces a visually identical line to DDA, but uses only integer arithmetic throughout. The decision parameter <em>err</em> is updated by simple addition and subtraction. The algorithm handles all eight octants through the sign variables <code>sx</code> and <code>sy</code>. Performance advantage is significant in hardware implementations such as GPU rasterizers.</p>
-
-    <div class="section-label">3.8 &nbsp; Conclusion</div>
-    <p>Bresenham's algorithm is the gold standard for line rasterization in computer graphics. Its exclusive use of integer arithmetic makes it both fast and accurate. Modern GPU rasterizers are fundamentally based on variations of this approach.</p>
   </div>
 
   <!-- LAB 04 -->
@@ -686,162 +295,568 @@
       <div class="lab-num">Lab 04</div>
       <div class="lab-title">Geometric Translation (2D Transformation)</div>
     </div>
-
-    <div class="section-label">4.1 &nbsp; Objective</div>
-    <p>To implement geometric translation — a fundamental 2D affine transformation — in C, which repositions every vertex of a shape by a fixed offset vector (Tx, Ty).</p>
-
-    <div class="section-label">4.2 &nbsp; Theory</div>
-    <p>Translation moves a geometric object from one position to another without rotation or scaling. For each point P(x, y) in the object, the translated point P'(x', y') is given by:</p>
+    <div class="section-label">4.1 Objective</div>
+    <p>To implement geometric translation, a fundamental 2D affine transformation, which repositions every vertex of a shape by a fixed offset vector (Tx, Ty).</p>
+    <div class="section-label">4.2 Theory</div>
     <div class="result-box">
       <strong>x' = x + Tx</strong><br>
       <strong>y' = y + Ty</strong><br><br>
-      <strong>Homogeneous matrix form (3×3):</strong><br>
+      <strong>Homogeneous matrix form (3x3):</strong><br>
       [ x' ]   [ 1  0  Tx ] [ x ]<br>
       [ y' ] = [ 0  1  Ty ] [ y ]<br>
       [ 1  ]   [ 0  0  1  ] [ 1 ]
     </div>
-    <p>The homogeneous coordinate representation is particularly important because it unifies all affine transformations (translation, rotation, scaling, shearing) into single matrix multiplications, enabling efficient composition of transforms.</p>
-
-    <div class="section-label">4.3 &nbsp; Algorithm Steps</div>
-    <ol>
-      <li>Define the original polygon vertices as arrays x[] and y[]</li>
-      <li>Input translation values Tx and Ty</li>
-      <li>Draw the original shape using line drawing functions</li>
-      <li>For each vertex i: x[i] = x[i] + Tx; y[i] = y[i] + Ty</li>
-      <li>Draw the translated shape using updated coordinates</li>
-      <li>Optionally draw arrows from original to translated vertices</li>
-    </ol>
-
-    <div class="section-label">4.4 &nbsp; Source Code</div>
+    <div class="section-label">4.3 Source Code</div>
     <div class="code-block"><pre><span class="pp">#include &lt;stdio.h&gt;
 #include &lt;graphics.h&gt;</span>
 
 <span class="kw">void</span> <span class="fn">drawPolygon</span>(<span class="kw">int</span> x[], <span class="kw">int</span> y[], <span class="kw">int</span> n, <span class="kw">int</span> color) {
-    <span class="kw">int</span> i;
     setcolor(color);
-    <span class="kw">for</span> (i = <span class="num">0</span>; i &lt; n - <span class="num">1</span>; i++)
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; n - <span class="num">1</span>; i++)
         line(x[i], y[i], x[i+<span class="num">1</span>], y[i+<span class="num">1</span>]);
     line(x[n-<span class="num">1</span>], y[n-<span class="num">1</span>], x[<span class="num">0</span>], y[<span class="num">0</span>]);
 }
 
 <span class="kw">void</span> <span class="fn">translate</span>(<span class="kw">int</span> x[], <span class="kw">int</span> y[], <span class="kw">int</span> n, <span class="kw">int</span> tx, <span class="kw">int</span> ty) {
-    <span class="kw">int</span> i;
-    <span class="kw">for</span> (i = <span class="num">0</span>; i &lt; n; i++) {
-        x[i] += tx;
-        y[i] += ty;
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; n; i++) { x[i] += tx; y[i] += ty; }
+}
+
+<span class="kw">int</span> <span class="fn">main</span>() {
+    <span class="kw">int</span> gd = DETECT, gm;
+    initgraph(&amp;gd, &amp;gm, <span class="str">""</span>);
+    <span class="kw">int</span> x[] = {<span class="num">100</span>,<span class="num">200</span>,<span class="num">200</span>,<span class="num">100</span>};
+    <span class="kw">int</span> y[] = {<span class="num">100</span>,<span class="num">100</span>,<span class="num">200</span>,<span class="num">200</span>};
+    <span class="fn">drawPolygon</span>(x, y, <span class="num">4</span>, WHITE);
+    <span class="fn">translate</span>(x, y, <span class="num">4</span>, <span class="num">150</span>, <span class="num">80</span>);
+    <span class="fn">drawPolygon</span>(x, y, <span class="num">4</span>, CYAN);
+    getch(); closegraph();
+    <span class="kw">return</span> <span class="num">0</span>;
+}</pre></div>
+    <div class="section-label">4.4 Interactive Simulation</div>
+    <div class="canvas-wrapper">
+      <div class="canvas-controls">
+        <span class="ctrl-label">Tx <input type="number" id="tx" value="200"></span>
+        <span class="ctrl-label">Ty <input type="number" id="ty" value="100"></span>
+        <span class="ctrl-label">Shape <select id="shapeType"><option value="square">Square</option><option value="triangle">Triangle</option><option value="pentagon">Pentagon</option></select></span>
+        <button class="btn" onclick="doTranslate()">Translate</button>
+        <button class="btn dim" onclick="animTranslate()">Animate</button>
+        <button class="btn red" onclick="resetTranslate()">Reset</button>
+      </div>
+      <canvas id="c4" width="700" height="320" style="width:100%"></canvas>
+      <div class="canvas-caption">Fig 4.1 - Original shape (dim) and translated shape (teal). Dashed arrow shows translation vector.</div>
+    </div>
+  </div>
+
+  <!-- LAB 05 -->
+  <div class="lab-section">
+    <div class="lab-header">
+      <div class="lab-num">Lab 05</div>
+      <div class="lab-title">Midpoint Circle Drawing Algorithm</div>
+    </div>
+    <div class="section-label">5.1 Objective</div>
+    <p>To implement the Midpoint Circle Algorithm (Bresenham's Circle) in C, which uses only integer arithmetic to rasterize a circle, exploiting 8-way symmetry to compute only 1/8th of the circle.</p>
+    <div class="section-label">5.2 Theory</div>
+    <p>A circle with center (xc, yc) and radius r has the implicit equation <strong>f(x,y) = x^2 + y^2 - r^2 = 0</strong>.</p>
+    <div class="result-box">
+      <strong>Initial decision parameter:</strong> p0 = 1 - r<br><br>
+      <strong>If p < 0:</strong> choose E (x+1, y), update p = p + 2x + 3<br>
+      <strong>If p >= 0:</strong> choose SE (x+1, y-1), update p = p + 2(x-y) + 5<br><br>
+      <strong>8-way symmetry:</strong> From one point (x,y), plot all 8 symmetric points:<br>
+      (+/-x, +/-y), (+/-y, +/-x)
+    </div>
+    <p>The algorithm stops when x > y (we've covered 45 degrees).</p>
+    <div class="section-label">5.3 Source Code</div>
+    <div class="code-block"><pre><span class="pp">#include &lt;graphics.h&gt;
+#include &lt;conio.h&gt;</span>
+
+<span class="kw">void</span> <span class="fn">plotCirclePoints</span>(<span class="kw">int</span> xc, <span class="kw">int</span> yc, <span class="kw">int</span> x, <span class="kw">int</span> y) {
+    putpixel(xc+x, yc+y, WHITE);
+    putpixel(xc-x, yc+y, WHITE);
+    putpixel(xc+x, yc-y, WHITE);
+    putpixel(xc-x, yc-y, WHITE);
+    putpixel(xc+y, yc+x, WHITE);
+    putpixel(xc-y, yc+x, WHITE);
+    putpixel(xc+y, yc-x, WHITE);
+    putpixel(xc-y, yc-x, WHITE);
+}
+
+<span class="kw">void</span> <span class="fn">midpointCircle</span>(<span class="kw">int</span> xc, <span class="kw">int</span> yc, <span class="kw">int</span> r) {
+    <span class="kw">int</span> x = <span class="num">0</span>, y = r;
+    <span class="kw">int</span> p = <span class="num">1</span> - r;
+    plotCirclePoints(xc, yc, x, y);
+    <span class="kw">while</span> (x &lt; y) {
+        x++;
+        <span class="kw">if</span> (p &lt; <span class="num">0</span>) { p += <span class="num">2</span>*x + <span class="num">3</span>; }
+        <span class="kw">else</span> { y--; p += <span class="num">2</span>*(x-y) + <span class="num">5</span>; }
+        plotCirclePoints(xc, yc, x, y);
     }
 }
 
 <span class="kw">int</span> <span class="fn">main</span>() {
     <span class="kw">int</span> gd = DETECT, gm;
     initgraph(&amp;gd, &amp;gm, <span class="str">""</span>);
-
-    <span class="kw">int</span> x[] = {<span class="num">100</span>, <span class="num">200</span>, <span class="num">200</span>, <span class="num">100</span>};
-    <span class="kw">int</span> y[] = {<span class="num">100</span>, <span class="num">100</span>, <span class="num">200</span>, <span class="num">200</span>};
-    <span class="kw">int</span> n = <span class="num">4</span>;
-    <span class="kw">int</span> tx = <span class="num">150</span>, ty = <span class="num">80</span>;
-
-    <span class="fn">drawPolygon</span>(x, y, n, WHITE);   <span class="cm">// draw original</span>
-    <span class="fn">translate</span>(x, y, n, tx, ty);    <span class="cm">// apply translation</span>
-    <span class="fn">drawPolygon</span>(x, y, n, CYAN);    <span class="cm">// draw translated</span>
-
-    outtextxy(<span class="num">110</span>, <span class="num">210</span>, <span class="str">"Original"</span>);
-    outtextxy(<span class="num">260</span>, <span class="num">290</span>, <span class="str">"Translated"</span>);
-
-    getch();
-    closegraph();
+    midpointCircle(<span class="num">300</span>, <span class="num">200</span>, <span class="num">50</span>);
+    midpointCircle(<span class="num">300</span>, <span class="num">200</span>, <span class="num">100</span>);
+    midpointCircle(<span class="num">300</span>, <span class="num">200</span>, <span class="num">150</span>);
+    getch(); closegraph();
     <span class="kw">return</span> <span class="num">0</span>;
 }</pre></div>
-
-    <div class="section-label">4.5 &nbsp; Interactive Simulation</div>
+    <div class="section-label">5.4 Interactive Simulation</div>
     <div class="canvas-wrapper">
       <div class="canvas-controls">
-        <span class="ctrl-label">Tx <input type="number" id="tx" value="200"></span>
-        <span class="ctrl-label">Ty <input type="number" id="ty" value="100"></span>
-        <span class="ctrl-label">Shape
-          <select id="shapeType" style="background:#2a2a3e;border:0.5px solid #444;color:#eee;padding:3px 6px;font-family:'Courier Prime',monospace;font-size:12px;border-radius:3px">
-            <option value="square">Square</option>
-            <option value="triangle">Triangle</option>
-            <option value="pentagon">Pentagon</option>
-          </select>
-        </span>
-        <button class="btn" onclick="doTranslate()">Translate</button>
-        <button class="btn dim" onclick="animTranslate()">Animate</button>
-        <button class="btn red" onclick="resetTranslate()">Reset</button>
+        <span class="ctrl-label">cx <input type="number" id="l5cx" value="350"></span>
+        <span class="ctrl-label">cy <input type="number" id="l5cy" value="140"></span>
+        <span class="ctrl-label">r <input type="number" id="l5r" value="80"></span>
+        <span class="ctrl-label">Color <input type="color" id="l5col" value="#ff6b9d"></span>
+        <button class="btn" onclick="drawLab5()">Draw</button>
+        <button class="btn dim" onclick="animCircle()">Animate</button>
+        <button class="btn red" onclick="clearC('c5')">Clear</button>
       </div>
-      <canvas id="c4" width="700" height="320" style="width:100%"></canvas>
-      <div class="canvas-caption">Fig 4.1 — Original shape (dim) and translated shape (teal). Dashed arrow shows translation vector.</div>
+      <canvas id="c5" width="700" height="280" style="width:100%"></canvas>
+      <div class="canvas-caption">Fig 5.1 - Circle drawn with Midpoint algorithm (click Animate for step-by-step)</div>
     </div>
+    <div class="section-label">5.5 Result</div>
+    <p>The midpoint circle algorithm correctly rasterizes circles of any radius. By exploiting 8-way symmetry, only 1/8th of the circle is computed. The algorithm uses only integer addition and comparison, making it extremely fast.</p>
+  </div>
 
-    <div class="section-label">4.6 &nbsp; Properties of Translation</div>
+  <!-- LAB 06 -->
+  <div class="lab-section">
+    <div class="lab-header">
+      <div class="lab-num">Lab 06</div>
+      <div class="lab-title">2D Rotation Transformation</div>
+    </div>
+    <div class="section-label">6.1 Objective</div>
+    <p>To implement 2D rotation in C, which turns an object around a fixed pivot point by a specified angle theta. Positive angles rotate counterclockwise.</p>
+    <div class="section-label">6.2 Theory</div>
+    <div class="result-box">
+      <strong>x' = x*cos(theta) - y*sin(theta)</strong><br>
+      <strong>y' = x*sin(theta) + y*cos(theta)</strong><br><br>
+      <strong>Matrix form:</strong><br>
+      [ x' ]   [ cos(t)  -sin(t)  0 ]   [ x ]<br>
+      [ y' ] = [ sin(t)   cos(t)  0 ] * [ y ]<br>
+      [ 1  ]   [  0       0       1 ]   [ 1 ]<br><br>
+      <strong>Rotation about arbitrary point (cx, cy):</strong><br>
+      1. Translate pivot to origin: T(-cx, -cy)<br>
+      2. Rotate about origin: R(theta)<br>
+      3. Translate back: T(cx, cy)
+    </div>
+    <div class="section-label">6.3 Source Code</div>
+    <div class="code-block"><pre><span class="pp">#include &lt;graphics.h&gt;
+#include &lt;cmath&gt;
+#include &lt;conio.h&gt;</span>
+<span class="pp">#define PI 3.14159265</span>
+
+<span class="kw">void</span> <span class="fn">rotatePoint</span>(<span class="kw">int</span> x, <span class="kw">int</span> y, <span class="kw">int</span> cx, <span class="kw">int</span> cy, <span class="kw">float</span> angle, <span class="kw">int</span> &amp;xOut, <span class="kw">int</span> &amp;yOut) {
+    <span class="kw">float</span> rad = angle * PI / <span class="num">180.0</span>;
+    <span class="kw">float</span> cosA = cos(rad), sinA = sin(rad);
+    <span class="kw">int</span> xRel = x - cx, yRel = y - cy;
+    xOut = cx + (<span class="kw">int</span>)(xRel * cosA - yRel * sinA + <span class="num">0.5f</span>);
+    yOut = cy + (<span class="kw">int</span>)(xRel * sinA + yRel * cosA + <span class="num">0.5f</span>);
+}
+
+<span class="kw">int</span> <span class="fn">main</span>() {
+    <span class="kw">int</span> gd = DETECT, gm;
+    initwindow(<span class="num">640</span>, <span class="num">480</span>, <span class="str">"2D Rotation"</span>);
+    <span class="cm">// Draw triangle, rotate about centroid by 60 degrees</span>
+    getch(); closegraph();
+    <span class="kw">return</span> <span class="num">0</span>;
+}</pre></div>
+    <div class="section-label">6.4 Interactive Simulation</div>
+    <div class="canvas-wrapper">
+      <div class="canvas-controls">
+        <span class="ctrl-label">Angle <input type="number" id="l6angle" value="45"></span>
+        <span class="ctrl-label">Pivot <select id="l6pivot"><option value="centroid">Centroid</option><option value="origin">Origin</option><option value="vertex">First Vertex</option></select></span>
+        <span class="ctrl-label">Shape <select id="l6shape"><option value="triangle">Triangle</option><option value="square">Square</option><option value="pentagon">Pentagon</option></select></span>
+        <button class="btn" onclick="drawLab6()">Rotate</button>
+        <button class="btn dim" onclick="animRotate()">Animate</button>
+        <button class="btn red" onclick="clearC('c6')">Clear</button>
+      </div>
+      <canvas id="c6" width="700" height="320" style="width:100%"></canvas>
+      <div class="canvas-caption">Fig 6.1 - White = original, Magenta = rotated. Dashed arc shows rotation angle.</div>
+    </div>
+    <div class="section-label">6.5 Properties</div>
     <table class="algo-table">
       <tr><th>Property</th><th>Description</th></tr>
-      <tr><td>Type</td><td>Rigid body transformation (isometry) — preserves shape and size</td></tr>
-      <tr><td>Invertible?</td><td>Yes — inverse is translation by (−Tx, −Ty)</td></tr>
-      <tr><td>Commutative?</td><td>Yes — T(Tx1,Ty1) followed by T(Tx2,Ty2) = T(Tx1+Tx2, Ty1+Ty2)</td></tr>
-      <tr><td>Matrix form</td><td>Requires 3×3 homogeneous coordinates in 2D</td></tr>
-      <tr><td>Fixed points</td><td>None — every point moves</td></tr>
+      <tr><td>Type</td><td>Rigid body (isometry) - preserves distances and angles</td></tr>
+      <tr><td>Invertible?</td><td>Yes - rotate by -theta</td></tr>
+      <tr><td>Commutative?</td><td>No - R(t1)*R(t2) != R(t2)*R(t1) in general</td></tr>
+      <tr><td>Fixed point</td><td>The pivot point (center of rotation)</td></tr>
     </table>
+  </div>
 
-    <div class="section-label">4.7 &nbsp; Result &amp; Discussion</div>
-    <p>The translation program successfully repositions all vertices of the polygon by the specified (Tx, Ty) offset. The shape's geometry — angles, side lengths, and orientation — remains completely unchanged. Using homogeneous coordinates enables translation to be expressed as a matrix multiplication, which is essential for composing multiple transformations efficiently in graphics pipelines (e.g., model-view-projection matrices in OpenGL).</p>
+  <!-- LAB 07 -->
+  <div class="lab-section">
+    <div class="lab-header">
+      <div class="lab-num">Lab 07</div>
+      <div class="lab-title">2D Scaling Transformation</div>
+    </div>
+    <div class="section-label">7.1 Objective</div>
+    <p>To implement 2D scaling in C, which changes the size of an object by multiplying coordinates by scaling factors sx and sy.</p>
+    <div class="section-label">7.2 Theory</div>
+    <div class="result-box">
+      <strong>x' = fx + (x - fx) * sx</strong><br>
+      <strong>y' = fy + (y - fy) * sy</strong><br><br>
+      <strong>Matrix form:</strong><br>
+      [ x' ]   [ sx  0   0 ]   [ x ]<br>
+      [ y' ] = [ 0   sy  0 ] * [ y ]<br>
+      [ 1  ]   [ 0   0   1 ]   [ 1 ]<br><br>
+      <strong>Uniform scaling:</strong> sx = sy - shape preserved<br>
+      <strong>Differential scaling:</strong> sx != sy - object stretches/distorts
+    </div>
+    <div class="section-label">7.3 Source Code</div>
+    <div class="code-block"><pre><span class="pp">#include &lt;graphics.h&gt;
+#include &lt;cmath&gt;
+#include &lt;conio.h&gt;</span>
 
-    <div class="section-label">4.8 &nbsp; Conclusion</div>
-    <p>Translation is the simplest of the geometric transformations, yet it is foundational to all 2D and 3D graphics. Understanding translation in matrix form prepares the ground for rotation, scaling, and composite transformations studied in advanced computer graphics. The implementation is straightforward: a simple loop adding Tx and Ty to each coordinate pair.</p>
+<span class="kw">void</span> <span class="fn">scalePoint</span>(<span class="kw">int</span> x, <span class="kw">int</span> y, <span class="kw">int</span> fx, <span class="kw">int</span> fy, <span class="kw">float</span> sx, <span class="kw">float</span> sy, <span class="kw">int</span> &amp;xOut, <span class="kw">int</span> &amp;yOut) {
+    xOut = fx + (<span class="kw">int</span>)((x - fx) * sx + <span class="num">0.5f</span>);
+    yOut = fy + (<span class="kw">int</span>)((y - fy) * sy + <span class="num">0.5f</span>);
+}</pre></div>
+    <div class="section-label">7.4 Interactive Simulation</div>
+    <div class="canvas-wrapper">
+      <div class="canvas-controls">
+        <span class="ctrl-label">sx <input type="number" id="l7sx" value="150" style="width:50px">%</span>
+        <span class="ctrl-label">sy <input type="number" id="l7sy" value="150" style="width:50px">%</span>
+        <span class="ctrl-label">Pivot <select id="l7pivot"><option value="centroid">Centroid</option><option value="origin">Origin</option></select></span>
+        <span class="ctrl-label">Shape <select id="l7shape"><option value="triangle">Triangle</option><option value="square">Square</option><option value="pentagon">Pentagon</option></select></span>
+        <button class="btn" onclick="drawLab7()">Scale</button>
+        <button class="btn dim" onclick="animScale()">Animate</button>
+        <button class="btn red" onclick="clearC('c7')">Clear</button>
+      </div>
+      <canvas id="c7" width="700" height="320" style="width:100%"></canvas>
+      <div class="canvas-caption">Fig 7.1 - White = original, Magenta = scaled. Use sx=sy for uniform scaling.</div>
+    </div>
+    <div class="section-label">7.5 Result</div>
+    <p>Scaling about a fixed point enlarges or shrinks the object while keeping the fixed point stationary. Uniform scaling preserves proportions; differential scaling creates stretch/squash effects.</p>
+  </div>
+
+  <!-- LAB 08 -->
+  <div class="lab-section">
+    <div class="lab-header">
+      <div class="lab-num">Lab 08</div>
+      <div class="lab-title">3D Rotation About an Arbitrary Axis</div>
+    </div>
+    <div class="section-label">8.1 Objective</div>
+    <p>To implement 3D rotation about an arbitrary axis using Rodrigues' Rotation Formula in C, visualized on a 2D screen using oblique projection.</p>
+    <div class="section-label">8.2 Theory</div>
+    <div class="result-box">
+      <strong>Rodrigues' Formula:</strong><br>
+      v' = v*cos(theta) + (u x v)*sin(theta) + u*(u . v)*(1 - cos(theta))<br><br>
+      Where u = unit axis vector, v = point to rotate<br>
+      u x v = cross product, u . v = dot product<br><br>
+      <strong>Steps:</strong><br>
+      1. Translate so axis passes through origin<br>
+      2. Normalize axis direction to unit vector u<br>
+      3. Apply Rodrigues' formula<br>
+      4. Translate back<br><br>
+      <strong>Oblique projection (3D to 2D):</strong><br>
+      screen_x = world_x + world_z * 0.5 * cos(30 deg)<br>
+      screen_y = world_y + world_z * 0.5 * sin(30 deg)
+    </div>
+    <div class="section-label">8.3 Source Code (excerpt)</div>
+    <div class="code-block"><pre><span class="pp">#include &lt;graphics.h&gt;
+#include &lt;cmath&gt;
+#include &lt;conio.h&gt;</span>
+<span class="pp">#define PI 3.14159265</span>
+
+<span class="kw">struct</span> Point3D { <span class="kw">int</span> x, y, z; };
+
+<span class="kw">void</span> <span class="fn">rotateAboutAxis</span>(Point3D &amp;p, Point3D a1, Point3D a2, <span class="kw">float</span> angle) {
+    <span class="kw">float</span> px=p.x-a1.x, py=p.y-a1.y, pz=p.z-a1.z;
+    <span class="kw">float</span> ax=a2.x-a1.x, ay=a2.y-a1.y, az=a2.z-a1.z;
+    <span class="kw">float</span> len=sqrt(ax*ax+ay*ay+az*az);
+    <span class="kw">float</span> ux=ax/len, uy=ay/len, uz=az/len;
+    <span class="kw">float</span> rad=angle*PI/<span class="num">180.0</span>, c=cos(rad), s=sin(rad);
+    <span class="kw">float</span> dot=px*ux+py*uy+pz*uz;
+    <span class="kw">float</span> cx=uy*pz-uz*py, cy=uz*px-ux*pz, cz=ux*py-uy*px;
+    p.x=(<span class="kw">int</span>)(px*c+cx*s+ux*dot*(<span class="num">1</span>-c)+a1.x+<span class="num">0.5f</span>);
+    p.y=(<span class="kw">int</span>)(py*c+cy*s+uy*dot*(<span class="num">1</span>-c)+a1.y+<span class="num">0.5f</span>);
+    p.z=(<span class="kw">int</span>)(pz*c+cz*s+uz*dot*(<span class="num">1</span>-c)+a1.z+<span class="num">0.5f</span>);
+}</pre></div>
+    <div class="section-label">8.4 Interactive Simulation</div>
+    <div class="canvas-wrapper">
+      <div class="canvas-controls">
+        <span class="ctrl-label">Angle <input type="number" id="l8angle" value="45"></span>
+        <span class="ctrl-label">Axis <select id="l8axis"><option value="diag">Body Diagonal</option><option value="x">X-Axis</option><option value="y">Y-Axis</option><option value="z">Z-Axis</option></select></span>
+        <button class="btn" onclick="drawLab8()">Rotate</button>
+        <button class="btn red" onclick="clearC('c8')">Clear</button>
+      </div>
+      <canvas id="c8" width="700" height="320" style="width:100%"></canvas>
+      <div class="canvas-caption">Fig 8.1 - 3D cube with oblique projection. White = original, Yellow = rotated.</div>
+    </div>
+    <div class="section-label">8.5 Result</div>
+    <p>Rodrigues' formula provides an elegant way to rotate about any axis in 3D space. The oblique projection gives a pseudo-3D appearance on the 2D screen. GPUs implement this using quaternions to avoid gimbal lock.</p>
+  </div>
+
+  <!-- LAB 09 -->
+  <div class="lab-section">
+    <div class="lab-header">
+      <div class="lab-num">Lab 09</div>
+      <div class="lab-title">Cohen-Sutherland Line Clipping</div>
+    </div>
+    <div class="section-label">9.1 Objective</div>
+    <p>To implement the Cohen-Sutherland line clipping algorithm in C, which efficiently determines the visible portion of a line segment inside a rectangular clipping window.</p>
+    <div class="section-label">9.2 Theory</div>
+    <div class="result-box">
+      <strong>Region codes (4 bits):</strong><br>
+      Bit 3 (8) = TOP (y < yMin)<br>
+      Bit 2 (4) = BOTTOM (y > yMax)<br>
+      Bit 1 (2) = RIGHT (x > xMax)<br>
+      Bit 0 (1) = LEFT (x < xMin)<br>
+      0000 = INSIDE<br><br>
+      <strong>Trivial Accept:</strong> both codes = 0000<br>
+      <strong>Trivial Reject:</strong> code1 AND code2 != 0<br>
+      <strong>Otherwise:</strong> clip against one edge, replace endpoint, repeat
+    </div>
+    <div class="section-label">9.3 Source Code</div>
+    <div class="code-block"><pre><span class="pp">#include &lt;graphics.h&gt;
+#include &lt;conio.h&gt;</span>
+
+<span class="kw">const int</span> INSIDE=<span class="num">0</span>, LEFT=<span class="num">1</span>, RIGHT=<span class="num">2</span>, BOTTOM=<span class="num">4</span>, TOP=<span class="num">8</span>;
+<span class="kw">int</span> xMin=<span class="num">150</span>, yMin=<span class="num">100</span>, xMax=<span class="num">450</span>, yMax=<span class="num">300</span>;
+
+<span class="kw">int</span> <span class="fn">computeCode</span>(<span class="kw">int</span> x, <span class="kw">int</span> y) {
+    <span class="kw">int</span> code = INSIDE;
+    <span class="kw">if</span> (x < xMin) code |= LEFT;
+    <span class="kw">if</span> (x > xMax) code |= RIGHT;
+    <span class="kw">if</span> (y < yMin) code |= TOP;
+    <span class="kw">if</span> (y > yMax) code |= BOTTOM;
+    <span class="kw">return</span> code;
+}
+
+<span class="kw">void</span> <span class="fn">cohenSutherland</span>(<span class="kw">int</span> x1, <span class="kw">int</span> y1, <span class="kw">int</span> x2, <span class="kw">int</span> y2) {
+    <span class="kw">int</span> c1=computeCode(x1,y1), c2=computeCode(x2,y2), accept=<span class="num">0</span>;
+    <span class="kw">while</span>(<span class="num">1</span>) {
+        <span class="kw">if</span>(!c1 && !c2) { accept=<span class="num">1</span>; <span class="kw">break</span>; }
+        <span class="kw">else if</span>(c1 & c2) <span class="kw">break</span>;
+        <span class="kw">else</span> {
+            <span class="kw">int</span> cOut = (c1!=<span class="num">0</span>)?c1:c2, x, y;
+            <span class="kw">if</span>(cOut&TOP) { x=x1+(x2-x1)*(yMin-y1)/(y2-y1); y=yMin; }
+            <span class="kw">else if</span>(cOut&BOTTOM) { x=x1+(x2-x1)*(yMax-y1)/(y2-y1); y=yMax; }
+            <span class="kw">else if</span>(cOut&RIGHT) { y=y1+(y2-y1)*(xMax-x1)/(x2-x1); x=xMax; }
+            <span class="kw">else</span> { y=y1+(y2-y1)*(xMin-x1)/(x2-x1); x=xMin; }
+            <span class="kw">if</span>(cOut==c1) { x1=x; y1=y; c1=computeCode(x1,y1); }
+            <span class="kw">else</span> { x2=x; y2=y; c2=computeCode(x2,y2); }
+        }
+    }
+    <span class="kw">if</span>(accept) { setcolor(YELLOW); line(x1,y1,x2,y2); }
+}</pre></div>
+    <div class="section-label">9.4 Interactive Simulation</div>
+    <div class="canvas-wrapper">
+      <div class="canvas-controls">
+        <span class="ctrl-label">Line: (<input type="number" id="l9x1" value="50">,<input type="number" id="l9y1" value="200">) to (<input type="number" id="l9x2" value="300">,<input type="number" id="l9y2" value="80">)</span>
+        <button class="btn" onclick="drawLab9()">Clip</button>
+        <button class="btn red" onclick="clearC('c9')">Clear</button>
+      </div>
+      <canvas id="c9" width="700" height="320" style="width:100%"></canvas>
+      <div class="canvas-caption">Fig 9.1 - White = clipping window + original lines, Yellow = visible (clipped) portions</div>
+    </div>
+    <div class="section-label">9.5 Result</div>
+    <p>Cohen-Sutherland efficiently rejects fully outside lines with a single AND operation. For lines crossing the window, iterative clipping replaces outside endpoints with intersection points until the line is fully inside.</p>
+  </div>
+
+  <!-- LAB 10 -->
+  <div class="lab-section">
+    <div class="lab-header">
+      <div class="lab-num">Lab 10</div>
+      <div class="lab-title">Sutherland-Hodgman Polygon Clipping</div>
+    </div>
+    <div class="section-label">10.1 Objective</div>
+    <p>To implement the Sutherland-Hodgman polygon clipping algorithm, which clips an entire polygon against a rectangular window by processing one edge at a time.</p>
+    <div class="section-label">10.2 Theory</div>
+    <div class="result-box">
+      <strong>Four cases for each edge (S to P):</strong><br>
+      1. S inside, P inside - Output P<br>
+      2. S inside, P outside - Output intersection I<br>
+      3. S outside, P outside - Output nothing<br>
+      4. S outside, P inside - Output I, then P<br><br>
+      <strong>Processing order:</strong> Left - Right - Bottom - Top<br>
+      Each stage's output becomes the next stage's input.
+    </div>
+    <div class="section-label">10.3 Source Code (excerpt)</div>
+    <div class="code-block"><pre><span class="pp">#include &lt;graphics.h&gt;
+#include &lt;vector&gt;
+using namespace std;</span>
+
+<span class="kw">struct</span> Point { <span class="kw">int</span> x, y; };
+<span class="kw">int</span> xMin=<span class="num">150</span>, yMin=<span class="num">100</span>, xMax=<span class="num">450</span>, yMax=<span class="num">300</span>;
+
+<span class="kw">bool</span> <span class="fn">inside</span>(Point p, <span class="kw">int</span> edge) {
+    <span class="kw">switch</span>(edge) {
+        <span class="kw">case</span> <span class="num">0</span>: <span class="kw">return</span> p.x >= xMin;
+        <span class="kw">case</span> <span class="num">1</span>: <span class="kw">return</span> p.x <= xMax;
+        <span class="kw">case</span> <span class="num">2</span>: <span class="kw">return</span> p.y >= yMin;
+        <span class="kw">case</span> <span class="num">3</span>: <span class="kw">return</span> p.y <= yMax;
+    }
+    <span class="kw">return false</span>;
+}
+
+vector&lt;Point&gt; <span class="fn">clipAgainstEdge</span>(vector&lt;Point&gt; poly, <span class="kw">int</span> edge) {
+    vector&lt;Point&gt; result;
+    <span class="kw">int</span> n = poly.size();
+    <span class="kw">for</span>(<span class="kw">int</span> i=<span class="num">0</span>; i<n; i++) {
+        Point cur=poly[i], nxt=poly[(i+<span class="num">1</span>)%n];
+        <span class="kw">bool</span> ci=inside(cur,edge), ni=inside(nxt,edge);
+        <span class="kw">if</span>(ci && ni) result.push_back(nxt);
+        <span class="kw">else if</span>(ci && !ni) result.push_back(intersect(cur,nxt,edge));
+        <span class="kw">else if</span>(!ci && ni) {
+            result.push_back(intersect(cur,nxt,edge));
+            result.push_back(nxt);
+        }
+    }
+    <span class="kw">return</span> result;
+}</pre></div>
+    <div class="section-label">10.4 Interactive Simulation</div>
+    <div class="canvas-wrapper">
+      <div class="canvas-controls">
+        <span class="ctrl-label">Shape <select id="l10shape"><option value="octagon">Octagon</option><option value="star">Star</option><option value="arrow">Arrow</option></select></span>
+        <button class="btn" onclick="drawLab10()">Clip</button>
+        <button class="btn red" onclick="clearC('c10')">Clear</button>
+      </div>
+      <canvas id="c10" width="700" height="320" style="width:100%"></canvas>
+      <div class="canvas-caption">Fig 10.1 - White = clipping window + original polygon, Yellow = clipped result</div>
+    </div>
+    <div class="section-label">10.5 Result</div>
+    <p>Sutherland-Hodgman produces a valid polygon from clipping a convex or concave input polygon. The sequential edge-clipping approach is elegant: each stage reduces the polygon.</p>
+  </div>
+
+  <!-- LAB 11 -->
+  <div class="lab-section">
+    <div class="lab-header">
+      <div class="lab-num">Lab 11</div>
+      <div class="lab-title">Bezier Curve</div>
+    </div>
+    <div class="section-label">11.1 Objective</div>
+    <p>To implement a cubic Bezier curve in C, which generates a smooth curve from 4 control points using Bernstein basis polynomials.</p>
+    <div class="section-label">11.2 Theory</div>
+    <div class="result-box">
+      <strong>B(t) = (1-t)^3*P0 + 3t(1-t)^2*P1 + 3t^2(1-t)*P2 + t^3*P3</strong><br><br>
+      <strong>Bernstein basis polynomials:</strong><br>
+      B0(t) = (1-t)^3      weight for P0<br>
+      B1(t) = 3t(1-t)^2    weight for P1<br>
+      B2(t) = 3t^2(1-t)    weight for P2<br>
+      B3(t) = t^3           weight for P3<br><br>
+      <strong>Properties:</strong><br>
+      - Passes through P0 (t=0) and P3 (t=1)<br>
+      - Tangent at start = direction P0 to P1<br>
+      - Tangent at end = direction P2 to P3<br>
+      - Curve lies inside the convex hull of control points<br>
+      - Moving any control point affects the ENTIRE curve (global control)
+    </div>
+    <div class="section-label">11.3 Source Code</div>
+    <div class="code-block"><pre><span class="pp">#include &lt;graphics.h&gt;
+#include &lt;cmath&gt;
+#include &lt;conio.h&gt;</span>
+
+<span class="kw">void</span> <span class="fn">bezierCurve</span>(<span class="kw">int</span> x[<span class="num">4</span>], <span class="kw">int</span> y[<span class="num">4</span>], <span class="kw">int</span> steps=<span class="num">100</span>) {
+    <span class="kw">for</span>(<span class="kw">int</span> i=<span class="num">0</span>; i<=steps; i++) {
+        <span class="kw">float</span> t=(<span class="kw">float</span>)i/steps, u=<span class="num">1</span>-t;
+        <span class="kw">float</span> b0=u*u*u, b1=<span class="num">3</span>*t*u*u;
+        <span class="kw">float</span> b2=<span class="num">3</span>*t*t*u, b3=t*t*t;
+        <span class="kw">int</span> px=(<span class="kw">int</span>)(b0*x[<span class="num">0</span>]+b1*x[<span class="num">1</span>]+b2*x[<span class="num">2</span>]+b3*x[<span class="num">3</span>]+<span class="num">0.5f</span>);
+        <span class="kw">int</span> py=(<span class="kw">int</span>)(b0*y[<span class="num">0</span>]+b1*y[<span class="num">1</span>]+b2*y[<span class="num">2</span>]+b3*y[<span class="num">3</span>]+<span class="num">0.5f</span>);
+        putpixel(px, py, YELLOW);
+    }
+}</pre></div>
+    <div class="section-label">11.4 Interactive Simulation</div>
+    <div class="canvas-wrapper">
+      <div class="canvas-controls">
+        <span class="ctrl-label">Preset <select id="l11preset" onchange="drawLab11()"><option value="s">S-Curve</option><option value="wave">Wave</option><option value="loop">Loop</option></select></span>
+        <button class="btn" onclick="drawLab11()">Draw</button>
+        <button class="btn red" onclick="clearC('c11')">Clear</button>
+      </div>
+      <canvas id="c11" width="700" height="320" style="width:100%"></canvas>
+      <div class="canvas-caption">Fig 11.1 - White = control polygon, Red = control points, Yellow = Bezier curve</div>
+    </div>
+    <div class="section-label">11.5 Result</div>
+    <p>The Bezier curve smoothly interpolates between control points. Moving P1 or P2 bends the curve without moving the endpoints. However, changing one control point affects the entire curve - there's no local control.</p>
+  </div>
+
+  <!-- LAB 12 -->
+  <div class="lab-section">
+    <div class="lab-header">
+      <div class="lab-num">Lab 12</div>
+      <div class="lab-title">B-Spline Curve</div>
+    </div>
+    <div class="section-label">12.1 Objective</div>
+    <p>To implement a uniform cubic B-spline curve in C, which provides local control - each control point affects only a small region of the curve.</p>
+    <div class="section-label">12.2 Theory</div>
+    <div class="result-box">
+      <strong>Uniform cubic B-spline segment:</strong><br>
+      Bi(t) = (1/6) * [<br>
+      (1-t)^3*Pi + (3t^3 - 6t^2 + 4)*Pi+1 +<br>
+      (-3t^3 + 3t^2 + 3t + 1)*Pi+2 + t^3*Pi+3<br>]<br><br>
+      <strong>Key differences from Bezier:</strong><br>
+      - Local control: changing Pi affects at most 4 segments<br>
+      - C2 continuous (smoother joins)<br>
+      - Does NOT pass through control points<br>
+      - n control points produce (n-3) segments
+    </div>
+    <div class="section-label">12.3 Source Code</div>
+    <div class="code-block"><pre><span class="pp">#include &lt;graphics.h&gt;
+#include &lt;cmath&gt;
+#include &lt;conio.h&gt;</span>
+<span class="pp">#define NUM_POINTS 6</span>
+
+<span class="kw">void</span> <span class="fn">bSpline</span>(<span class="kw">int</span> cx[], <span class="kw">int</span> cy[], <span class="kw">int</span> n, <span class="kw">int</span> steps=<span class="num">50</span>) {
+    setcolor(WHITE);
+    <span class="kw">for</span>(<span class="kw">int</span> i=<span class="num">0</span>; i<n-<span class="num">1</span>; i++) line(cx[i],cy[i],cx[i+<span class="num">1</span>],cy[i+<span class="num">1</span>]);
+    setcolor(YELLOW);
+    <span class="kw">for</span>(<span class="kw">int</span> i=<span class="num">0</span>; i<n-<span class="num">3</span>; i++) {
+        <span class="kw">for</span>(<span class="kw">int</span> j=<span class="num">0</span>; j<=steps; j++) {
+            <span class="kw">float</span> t=(<span class="kw">float</span>)j/steps, t2=t*t, t3=t2*t;
+            <span class="kw">float</span> b0=(<span class="num">1.0f</span>/<span class="num">6.0f</span>)*(-t3+<span class="num">3</span>*t2-<span class="num">3</span>*t+<span class="num">1</span>);
+            <span class="kw">float</span> b1=(<span class="num">1.0f</span>/<span class="num">6.0f</span>)*(<span class="num">3</span>*t3-<span class="num">6</span>*t2+<span class="num">4</span>);
+            <span class="kw">float</span> b2=(<span class="num">1.0f</span>/<span class="num">6.0f</span>)*(-<span class="num">3</span>*t3+<span class="num">3</span>*t2+<span class="num">3</span>*t+<span class="num">1</span>);
+            <span class="kw">float</span> b3=(<span class="num">1.0f</span>/<span class="num">6.0f</span>)*t3;
+            <span class="kw">int</span> px=(<span class="kw">int</span>)(b0*cx[i]+b1*cx[i+<span class="num">1</span>]+b2*cx[i+<span class="num">2</span>]+b3*cx[i+<span class="num">3</span>]+<span class="num">0.5f</span>);
+            <span class="kw">int</span> py=(<span class="kw">int</span>)(b0*cy[i]+b1*cy[i+<span class="num">1</span>]+b2*cy[i+<span class="num">2</span>]+b3*cy[i+<span class="num">3</span>]+<span class="num">0.5f</span>);
+            putpixel(px, py, YELLOW);
+        }
+    }
+}</pre></div>
+    <div class="section-label">12.4 Interactive Simulation</div>
+    <div class="canvas-wrapper">
+      <div class="canvas-controls">
+        <span class="ctrl-label">Preset <select id="l12preset" onchange="drawLab12()"><option value="wave">Wave (6 pts)</option><option value="circle">Circle Approx</option><option value="spiral">S-curve</option></select></span>
+        <button class="btn" onclick="drawLab12()">Draw</button>
+        <button class="btn red" onclick="clearC('c12')">Clear</button>
+      </div>
+      <canvas id="c12" width="700" height="320" style="width:100%"></canvas>
+      <div class="canvas-caption">Fig 12.1 - White = control polygon, Red = control points, Yellow = B-spline curve (C2 continuous)</div>
+    </div>
+    <div class="section-label">12.5 Result</div>
+    <p>The B-spline produces a smoother curve than Bezier because it's C2 continuous. Changing one control point only affects nearby segments. The trade-off is that the curve doesn't pass through the control points.</p>
   </div>
 
   <!-- COMPARATIVE ANALYSIS -->
   <div class="lab-section">
     <div class="lab-header">
       <div class="lab-num">Analysis</div>
-      <div class="lab-title">Comparative Analysis of Line Drawing Algorithms</div>
+      <div class="lab-title">Comparative Analysis of Algorithms</div>
     </div>
-
-    <div class="section-label">5.1 &nbsp; Time &amp; Space Complexity</div>
+    <div class="section-label">A.1 Line Drawing Complexity</div>
     <table class="compare-table">
-      <tr>
-        <th>Algorithm</th>
-        <th>Time Complexity</th>
-        <th>Space Complexity</th>
-        <th>Arithmetic</th>
-      </tr>
-      <tr><td>Parametric</td><td>O(n)</td><td>O(1)</td><td class="bad">Float (+, ×, ÷)</td></tr>
-      <tr><td>DDA</td><td>O(n)</td><td>O(1)</td><td class="bad">Float (+, ÷)</td></tr>
-      <tr><td>Bresenham</td><td>O(n)</td><td>O(1)</td><td class="good">Integer (+, −, ≪)</td></tr>
+      <tr><th>Algorithm</th><th>Time</th><th>Space</th><th>Arithmetic</th></tr>
+      <tr><td>Parametric</td><td>O(n)</td><td>O(1)</td><td class="bad">Float (+, *, /)</td></tr>
+      <tr><td>DDA</td><td>O(n)</td><td>O(1)</td><td class="bad">Float (+, /)</td></tr>
+      <tr><td>Bresenham</td><td>O(n)</td><td>O(1)</td><td class="good">Integer (+, -, <<)</td></tr>
     </table>
-    <p>where <em>n = max(|dx|, |dy|)</em> is the number of pixel steps. All three algorithms are linear in the dominant axis length. Bresenham's constant-factor advantage comes from replacing float division/multiplication with integer addition and bit-shift operations, making it ~2–3× faster in practice on CPU and the preferred choice in hardware rasterizers.</p>
-
-    <div class="section-label">5.2 &nbsp; Accuracy Comparison</div>
+    <div class="section-label">A.2 Transformation Summary</div>
     <table class="algo-table">
-      <tr><th>Metric</th><th>Parametric</th><th>DDA</th><th>Bresenham</th></tr>
-      <tr><td>Pixel deviation (mean)</td><td>±0.5 px</td><td>±0.5 px</td><td>±0.0 px (exact)</td></tr>
-      <tr><td>Integer overflow risk</td><td rowspan="2">Low (floats)</td><td rowspan="2">Low (floats)</td><td>Possible if dx,dy &gt; 2¹⁵</td></tr>
-      <tr><td>Anti-aliasing support</td><td>Easily extended</td><td>Easily extended</td><td>Requires modification (Wu)</td></tr>
-      <tr><td>Vertical/horizontal lines</td><td>✓</td><td>✓</td><td>✓</td></tr>
-      <tr><td>Arbitrary octants</td><td>✓ (implicit)</td><td>✓ (via sign checks)</td><td>✓ (via sx, sy)</td></tr>
+      <tr><th>Transform</th><th>Preserves</th><th>Fixed Points</th><th>Cost</th></tr>
+      <tr><td>Translation</td><td>Shape, size, orientation</td><td>None</td><td>Addition only</td></tr>
+      <tr><td>Rotation</td><td>Shape, size</td><td>Pivot point</td><td>cos, sin</td></tr>
+      <tr><td>Scaling</td><td>Angles (if uniform)</td><td>Fixed point</td><td>Multiplication</td></tr>
     </table>
-
-    <div class="section-label">5.3 &nbsp; Cumulative Error Analysis</div>
-    <p>Both Parametric and DDA accumulate floating-point rounding errors as <strong>ε · n</strong> where ε ≈ 1×10⁻⁷ (single precision). After 10⁶ steps, worst-case drift reaches ~0.1 pixels — negligible for display purposes but problematic for precise CAD/CAM rasterization. Bresenham's integer-only accumulator <em>err</em> is <strong>exact</strong>: the chosen pixels always minimize the true Euclidean distance to the ideal line, provably optimal.</p>
-
-    <div class="section-label">5.4 &nbsp; Decision Parameter Derivation (Bresenham)</div>
-    <p>The decision parameter <em>p<sub>k</sub></em> at step <em>k</em> is derived from the difference between the two candidate pixel distances from the true line:</p>
-    <div class="result-box">
-      <strong>p<sub>k</sub> = 2·dy · x<sub>k</sub> − 2·dx · y<sub>k</sub> + 2·dy + dx · (2·y₁ − 1) − 2·dy · x₁</strong><br><br>
-      Simplified recurrence (for slope 0 &lt; m &lt; 1):<br>
-      <strong>p₀ = 2·dy − dx</strong><br>
-      p<sub>k+1</sub> = p<sub>k</sub> + 2·dy &nbsp;— if p<sub>k</sub> &lt; 0<br>
-      p<sub>k+1</sub> = p<sub>k</sub> + 2·dy − 2·dx &nbsp;— if p<sub>k</sub> ≥ 0
-    </div>
-    <p>This recurrence eliminates multiplication entirely, requiring only addition and comparison at each step — the hallmark of Bresenham's efficiency.</p>
-
-    <div class="section-label">5.5 &nbsp; Extension: Anti-Aliased Lines (Wu's Algorithm)</div>
-    <p>Bresenham's algorithm plots exactly one pixel per column (or row). For smoother visual appearance, Xiaolin Wu's algorithm (1991) draws <strong>two</strong> pixels per step with intensity proportional to coverage area — known as <em>anti-aliasing</em>. The brightness of each pixel is computed as:</p>
-    <div class="result-box">
-      End brightness = fractional part of the computed y-coordinate (or x)<br>
-      Adjacent pixel brightness = 1 − end brightness
-    </div>
-    <p>Wu's algorithm trades ≈2× more pixel writes for significantly reduced staircasing (jaggies). It is commonly used in modern 2D rendering libraries (e.g., Cairo, Skia) where smooth lines are required.</p>
+    <div class="section-label">A.3 Curve Comparison</div>
+    <table class="compare-table">
+      <tr><th>Property</th><th>Bezier</th><th>B-Spline</th></tr>
+      <tr><td>Control</td><td class="bad">Global</td><td class="good">Local</td></tr>
+      <tr><td>Continuity</td><td>C1 at joins</td><td class="good">C2 at joins</td></tr>
+      <tr><td>Through endpoints?</td><td class="good">Yes</td><td>No</td></tr>
+      <tr><td>Segments from n pts</td><td>1 (degree n-1)</td><td>n-3</td></tr>
+    </table>
   </div>
 
   <!-- 2D TRANSFORMATIONS SUMMARY -->
@@ -850,26 +865,16 @@
       <div class="lab-num">Transform</div>
       <div class="lab-title">2D Affine Transformations: A Unified View</div>
     </div>
-
-    <div class="section-label">6.1 &nbsp; Transformation Matrices</div>
-    <p>All standard 2D affine transformations can be expressed as 3×3 homogeneous matrices. Composition is achieved by simple matrix multiplication:</p>
+    <div class="section-label">T.1 Transformation Matrices</div>
     <table class="algo-table">
-      <tr><th>Transformation</th><th>Matrix (3×3)</th><th>Inverse</th></tr>
-      <tr><td>Translation</td><td>[1 0 Tx; 0 1 Ty; 0 0 1]</td><td>Translate by (−Tx, −Ty)</td></tr>
-      <tr><td>Rotation (θ)</td><td>[cosθ −sinθ 0; sinθ cosθ 0; 0 0 1]</td><td>Rotate by −θ</td></tr>
-      <tr><td>Scale (Sx, Sy)</td><td>[Sx 0 0; 0 Sy 0; 0 0 1]</td><td>Scale by (1/Sx, 1/Sy)</td></tr>
-      <tr><td>Shear (X, Y)</td><td>[1 Shx 0; Shy 1 0; 0 0 1]</td><td>Shear by (−Shx, −Shy)</td></tr>
-      <tr><td>Reflection (X-axis)</td><td>[1 0 0; 0 −1 0; 0 0 1]</td><td>Same (involution)</td></tr>
+      <tr><th>Transformation</th><th>Matrix (3x3)</th><th>Inverse</th></tr>
+      <tr><td>Translation</td><td>[1 0 Tx; 0 1 Ty; 0 0 1]</td><td>Translate by (-Tx, -Ty)</td></tr>
+      <tr><td>Rotation</td><td>[cos -sin 0; sin cos 0; 0 0 1]</td><td>Rotate by -theta</td></tr>
+      <tr><td>Scale</td><td>[Sx 0 0; 0 Sy 0; 0 0 1]</td><td>Scale by (1/Sx, 1/Sy)</td></tr>
+      <tr><td>Shear</td><td>[1 Shx 0; Shy 1 0; 0 0 1]</td><td>Shear by (-Shx, -Shy)</td></tr>
+      <tr><td>Reflection (X)</td><td>[1 0 0; 0 -1 0; 0 0 1]</td><td>Same (involution)</td></tr>
     </table>
-    <p>The homogeneous form allows any sequence — e.g., <strong>Translate · Rotate · Scale</strong> — to be pre-multiplied into a single 3×3 matrix, eliminating per-vertex overhead. This is the mathematical foundation of the model-view-projection pipeline in OpenGL and DirectX.</p>
-
-    <div class="section-label">6.2 &nbsp; Composition Order Matters</div>
-    <div class="result-box">
-      <strong>Rotate then Translate</strong> vs <strong>Translate then Rotate</strong> produce different results.<br><br>
-      Example: Rotate a square 45°, then translate — the square moves along the rotated axes.<br>
-      Translate first, then rotate — the square orbits around the origin.
-    </div>
-    <p>In computer graphics, the standard convention is <strong>Scale → Rotate → Translate</strong> (SRT) when building a model matrix, applied right-to-left: P' = T · R · S · P.</p>
+    <p>Standard convention: <strong>Scale - Rotate - Translate</strong> (SRT), applied right-to-left: P' = T * R * S * P.</p>
   </div>
 
   <!-- APPLICATIONS -->
@@ -878,22 +883,26 @@
       <div class="lab-num">Use</div>
       <div class="lab-title">Practical Applications in Computer Graphics</div>
     </div>
-
-    <div class="section-label">7.1 &nbsp; Line Drawing</div>
+    <div class="section-label">Line Drawing &amp; Circles</div>
     <ul>
-      <li><strong>Vector graphics rendering</strong> — SVG, PDF, PostScript rasterizers use Bresenham-based algorithms to convert vector paths to pixel displays</li>
-      <li><strong>CAD software</strong> — AutoCAD, SolidWorks, and KiCad rely on integer line drawing for wireframe previews at interactive frame rates</li>
-      <li><strong>Game engines</strong> — Early 2D engines (e.g., Doom, Wolfenstein 3D) used Bresenham for raycasting and wall rendering</li>
-      <li><strong>Printer drivers</strong> — Laser and inkjet printer firmware implements Bresenham for nozzle/pin control</li>
-      <li><strong>LCD/OLED controllers</strong> — Embedded display drivers on microcontrollers often have Bresenham in silicon</li>
+      <li><strong>Vector graphics</strong> - SVG, PDF, PostScript rasterizers use Bresenham-based algorithms</li>
+      <li><strong>CAD software</strong> - AutoCAD, SolidWorks use integer line drawing for wireframe previews</li>
+      <li><strong>Game engines</strong> - Early 2D engines (Doom, Wolfenstein) used Bresenham for raycasting</li>
+      <li><strong>Printer drivers</strong> - Laser/inkjet firmware implements Bresenham for nozzle control</li>
     </ul>
-
-    <div class="section-label">7.2 &nbsp; Geometric Transformations</div>
+    <div class="section-label">Transformations</div>
     <ul>
-      <li><strong>Computer animation</strong> — Translation is the fundamental operation for keyframe interpolation; position curves (splines) generate intermediate Tx, Ty values per frame</li>
-      <li><strong>GUI systems</strong> — Window managers apply translation matrices for window dragging, scrolling, and viewport panning</li>
-      <li><strong>Robotics &amp; vision</strong> — Image registration and stitching use 2D affine transforms (including translation) to align overlapping photos</li>
-      <li><strong>Geographic Information Systems (GIS)</strong> — Map panning and coordinate system transformations (e.g., from WGS84 to screen coordinates) rely on translation and scaling</li>
+      <li><strong>Animation</strong> - Translation, rotation, scaling form the basis of keyframe interpolation</li>
+      <li><strong>GUI systems</strong> - Window managers apply transforms for dragging, scrolling, panning</li>
+      <li><strong>Robotics &amp; vision</strong> - Image registration uses affine transforms to align photos</li>
+      <li><strong>GIS</strong> - Map panning uses translation and scaling of coordinate systems</li>
+    </ul>
+    <div class="section-label">Clipping &amp; Curves</div>
+    <ul>
+      <li><strong>Viewport culling</strong> - Clipping prevents drawing objects outside the visible area</li>
+      <li><strong>Font rendering</strong> - TrueType uses Bezier curves; OpenType adds B-splines</li>
+      <li><strong>Animation paths</strong> - Bezier/B-splines define smooth camera trajectories</li>
+      <li><strong>Industrial design</strong> - Car body and aircraft surfaces use B-spline/NURBS curves</li>
     </ul>
   </div>
 
@@ -903,198 +912,200 @@
       <div class="lab-num">Refs</div>
       <div class="lab-title">References &amp; Further Reading</div>
     </div>
-
     <ol style="font-size:12.5px;line-height:2;color:var(--ink-light)">
-      <li>Hearn, D., Baker, M. P., &amp; Carithers, W. — <em>Computer Graphics with OpenGL</em>, 4th Ed., Pearson (2010). Chapters 3–5 cover line algorithms and 2D transformations in depth.</li>
-      <li>Bresenham, J. E. — "Algorithm for Computer Control of a Digital Plotter." <em>IBM Systems Journal</em>, 4(1):25–30 (1965). The original paper.</li>
-      <li>Foley, J. D., van Dam, A., Feiner, S. K., &amp; Hughes, J. F. — <em>Computer Graphics: Principles and Practice</em>, 3rd Ed., Addison-Wesley (2013). The canonical reference.</li>
-      <li>Wu, X. — "An Efficient Antialiasing Technique." <em>Computer Graphics</em> (ACM SIGGRAPH), 25(4):143–152 (1991).</li>
-      <li>Shirley, P. &amp; Marschner, S. — <em>Fundamentals of Computer Graphics</em>, 4th Ed., CRC Press (2016). Chapter 8 covers rasterization algorithms.</li>
-      <li>Wikipedia — <em>Bresenham's line algorithm</em> and <em>Digital differential analyzer (graphics algorithm)</em>. Detailed worked examples with interactive demos.</li>
+      <li>Hearn, D., Baker, M. P., &amp; Carithers, W. - <em>Computer Graphics with OpenGL</em>, 4th Ed., Pearson (2010).</li>
+      <li>Bresenham, J. E. - "Algorithm for Computer Control of a Digital Plotter." <em>IBM Systems Journal</em>, 4(1):25-30 (1965).</li>
+      <li>Foley, J. D., van Dam, A., et al. - <em>Computer Graphics: Principles and Practice</em>, 3rd Ed., Addison-Wesley (2013).</li>
+      <li>Wu, X. - "An Efficient Antialiasing Technique." <em>ACM SIGGRAPH</em>, 25(4):143-152 (1991).</li>
+      <li>Shirley, P. &amp; Marschner, S. - <em>Fundamentals of Computer Graphics</em>, 4th Ed., CRC Press (2016).</li>
+      <li>Rogers, D. F. &amp; Adams, J. A. - <em>Mathematical Elements for Computer Graphics</em>, 2nd Ed., McGraw-Hill (1990).</li>
+      <li>Wikipedia - <em>Bresenham's line algorithm</em>, <em>Midpoint circle algorithm</em>, <em>Cohen-Sutherland</em>, <em>Bezier curve</em>, <em>B-spline</em>.</li>
     </ol>
   </div>
 
-</div><!-- end .page -->
-
+</div>
 <script>
 function px(x,y,ctx,col){ctx.fillStyle=col;ctx.fillRect(x,y,2,2);}
-
-function clearC(id){
-  const c=document.getElementById(id);
-  const ctx=c.getContext('2d');
-  ctx.fillStyle='#0d0d1a';
-  ctx.fillRect(0,0,c.width,c.height);
-}
-['c1','c2','c3'].forEach(clearC);
+function clearC(id){var c=document.getElementById(id);if(!c)return;var ctx=c.getContext('2d');ctx.fillStyle='#0d0d1a';ctx.fillRect(0,0,c.width,c.height);}
+['c1','c2','c3','c5','c6','c7','c8','c9','c10','c11','c12'].forEach(clearC);
 
 function drawLab1(){
-  clearC('c1');
-  const ctx=document.getElementById('c1').getContext('2d');
-  const x1=+document.getElementById('l1x1').value;
-  const y1=+document.getElementById('l1y1').value;
-  const x2=+document.getElementById('l1x2').value;
-  const y2=+document.getElementById('l1y2').value;
-  const col=document.getElementById('l1col').value;
-  const dx=x2-x1,dy=y2-y1;
-  const steps=Math.max(Math.abs(dx),Math.abs(dy));
-  const xi=dx/steps,yi=dy/steps;
-  let x=x1,y=y1;
-  for(let i=0;i<=steps;i++){px(Math.round(x),Math.round(y),ctx,col);x+=xi;y+=yi;}
-  ctx.fillStyle='rgba(255,255,255,0.5)';ctx.font='11px monospace';
-  ctx.fillText(`(${x1},${y1})`,x1+4,y1-6);ctx.fillText(`(${x2},${y2})`,x2-50,y2-6);
+  clearC('c1');var ctx=document.getElementById('c1').getContext('2d');
+  var x1=+document.getElementById('l1x1').value,y1=+document.getElementById('l1y1').value;
+  var x2=+document.getElementById('l1x2').value,y2=+document.getElementById('l1y2').value;
+  var col=document.getElementById('l1col').value;
+  var dx=x2-x1,dy=y2-y1,steps=Math.max(Math.abs(dx),Math.abs(dy));
+  var xi=dx/steps,yi=dy/steps,x=x1,y=y1;
+  for(var i=0;i<=steps;i++){px(Math.round(x),Math.round(y),ctx,col);x+=xi;y+=yi;}
 }
 drawLab1();
 
 function drawLab2(){
-  clearC('c2');
-  const ctx=document.getElementById('c2').getContext('2d');
-  const x1=+document.getElementById('l2x1').value;
-  const y1=+document.getElementById('l2y1').value;
-  const x2=+document.getElementById('l2x2').value;
-  const y2=+document.getElementById('l2y2').value;
-  const col=document.getElementById('l2col').value;
-  const dx=x2-x1,dy=y2-y1;
-  const steps=Math.max(Math.abs(dx),Math.abs(dy));
-  const xi=dx/steps,yi=dy/steps;
-  let x=x1,y=y1;
-  for(let i=0;i<=steps;i++){px(Math.round(x),Math.round(y),ctx,col);x+=xi;y+=yi;}
+  clearC('c2');var ctx=document.getElementById('c2').getContext('2d');
+  var x1=+document.getElementById('l2x1').value,y1=+document.getElementById('l2y1').value;
+  var x2=+document.getElementById('l2x2').value,y2=+document.getElementById('l2y2').value;
+  var col=document.getElementById('l2col').value;
+  var dx=x2-x1,dy=y2-y1,steps=Math.max(Math.abs(dx),Math.abs(dy));
+  var xi=dx/steps,yi=dy/steps,x=x1,y=y1;
+  for(var i=0;i<=steps;i++){px(Math.round(x),Math.round(y),ctx,col);x+=xi;y+=yi;}
 }
 drawLab2();
 
-function drawLab3(){
-  clearC('c3');
-  const ctx=document.getElementById('c3').getContext('2d');
-  let x0=+document.getElementById('l3x1').value;
-  let y0=+document.getElementById('l3y1').value;
-  const x1=+document.getElementById('l3x2').value;
-  const y1=+document.getElementById('l3y2').value;
-  const col=document.getElementById('l3col').value;
-  bres(ctx,x0,y0,x1,y1,col);
-}
 function bres(ctx,x0,y0,x1,y1,col){
-  let dx=Math.abs(x1-x0),dy=Math.abs(y1-y0);
-  let sx=x0<x1?1:-1,sy=y0<y1?1:-1,err=dx-dy;
-  while(true){
-    px(x0,y0,ctx,col);
-    if(x0===x1&&y0===y1)break;
-    let e2=2*err;
-    if(e2>-dy){err-=dy;x0+=sx;}
-    if(e2<dx){err+=dx;y0+=sy;}
-  }
+  var dx=Math.abs(x1-x0),dy=Math.abs(y1-y0),sx=x0<x1?1:-1,sy=y0<y1?1:-1,err=dx-dy;
+  while(true){px(x0,y0,ctx,col);if(x0===x1&&y0===y1)break;var e2=2*err;if(e2>-dy){err-=dy;x0+=sx;}if(e2<dx){err+=dx;y0+=sy;}}
 }
+function drawLab3(){clearC('c3');var ctx=document.getElementById('c3').getContext('2d');bres(ctx,+document.getElementById('l3x1').value,+document.getElementById('l3y1').value,+document.getElementById('l3x2').value,+document.getElementById('l3y2').value,document.getElementById('l3col').value);}
 drawLab3();
-
-let anim3=null;
+var anim3=null;
 function animBresenham(){
-  if(anim3)clearTimeout(anim3);
-  clearC('c3');
-  const ctx=document.getElementById('c3').getContext('2d');
-  let x0=+document.getElementById('l3x1').value;
-  let y0=+document.getElementById('l3y1').value;
-  const x1=+document.getElementById('l3x2').value;
-  const y1=+document.getElementById('l3y2').value;
-  const col=document.getElementById('l3col').value;
-  let dx=Math.abs(x1-x0),dy=Math.abs(y1-y0);
-  let sx=x0<x1?1:-1,sy=y0<y1?1:-1,err=dx-dy;
-  let cx=x0,cy=y0;
-  function step(){
-    px(cx,cy,ctx,col);
-    if(cx===x1&&cy===y1)return;
-    let e2=2*err;
-    if(e2>-dy){err-=dy;cx+=sx;}
-    if(e2<dx){err+=dx;cy+=sy;}
-    anim3=setTimeout(step,3);
-  }
+  if(anim3)clearTimeout(anim3);clearC('c3');var ctx=document.getElementById('c3').getContext('2d');
+  var x0=+document.getElementById('l3x1').value,y0=+document.getElementById('l3y1').value;
+  var x1=+document.getElementById('l3x2').value,y1=+document.getElementById('l3y2').value,col=document.getElementById('l3col').value;
+  var dx=Math.abs(x1-x0),dy=Math.abs(y1-y0),sx=x0<x1?1:-1,sy=y0<y1?1:-1,err=dx-dy,cx=x0,cy=y0;
+  function step(){px(cx,cy,ctx,col);if(cx===x1&&cy===y1)return;var e2=2*err;if(e2>-dy){err-=dy;cx+=sx;}if(e2<dx){err+=dx;cy+=sy;}anim3=setTimeout(step,3);}
   step();
 }
 
-// LAB 4 shapes
-const shapes={
-  square:[[100,90],[210,90],[210,200],[100,200]],
-  triangle:[[155,80],[240,210],[70,210]],
-  pentagon:(()=>{
-    const pts=[];const cx=155,cy=150,r=70;
-    for(let i=0;i<5;i++){const a=-Math.PI/2+i*2*Math.PI/5;pts.push([Math.round(cx+r*Math.cos(a)),Math.round(cy+r*Math.sin(a))]);}
-    return pts;
-  })()
-};
-let curShape=null,origPts=null;
-
-function getShape(){
-  const t=document.getElementById('shapeType').value;
-  return shapes[t].map(p=>[...p]);
+// LAB 5 - Midpoint Circle
+function drawLab5(){
+  clearC('c5');var ctx=document.getElementById('c5').getContext('2d');
+  var xc=+document.getElementById('l5cx').value,yc=+document.getElementById('l5cy').value;
+  var r=+document.getElementById('l5r').value,col=document.getElementById('l5col').value;
+  var x=0,y=r,p=1-r;
+  function plot8(xc,yc,x,y){px(xc+x,yc+y,ctx,col);px(xc-x,yc+y,ctx,col);px(xc+x,yc-y,ctx,col);px(xc-x,yc-y,ctx,col);px(xc+y,yc+x,ctx,col);px(xc-y,yc+x,ctx,col);px(xc+y,yc-x,ctx,col);px(xc-y,yc-x,ctx,col);}
+  plot8(xc,yc,x,y);
+  while(x<y){x++;if(p<0){p+=2*x+3;}else{y--;p+=2*(x-y)+5;}plot8(xc,yc,x,y);}
+}
+drawLab5();
+var anim5=null;
+function animCircle(){
+  if(anim5)clearTimeout(anim5);clearC('c5');var ctx=document.getElementById('c5').getContext('2d');
+  var xc=+document.getElementById('l5cx').value,yc=+document.getElementById('l5cy').value;
+  var r=+document.getElementById('l5r').value,col=document.getElementById('l5col').value;
+  var x=0,y=r,p=1-r;
+  function plot8(x,y){px(xc+x,yc+y,ctx,col);px(xc-x,yc+y,ctx,col);px(xc+x,yc-y,ctx,col);px(xc-x,yc-y,ctx,col);px(xc+y,yc+x,ctx,col);px(xc-y,yc+x,ctx,col);px(xc+y,yc-x,ctx,col);px(xc-y,yc-x,ctx,col);}
+  function step(){plot8(x,y);if(x>=y)return;x++;if(p<0){p+=2*x+3;}else{y--;p+=2*(x-y)+5;}anim5=setTimeout(step,10);}
+  step();
 }
 
-function drawPoly4(ctx,pts,col,label,filled){
-  ctx.beginPath();
-  ctx.moveTo(pts[0][0],pts[0][1]);
-  for(let i=1;i<pts.length;i++)ctx.lineTo(pts[i][0],pts[i][1]);
-  ctx.closePath();
-  ctx.strokeStyle=col;ctx.lineWidth=2;ctx.stroke();
-  if(filled){ctx.fillStyle=col+'22';ctx.fill();}
-  pts.forEach(p=>{
-    ctx.beginPath();ctx.arc(p[0],p[1],3,0,Math.PI*2);
-    ctx.fillStyle=col;ctx.fill();
-  });
-  ctx.fillStyle=col;ctx.font='11px monospace';
-  ctx.fillText(label,pts[0][0]+4,pts[0][1]-8);
+// LAB 6 - Rotation
+var rotPts={triangle:[[350,80],[450,200],[250,200]],square:[[300,80],[420,80],[420,200],[300,200]],pentagon:(function(){var pts=[];for(var i=0;i<5;i++){var a=-Math.PI/2+i*2*Math.PI/5;pts.push([Math.round(350+70*Math.cos(a)),Math.round(160+70*Math.sin(a))]);}return pts;})()};
+function getPivot(pts,mode){if(mode==='origin')return[0,0];if(mode==='vertex')return pts[0];var cx=0,cy=0;pts.forEach(function(p){cx+=p[0];cy+=p[1];});return[Math.round(cx/pts.length),Math.round(cy/pts.length)];}
+function drawLab6(){
+  clearC('c6');var ctx=document.getElementById('c6').getContext('2d');
+  var angle=+document.getElementById('l6angle').value;
+  var pivot=document.getElementById('l6pivot').value;
+  var shape=document.getElementById('l6shape').value;
+  var pts=rotPts[shape].map(function(p){return[p[0],p[1]];});
+  var piv=getPivot(pts,pivot);
+  function rot(px,py){var rad=angle*Math.PI/180,c=Math.cos(rad),s=Math.sin(rad);var rx=px-piv[0],ry=py-piv[1];return[Math.round(piv[0]+rx*c-ry*s+0.5),Math.round(piv[1]+rx*s+ry*c+0.5)];}
+  function drawP(pts,col,lbl){ctx.beginPath();ctx.moveTo(pts[0][0],pts[0][1]);for(var i=1;i<pts.length;i++)ctx.lineTo(pts[i][0],pts[i][1]);ctx.closePath();ctx.strokeStyle=col;ctx.lineWidth=2;ctx.stroke();pts.forEach(function(p){ctx.beginPath();ctx.arc(p[0],p[1],3,0,Math.PI*2);ctx.fillStyle=col;ctx.fill();});ctx.fillStyle=col;ctx.font='11px monospace';ctx.fillText(lbl,pts[0][0]+5,pts[0][1]-8);}
+  drawP(pts,'#555','Original');
+  var rpts=pts.map(function(p){return rot(p[0],p[1]);});
+  drawP(rpts,'#e040fb','Rotated '+angle+'deg');
+  ctx.strokeStyle='rgba(224,64,251,0.3)';ctx.lineWidth=1;ctx.setLineDash([4,3]);ctx.beginPath();ctx.arc(piv[0],piv[1],25,0,angle*Math.PI/180);ctx.stroke();ctx.setLineDash([]);
 }
+drawLab6();
 
-function redraw4(){
-  const c=document.getElementById('c4');
-  const ctx=c.getContext('2d');
-  ctx.fillStyle='#0d0d1a';ctx.fillRect(0,0,c.width,c.height);
-  // grid
-  ctx.strokeStyle='rgba(255,255,255,0.04)';ctx.lineWidth=0.5;
-  for(let x=0;x<c.width;x+=40){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,c.height);ctx.stroke();}
-  for(let y=0;y<c.height;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(c.width,y);ctx.stroke();}
-  if(!origPts)origPts=getShape();
-  drawPoly4(ctx,origPts,'#555','P (original)',true);
-  if(curShape&&JSON.stringify(curShape)!==JSON.stringify(origPts)){
-    // arrow
-    const ox=origPts[0][0],oy=origPts[0][1];
-    const nx=curShape[0][0],ny=curShape[0][1];
-    ctx.strokeStyle='rgba(77,182,172,0.4)';ctx.lineWidth=1;ctx.setLineDash([5,4]);
-    ctx.beginPath();ctx.moveTo(ox,oy);ctx.lineTo(nx,ny);ctx.stroke();
-    ctx.setLineDash([]);
-    const angle=Math.atan2(ny-oy,nx-ox);
-    ctx.fillStyle='rgba(77,182,172,0.6)';
-    ctx.beginPath();ctx.moveTo(nx,ny);
-    ctx.lineTo(nx-10*Math.cos(angle-0.4),ny-10*Math.sin(angle-0.4));
-    ctx.lineTo(nx-10*Math.cos(angle+0.4),ny-10*Math.sin(angle+0.4));
-    ctx.closePath();ctx.fill();
-    const tx=curShape[0][0]-origPts[0][0],ty=curShape[0][1]-origPts[0][1];
-    drawPoly4(ctx,curShape,'#4db6ac',`P' (+${tx},+${ty})`,true);
-  }
+// LAB 7 - Scaling
+var sclPts={triangle:[[350,80],[450,200],[250,200]],square:[[300,80],[420,80],[420,200],[300,200]],pentagon:(function(){var pts=[];for(var i=0;i<5;i++){var a=-Math.PI/2+i*2*Math.PI/5;pts.push([Math.round(350+70*Math.cos(a)),Math.round(160+70*Math.sin(a))]);}return pts;})()};
+function drawLab7(){
+  clearC('c7');var ctx=document.getElementById('c7').getContext('2d');
+  var sx=+document.getElementById('l7sx').value/100,sy=+document.getElementById('l7sy').value/100;
+  var pivot=document.getElementById('l7pivot').value;
+  var shape=document.getElementById('l7shape').value;
+  var pts=sclPts[shape].map(function(p){return[p[0],p[1]];});
+  var fp=getPivot(pts,pivot);
+  function scl(px,py){return[Math.round(fp[0]+(px-fp[0])*sx+0.5),Math.round(fp[1]+(py-fp[1])*sy+0.5)];}
+  function drawP(pts,col,lbl){ctx.beginPath();ctx.moveTo(pts[0][0],pts[0][1]);for(var i=1;i<pts.length;i++)ctx.lineTo(pts[i][0],pts[i][1]);ctx.closePath();ctx.strokeStyle=col;ctx.lineWidth=2;ctx.stroke();pts.forEach(function(p){ctx.beginPath();ctx.arc(p[0],p[1],3,0,Math.PI*2);ctx.fillStyle=col;ctx.fill();});ctx.fillStyle=col;ctx.font='11px monospace';ctx.fillText(lbl,pts[0][0]+5,pts[0][1]-8);}
+  drawP(pts,'#555','Original');
+  var spts=pts.map(function(p){return scl(p[0],p[1]);});
+  drawP(spts,'#e040fb','Scaled ('+sx.toFixed(1)+'x,'+sy.toFixed(1)+'x)');
 }
-document.getElementById('shapeType').addEventListener('change',()=>{origPts=getShape();curShape=null;redraw4();});
-redraw4();
+drawLab7();
 
-function doTranslate(){
-  if(!origPts)origPts=getShape();
-  const tx=+document.getElementById('tx').value;
-  const ty=+document.getElementById('ty').value;
-  curShape=origPts.map(p=>[p[0]+tx,p[1]+ty]);
-  redraw4();
+// LAB 8 - 3D Rotation
+function drawLab8(){
+  clearC('c8');var ctx=document.getElementById('c8').getContext('2d');
+  var angle=+document.getElementById('l8angle').value;
+  var axisType=document.getElementById('l8axis').value;
+  var PI=Math.PI,a=PI/6;
+  function proj(x,y,z){return[x+z*0.5*Math.cos(a),y+z*0.5*Math.sin(a)];}
+  var cube=[[250,150,-50],[350,150,-50],[350,250,-50],[250,250,-50],[250,150,50],[350,150,50],[350,250,50],[250,250,50]];
+  var edges=[[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]];
+  function drawCube(verts,col){ctx.strokeStyle=col;ctx.lineWidth=1.5;edges.forEach(function(e){var p1=proj(verts[e[0]][0],verts[e[0]][1],verts[e[0]][2]);var p2=proj(verts[e[1]][0],verts[e[1]][1],verts[e[1]][2]);ctx.beginPath();ctx.moveTo(p1[0],p1[1]);ctx.lineTo(p2[0],p2[1]);ctx.stroke();});}
+  drawCube(cube,'#fff');
+  ctx.fillStyle='#fff';ctx.font='11px monospace';ctx.fillText('White = Original',10,20);
+  var rad=angle*Math.PI/180,c=Math.cos(rad),s=Math.sin(rad);
+  var ax,ay,az,len;
+  if(axisType==='x'){ax=1;ay=0;az=0;}else if(axisType==='y'){ax=0;ay=1;az=0;}else if(axisType==='z'){ax=0;ay=0;az=1;}else{ax=1;ay=1;az=1;}
+  len=Math.sqrt(ax*ax+ay*ay+az*az);ax/=len;ay/=len;az/=len;
+  var rotC=cube.map(function(v){var px=v[0]-300,py=v[1]-200,pz=v[2];var dot=px*ax+py*ay+pz*az;var cx=ay*pz-az*py,cy=az*px-ax*pz,cz=ax*py-ay*px;return[Math.round(300+px*c+cx*s+ax*dot*(1-c)),Math.round(200+py*c+cy*s+ay*dot*(1-c)),Math.round(pz*c+cz*s+az*dot*(1-c))];});
+  drawCube(rotC,'#ffeb3b');
+  ctx.fillStyle='#ffeb3b';ctx.fillText('Yellow = Rotated '+angle+' deg',10,35);
 }
+drawLab8();
 
-function resetTranslate(){origPts=getShape();curShape=null;redraw4();}
-
-let anim4=null;
-function animTranslate(){
-  if(anim4)clearInterval(anim4);
-  if(!origPts)origPts=getShape();
-  const tx=+document.getElementById('tx').value;
-  const ty=+document.getElementById('ty').value;
-  let step=0,total=40;
-  anim4=setInterval(()=>{
-    step++;const t=step/total;
-    curShape=origPts.map(p=>[Math.round(p[0]+tx*t),Math.round(p[1]+ty*t)]);
-    redraw4();
-    if(step>=total)clearInterval(anim4);
-  },20);
+// LAB 9 - Cohen-Sutherland
+function drawLab9(){
+  clearC('c9');var ctx=document.getElementById('c9').getContext('2d');
+  var xMin=150,yMin=100,xMax=450,yMax=300;
+  ctx.strokeStyle='#fff';ctx.lineWidth=1;ctx.strokeRect(xMin,yMin,xMax-xMin,yMax-yMin);
+  ctx.fillStyle='#fff';ctx.font='11px monospace';ctx.fillText('Clipping Window',xMin+5,yMin-5);
+  var x1=+document.getElementById('l9x1').value,y1=+document.getElementById('l9y1').value;
+  var x2=+document.getElementById('l9x2').value,y2=+document.getElementById('l9y2').value;
+  ctx.strokeStyle='rgba(255,255,255,0.4)';ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();
+  function code(x,y){var c=0;if(x<xMin)c|=1;if(x>xMax)c|=2;if(y<yMin)c|=8;if(y>yMax)c|=4;return c;}
+  var c1=code(x1,y1),c2=code(x2,y2),accept=0;
+  while(true){if(!c1&&!c2){accept=1;break;}if(c1&c2)break;var co=c1||c2;var ix,iy;if(co&8){ix=x1+(x2-x1)*(yMin-y1)/(y2-y1);iy=yMin;}else if(co&4){ix=x1+(x2-x1)*(yMax-y1)/(y2-y1);iy=yMax;}else if(co&2){iy=y1+(y2-y1)*(xMax-x1)/(x2-x1);ix=xMax;}else{iy=y1+(y2-y1)*(xMin-x1)/(x2-x1);ix=xMin;}if(co===c1){x1=ix;y1=iy;c1=code(x1,y1);}else{x2=ix;y2=iy;c2=code(x2,y2);}}
+  if(accept){ctx.strokeStyle='#ffd54f';ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();}
 }
+drawLab9();
 
+// LAB 10 - Sutherland-Hodgman
+var shPts={octagon:[[80,80],[200,50],[350,120],[500,100],[520,250],[400,350],[100,280],[50,200]],star:[[300,50],[340,180],[480,180],[370,260],[410,380],[300,300],[190,380],[230,260],[120,180],[260,180]],arrow:[[200,100],[400,100],[400,180],[500,180],[300,320],[100,180],[200,180]]};
+function drawLab10(){
+  clearC('c10');var ctx=document.getElementById('c10').getContext('2d');
+  var xMin=150,yMin=100,xMax=450,yMax=300;
+  ctx.strokeStyle='#fff';ctx.lineWidth=1;ctx.strokeRect(xMin,yMin,xMax-xMin,yMax-yMin);
+  var poly=shPts[document.getElementById('l10shape').value].map(function(p){return{x:p[0],y:p[1]};});
+  ctx.strokeStyle='#fff';ctx.beginPath();ctx.moveTo(poly[0].x,poly[0].y);for(var i=1;i<poly.length;i++)ctx.lineTo(poly[i].x,poly[i].y);ctx.closePath();ctx.stroke();
+  function inside(p,e){switch(e){case 0:return p.x>=xMin;case 1:return p.x<=xMax;case 2:return p.y>=yMin;case 3:return p.y<=yMax;}return false;}
+  function inter(p1,p2,e){var r={x:0,y:0};var m=(p2.x!==p1.x)?(p2.y-p1.y)/(p2.x-p1.x):1e10;switch(e){case 0:r.x=xMin;r.y=Math.round(p1.y+m*(xMin-p1.x));break;case 1:r.x=xMax;r.y=Math.round(p1.y+m*(xMax-p1.x));break;case 2:r.y=yMin;r.x=Math.round(p1.x+(yMin-p1.y)/m);break;case 3:r.y=yMax;r.x=Math.round(p1.x+(yMax-p1.y)/m);break;}return r;}
+  function clip(poly,e){var result=[];var n=poly.length;for(var i=0;i<n;i++){var cur=poly[i],nxt=poly[(i+1)%n];var ci=inside(cur,e),ni=inside(nxt,e);if(ci&&ni)result.push(nxt);else if(ci&&!ni)result.push(inter(cur,nxt,e));else if(!ci&&ni){result.push(inter(cur,nxt,e));result.push(nxt);}}return result;}
+  var clipped=poly;for(var e=0;e<4;e++)clipped=clip(clipped,e);
+  ctx.strokeStyle='#ffd54f';ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(clipped[0].x,clipped[0].y);for(var i=1;i<clipped.length;i++)ctx.lineTo(clipped[i].x,clipped[i].y);ctx.closePath();ctx.stroke();
+}
+drawLab10();
+
+// LAB 11 - Bezier
+function bezierPts(x,y,t){var u=1-t;return[Math.round(u*u*u*x[0]+3*t*u*u*x[1]+3*t*t*u*x[2]+t*t*t*x[3]+0.5),Math.round(u*u*u*y[0]+3*t*u*u*y[1]+3*t*t*u*y[2]+t*t*t*y[3]+0.5)];}
+function drawLab11(){
+  clearC('c11');var ctx=document.getElementById('c11').getContext('2d');
+  var preset=document.getElementById('l11preset').value;
+  var x,y;
+  if(preset==='s'){x=[100,200,300,400];y=[300,100,100,300];}
+  else if(preset==='wave'){x=[100,250,350,500];y=[400,250,350,400];}
+  else{x=[100,350,350,100];y=[100,100,300,300];}
+  ctx.strokeStyle='#fff';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(x[0],y[0]);for(var i=1;i<4;i++)ctx.lineTo(x[i],y[i]);ctx.stroke();
+  for(var i=0;i<4;i++){ctx.beginPath();ctx.arc(x[i],y[i],4,0,Math.PI*2);ctx.fillStyle='#ff5252';ctx.fill();ctx.fillStyle='#fff';ctx.font='11px monospace';ctx.fillText('P'+i,x[i]+6,y[i]-6);}
+  ctx.fillStyle='#ffd54f';for(var t=0;t<=1;t+=0.005){var p=bezierPts(x,y,t);px(p[0],p[1],ctx,'#ffd54f');}
+}
+drawLab11();
+
+// LAB 12 - B-Spline
+var bsPts={wave:{x:[100,180,280,380,480,560],y:[200,80,300,80,300,200]},circle:{x:[300,420,420,300,180,180],y:[80,140,260,320,260,140]},spiral:{x:[100,200,300,400,500,550],y:[200,50,280,50,280,200]}};
+function drawLab12(){
+  clearC('c12');var ctx=document.getElementById('c12').getContext('2d');
+  var preset=document.getElementById('l12preset').value;
+  var cx=bsPts[preset].x,cy=bsPts[preset].y,n=6;
+  ctx.strokeStyle='#fff';ctx.lineWidth=1;for(var i=0;i<n-1;i++){ctx.beginPath();ctx.moveTo(cx[i],cy[i]);ctx.lineTo(cx[i+1],cy[i+1]);ctx.stroke();}
+  for(var i=0;i<n;i++){ctx.beginPath();ctx.arc(cx[i],cy[i],4,0,Math.PI*2);ctx.fillStyle='#ff5252';ctx.fill();ctx.fillStyle='#fff';ctx.font='11px monospace';ctx.fillText('P'+i,cx[i]+5,cy[i]-6);}
+  ctx.fillStyle='#ffd54f';
+  for(var seg=0;seg<n-3;seg++){for(var t=0;t<=1;t+=0.01){var t2=t*t,t3=t2*t;var b0=(1/6)*(-t3+3*t2-3*t+1);var b1=(1/6)*(3*t3-6*t2+4);var b2=(1/6)*(-3*t3+3*t2+3*t+1);var b3=(1/6)*t3;var px=Math.round(b0*cx[seg]+b1*cx[seg+1]+b2*cx[seg+2]+b3*cx[seg+3]+0.5);var py=Math.round(b0*cy[seg]+b1*cy[seg+1]+b2*cy[seg+2]+b3*cy[seg+3]+0.5);ctx.fillRect(px,py,2,2);}}
+}
+drawLab12();
 </script>
 </body>
 </html>
