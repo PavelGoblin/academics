@@ -175,9 +175,14 @@ Each MCQ includes:
 
 ---
 
-## 🔗 References
+## 🔗 Live Link
 
-- [Google Drive Preview](https://drive.google.com/file/d/1CsaNzHm1zPwAsBeB3N6LG-6HzxxBTmTq/view)
+**[▶ View Live](https://html-preview.github.io/?url=https://github.com/PavelGoblin/academics/blob/main/english-grammar/index.html)**
+
+---
+
+## 📚 References
+
 - Built with the MASTER PROMPT methodology
 - Suitable for SSC, HSC, BCS, University, IELTS exams
 
