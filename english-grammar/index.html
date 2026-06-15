@@ -1,0 +1,1982 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>সম্পূর্ণ ইংরেজি ব্যাকরণ — বাংলা মাধ্যমে</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d0d0d;--card:#1a1a2e;--accent:#f0c040;--green:#00c896;--red:#ff4757;--text:#e0e0e0;--muted:#888;--sidebar-w:280px;--border:#333}
+[data-theme="light"]{--bg:#f5f5f5;--card:#fff;--text:#222;--muted:#666;--border:#ddd}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Hind Siliguri','Lato',sans-serif;background:var(--bg);color:var(--text);line-height:1.8}
+a{color:var(--accent);text-decoration:none}
+.sidebar{position:fixed;top:0;left:0;width:var(--sidebar-w);height:100vh;background:var(--card);border-right:1px solid var(--border);overflow-y:auto;z-index:100;transition:transform .3s}
+.sidebar-header{padding:15px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--card);z-index:1}
+.sidebar-header h2{font-size:16px;color:var(--accent);margin-bottom:8px}
+.search-box{width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);font-size:14px}
+.sidebar nav{padding:10px 0}
+.sidebar nav .part-title{padding:8px 15px;font-weight:700;color:var(--accent);font-size:13px;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+.sidebar nav .part-title:hover{background:rgba(240,192,64,0.1)}
+.sidebar nav .chapter-link{display:block;padding:6px 15px 6px 30px;font-size:13px;color:var(--text);transition:background .2s;cursor:pointer}
+.sidebar nav .chapter-link:hover,.sidebar nav .chapter-link.active{background:rgba(240,192,64,0.15);color:var(--accent)}
+.sidebar nav .chapter-link .progress-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-left:6px}
+.sidebar nav .chapter-link .progress-dot.done{background:var(--green)}
+.sidebar nav .chapter-link .progress-dot.todo{background:var(--border)}
+.main{margin-left:var(--sidebar-w);padding:20px 40px 60px;max-width:1000px}
+.top-bar{position:sticky;top:0;z-index:50;background:var(--bg);padding:10px 0;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);margin-bottom:20px}
+.top-bar button{padding:6px 14px;border:1px solid var(--border);border-radius:6px;background:var(--card);color:var(--text);cursor:pointer;font-size:13px}
+.top-bar button:hover{border-color:var(--accent);color:var(--accent)}
+h1{font-size:28px;color:var(--accent);margin:20px 0 10px}
+h2{font-size:22px;color:var(--accent);margin:30px 0 10px;border-bottom:2px solid var(--accent);padding-bottom:6px}
+h3{font-size:18px;margin:20px 0 8px;color:#ccc}
+h4{font-size:16px;margin:15px 0 6px;color:var(--accent)}
+p{margin:8px 0}
+.rule-box{background:var(--card);border-left:4px solid var(--accent);padding:15px;margin:15px 0;border-radius:0 8px 8px 0}
+.example-box{background:rgba(0,200,150,0.08);border:1px solid var(--green);padding:12px;margin:10px 0;border-radius:8px}
+.bcs-box{background:rgba(255,165,0,0.08);border:1px solid orange;padding:12px;margin:10px 0;border-radius:8px}
+.ielts-box{background:rgba(0,191,255,0.08);border:1px solid teal;padding:12px;margin:10px 0;border-radius:8px}
+.kids-box{background:rgba(255,105,180,0.08);border:1px solid hotpink;padding:12px;margin:10px 0;border-radius:8px}
+.uni-box{background:rgba(138,43,226,0.08);border:1px solid blueviolet;padding:12px;margin:10px 0;border-radius:8px}
+table{width:100%;border-collapse:collapse;margin:15px 0}
+th,td{padding:10px 12px;border:1px solid var(--border);text-align:left;font-size:14px}
+th{background:var(--card);color:var(--accent);font-weight:600}
+tr:nth-child(even){background:rgba(255,255,255,0.03)}
+.tabs{display:flex;gap:6px;margin:15px 0;flex-wrap:wrap}
+.tab-btn{padding:6px 14px;border:1px solid var(--border);border-radius:20px;background:var(--card);color:var(--text);cursor:pointer;font-size:13px;transition:all .2s}
+.tab-btn.active,.tab-btn:hover{background:var(--accent);color:#000;border-color:var(--accent)}
+.tab-content{display:none;padding:15px;background:var(--card);border-radius:8px;margin:10px 0;border:1px solid var(--border)}
+.tab-content.active{display:block}
+.quiz-box{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:15px;margin:15px 0}
+.quiz-box .question{font-weight:600;margin-bottom:10px}
+.quiz-box .options label{display:block;padding:8px 12px;margin:4px 0;border:1px solid var(--border);border-radius:6px;cursor:pointer;transition:all .2s}
+.quiz-box .options label:hover{border-color:var(--accent)}
+.quiz-box .options input[type="radio"]{margin-right:8px}
+.quiz-box .feedback{margin-top:10px;padding:10px;border-radius:6px;display:none}
+.quiz-box .feedback.correct{display:block;background:rgba(0,200,150,0.15);border:1px solid var(--green);color:var(--green)}
+.quiz-box .feedback.wrong{display:block;background:rgba(255,71,87,0.15);border:1px solid var(--red);color:var(--red)}
+.score-bar{text-align:center;padding:10px;background:var(--card);border-radius:8px;margin:10px 0;font-size:14px}
+.highlight{background:var(--accent);color:#000;padding:1px 4px;border-radius:3px}
+.back-to-top{position:fixed;bottom:30px;right:30px;width:44px;height:44px;border-radius:50%;background:var(--accent);color:#000;border:none;font-size:20px;cursor:pointer;display:none;z-index:100}
+.sidebar-toggle{display:none;position:fixed;top:10px;left:10px;z-index:200;padding:8px 12px;background:var(--card);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer}
+.bookmark-btn{cursor:pointer;color:var(--accent);font-size:18px;float:right}
+.bookmark-btn:hover{color:var(--green)}
+.progress-check{margin-right:8px}
+@media(max-width:768px){
+.sidebar{transform:translateX(-100%)}
+.sidebar.open{transform:translateX(0)}
+.main{margin-left:0;padding:15px}
+.sidebar-toggle{display:block}
+.top-bar{flex-wrap:wrap;gap:8px}
+}
+@media print{
+.sidebar,.top-bar,.back-to-top,.sidebar-toggle,.quiz-box,.tab-btn{display:none!important}
+.tab-content{display:block!important}
+.main{margin-left:0;padding:20px}
+}
+</style>
+</head>
+<body>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰ Menu</button>
+
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-header">
+<h2>📚 ব্যাকরণ মেনু</h2>
+<input type="text" class="search-box" id="searchBox" placeholder="🔍 অনুসন্ধান করুন...">
+</div>
+<nav id="sidebarNav"></nav>
+</aside>
+
+<main class="main" id="mainContent">
+<div class="top-bar">
+<button onclick="toggleTheme()">🌙 মোড পরিবর্তন</button>
+<button onclick="window.print()">🖨️ প্রিন্ট / PDF</button>
+<button onclick="bookmarkPage()">🔖 বুকমার্ক</button>
+<span id="globalProgress"></span>
+</div>
+
+<!-- ==================== HOME ==================== -->
+<section id="home">
+<h1>সম্পূর্ণ ইংরেজি ব্যাকরণ — বাংলা মাধ্যমে</h1>
+<p>Complete English Grammar in Bengali — from basics to BCS/IELTS level</p>
+<div class="rule-box">
+<strong>🎯 যাদের জন্য:</strong><br>
+🧒 শিশু (Class 5) • 📚 SSC/HSC • 🎓 বিশ্ববিদ্যালয় • 📋 BCS • 🌍 IELTS
+</div>
+<h3>📖 অধ্যায় তালিকা</h3>
+<table>
+<tr><th>#</th><th>অধ্যায়</th><th>বিষয়বস্তু</th></tr>
+<tr><td>1</td><td>Noun (বিশেষ্য)</td><td>প্রকারভেদ, লিঙ্গ, বচন, কারক</td></tr>
+<tr><td>2</td><td>Pronoun (সর্বনাম)</td><td>৯ প্রকার, সামঞ্জস্য নিয়ম</td></tr>
+<tr><td>3</td><td>Adjective (বিশেষণ)</td><td>তুলনা, ক্রম, OSASCOMP</td></tr>
+<tr><td>4</td><td>Verb (ক্রিয়া)</td><td>প্রকার, অনিয়মিত, Finite/Non-finite</td></tr>
+<tr><td>5</td><td>Adverb (ক্রিয়া বিশেষণ)</td><td>৮ প্রকার, অবস্থান নিয়ম</td></tr>
+<tr><td>6</td><td>Preposition (পদান্বয়ী)</td><td>সময়/স্থান, ১০০+ বাক্যাংশ</td></tr>
+<tr><td>7</td><td>Conjunction (সমুচ্চয়)</td><td>FANBOYS, Subordinating</td></tr>
+<tr><td>8</td><td>Interjection (বিস্ময়সূচক)</td><td>ব্যবহার, বিরাম চিহ্ন</td></tr>
+<tr><td>9</td><td>Article (পদবাচক)</td><td>A/An/The, Zero Article</td></tr>
+<tr><td>10</td><td>Tense (কাল)</td><td>১২ কাল সম্পূর্ণ</td></tr>
+<tr><td>11-15</td><td>Sentence Structure</td><td>বাক্য গঠন, Voice, Narration</td></tr>
+<tr><td>16-20</td><td>Advanced Grammar</td><td>Conditional, Modal, Clause</td></tr>
+<tr><td>21-25</td><td>Vocabulary</td><td>Word Formation, Idioms</td></tr>
+<tr><td>26-29</td><td>Writing Skills</td><td>Paragraph, Essay, Letter</td></tr>
+<tr><td>30-32</td><td>Exam Sections</td><td>BCS, University, IELTS</td></tr>
+</table>
+</section>
+
+<!-- ==================== CHAPTER 1: NOUN ==================== -->
+<section id="ch1" style="display:none">
+<h1>1. Noun (বিশেষ্য)</h1>
+
+<div class="tabs">
+<button class="tab-btn active" onclick="showTab(event,'ch1-kids')">🧒 শিশু বোঝার অংশ</button>
+<button class="tab-btn" onclick="showTab(event,'ch1-uni')">🎓 বিশ্ববিদ্যালয় স্তর</button>
+<button class="tab-btn" onclick="showTab(event,'ch1-bcs')">📋 BCS প্রস্তুতি</button>
+<button class="tab-btn" onclick="showTab(event,'ch1-ielts')">🌍 IELTS টিপস</button>
+</div>
+
+<div class="tab-content active" id="ch1-kids">
+<h3>🧒 শিশু বোঝার অংশ</h3>
+<div class="kids-box">
+<strong>সহজ ভাষায়:</strong> Noun মানে হলো <em>নাম</em>। যেকোনো মানুষ, জন্তু, জিনিস বা বোঝার নামকে Noun বলে।<br><br>
+<strong>উদাহরণ:</strong><br>
+• রিমার একটি <span class="highlight">বিড়াল</span> আছে। (Cat = Noun)<br>
+• <span class="highlight">ঢাকা</span> বাংলাদেশের রাজধানী। (Dhaka = Noun)<br>
+• <span class="highlight">প্রেম</span> একটি সুন্দর অনুভূতি। (Love = Noun)
+</div>
+</div>
+
+<div class="tab-content" id="ch1-uni">
+<h3>🎓 বিশ্ববিদ্যালয় স্তর</h3>
+<div class="uni-box">
+<strong>Definition:</strong> A noun is a word that functions as the name of a specific object, set of objects, place, or abstract concept. In linguistics, nouns belong to the major <em>lexical categories</em> and can combine with determiners and modifiers.
+</div>
+
+<h4>Noun এর প্রকারভেদ (Types of Noun)</h4>
+
+<div class="rule-box">
+<strong>1. Proper Noun (নির্দিষ্ট বিশেষ্য):</strong> নির্দিষ্ট ব্যক্তি, স্থান বা বস্তুর নাম।<br>
+• <em>Bangladesh, Dhaka, Ibrahim, Monday, January</em><br>
+• সবসময় বড় হাতের অক্ষর দিয়ে শুরু হয়।
+</div>
+
+<div class="rule-box">
+<strong>2. Common Noun (সাধারণ বিশেষ্য):</strong> একই ধরনের সকল বস্তুর সাধারণ নাম।<br>
+• <em>boy, girl, country, city, day, month</em><br>
+• Proper Noun-এর opposite।
+</div>
+
+<div class="rule-box">
+<strong>3. Collective Noun (সমষ্টিবাচক বিশেষ্য):</strong> একগোষ্ঠী বস্তুকে একটি নামে ডাকা হয়।<br>
+• <em>team, family, crowd, flock, herd, committee, army, audience, bunch, group</em><br>
+• The <strong>team</strong> <u>has</u> won the match. (singular verb)<br>
+• The team <u>have</u> gone to their homes. (plural verb - British)
+</div>
+
+<div class="rule-box">
+<strong>4. Abstract Noun (ব্যাপ্তিবাচক বিশেষ্য):</strong> চোখে দেখা যায় না, শুধু অনুভব করা যায়।<br>
+• <em>love, hate, freedom, justice, happiness, courage, wisdom, knowledge</em><br>
+• <em>childhood, friendship, darkness, brightness</em>
+</div>
+
+<div class="rule-box">
+<strong>5. Material/Concrete Noun (বস্তুবাচক বিশেষ্য):</strong> হাতে ধরা যায় এমন পদার্থ।<br>
+• <em>water, gold, iron, wood, rice, milk, air</em><br>
+• সাধারণত uncountable।
+</div>
+
+<div class="rule-box">
+<strong>6. Compound Noun (যৌগিক বিশেষ্য):</strong> দুই বা ততো শব্দ মিলে একটি নতুন অর্থ তৈরি করে।<br>
+• <em>sunshine, mother-in-law, pickpocket, ice cream, editor-in-chief</em><br>
+• Plural: sunshines, mothers-in-law, pickpockets
+</div>
+
+<h4>Countable vs Uncountable</h4>
+<table>
+<tr><th>Countable</th><th>Uncountable</th></tr>
+<tr><td>book → books</td><td>water → ~~waters~~</td></tr>
+<tr><td>a/an যোগ হয়</td><td>a/an যোগ হয় না</td></tr>
+<tr><td>many, few</td><td>much, little</td></tr>
+<tr><td>how many?</td><td>how much?</td></tr>
+<tr><td>cat, dog, idea</td><td>information, advice, furniture, luggage, homework, equipment, evidence, knowledge</td></tr>
+</table>
+
+<div class="rule-box">
+<strong>⚠️ Common Uncountable Nouns (ভুল হয়):</strong><br>
+• information, advice, furniture, luggage, homework, equipment, evidence, knowledge, progress, equipment, machinery, scenery, poetry, music, traffic, weather, rice, bread, milk
+</div>
+
+<h4>Gender (লিঙ্গ)</h4>
+<table>
+<tr><th>Gender</th><th>Example</th></tr>
+<tr><td>Masculine (পুল্লিঙ্গ)</td><td>boy, man, father, brother, king, lion</td></tr>
+<tr><td>Feminine (স্ত্রীলিঙ্গ)</td><td>girl, woman, mother, sister, queen, lioness</td></tr>
+<tr><td>Common (উভয়লিঙ্গ)</td><td>child, student, teacher, doctor, neighbor</td></tr>
+<tr><td>Neuter (নপুংসক)</td><td>table, book, tree, country, moon</td></tr>
+</table>
+
+<h4>Number (বচন)</h4>
+<div class="rule-box">
+<strong>Irregular Plurals:</strong><br>
+man → men, woman → women, child → children, foot → feet, tooth → teeth, goose → geese, mouse → mice, ox → oxen, sheep → sheep, deer → deer, fish → fish/fishes, person → people, crisis → crises, nucleus → nuclei, cactus → cacti, phenomenon → phenomena, datum → data, medium → media, criterion → criteria, analysis → analyses, basis → bases, radius → radii, fungus → fungi
+</div>
+
+<h4>Case (কারক)</h4>
+<table>
+<tr><th>Case</th><th>Usage</th><th>Example</th></tr>
+<tr><td>Nominative (কর্তা)</td><td>Subject</td><td><strong>He</strong> plays football.</td></tr>
+<tr><td>Objective (কর্ম/করণ)</td><td>Object</td><td>I saw <strong>him</strong>.</td></tr>
+<tr><td>Possessive (সম্বন্ধ)</td><td>Possession</td><td>This is <strong>his</strong> book.</td></tr>
+<tr><td>Vocative (সম্বোধন)</td><td>Address</td><td><strong>O John!</strong> come here.</td></tr>
+</table>
+</div>
+
+<div class="tab-content" id="ch1-bcs">
+<h3>📋 BCS প্রস্তুতি</h3>
+<div class="bcs-box">
+<strong>BCS-তে Noun থেকে নেওয়া হয়:</strong> Collective Noun, Abstract Noun, Countable/Uncountable, Plural forms
+</div>
+
+<div class="quiz-box" data-answer="2">
+<div class="question">Q1. "The jury ___ divided in their opinions." — সঠিক verb কোনটি?</div>
+<div class="options">
+<label><input type="radio" name="q1_1" value="0"> a) is</label>
+<label><input type="radio" name="q1_1" value="1"> b) are</label>
+<label><input type="radio" name="q1_1" value="2"> c) has</label>
+<label><input type="radio" name="q1_1" value="3"> d) have</label>
+</div>
+<div class="feedback"></div>
+</div>
+
+<div class="quiz-box" data-answer="1">
+<div class="question">Q2. "Information" — এটি কোন প্রকার Noun?</div>
+<div class="options">
+<label><input type="radio" name="q1_2" value="0"> a) Countable</label>
+<label><input type="radio" name="q1_2" value="1"> b) Uncountable</label>
+<label><input type="radio" name="q1_2" value="2"> c) Collective</label>
+<label><input type="radio" name="q1_2" value="3"> d) Abstract</label>
+</div>
+<div class="feedback"></div>
+</div>
+
+<div class="quiz-box" data-answer="3">
+<div class="question">Q3. "Mice" — এর singular কী?</div>
+<div class="options">
+<label><input type="radio" name="q1_3" value="0"> a) mouses</label>
+<label><input type="radio" name="q1_3" value="1"> b) mices</label>
+<label><input type="radio" name="q1_3" value="2"> c) meese</label>
+<label><input type="radio" name="q1_3" value="3"> d) mouse</label>
+</div>
+<div class="feedback"></div>
+</div>
+
+<div class="quiz-box" data-answer="0">
+<div class="question">Q4. "The committee ___ reached a decision." — সঠিক?</div>
+<div class="options">
+<label><input type="radio" name="q1_4" value="0"> a) has</label>
+<label><input type="radio" name="q1_4" value="1"> b) have</label>
+<label><input type="radio" name="q1_4" value="2"> c) are</label>
+<label><input type="radio" name="q1_4" value="3"> d) were</label>
+</div>
+<div class="feedback"></div>
+</div>
+
+<div class="quiz-box" data-answer="2">
+<div class="question">Q5. "Furniture" — এর plural কী?</div>
+<div class="options">
+<label><input type="radio" name="q1_5" value="0"> a) furnitures</label>
+<label><input type="radio" name="q1_5" value="1"> b) furnaces</label>
+<label><input type="radio" name="q1_5" value="2"> c) furniture (no plural)</label>
+<label><input type="radio" name="q1_5" value="3"> d) furnishment</label>
+</div>
+<div class="feedback"></div>
+</div>
+</div>
+
+<div class="tab-content" id="ch1-ielts">
+<h3>🌍 IELTS টিপস</h3>
+<div class="ielts-box">
+<strong>IELTS Writing Task 2:</strong> Noun এর সঠিক ব্যবহার Band Score নির্ধারণ করে।<br><br>
+<strong>ব্যবহারের নিয়ম:</strong><br>
+• <em>Abstract nouns</em> ব্যবহার করুন opinions express করতে: <em>"The <strong>development</strong> of technology has..."</em><br>
+• <em>Compound nouns</em> ব্যবহার করুন formal writing-এ: <em>"decision-making process"</em><br>
+• <em>Noun phrases</em> ব্যবহার করুন complexity বাড়াতে
+</div>
+
+<div class="example-box">
+<strong>IELTS Band 7+ Example:</strong><br>
+"The <span class="highlight">implementation</span> of strict environmental <span class="highlight">regulations</span> has significantly <span class="highlight">reduced</span> industrial <span class="highlight">pollution</span> in many developed nations."
+</div>
+</div>
+
+<div class="score-bar">Score: <span id="score-ch1">0</span> / 5 | Progress: <span id="progress-ch1">0</span>%</div>
+</section>
+
+<!-- ==================== CHAPTER 2: PRONOUN ==================== -->
+<section id="ch2" style="display:none">
+<h1>2. Pronoun (সর্বনাম)</h1>
+
+<div class="tabs">
+<button class="tab-btn active" onclick="showTab(event,'ch2-kids')">🧒 শিশু বোঝার অংশ</button>
+<button class="tab-btn" onclick="showTab(event,'ch2-uni')">🎓 বিশ্ববিদ্যালয় স্তর</button>
+<button class="tab-btn" onclick="showTab(event,'ch2-bcs')">📋 BCS প্রস্তুতি</button>
+<button class="tab-btn" onclick="showTab(event,'ch2-ielts')">🌍 IELTS টিপস</button>
+</div>
+
+<div class="tab-content active" id="ch2-kids">
+<h3>🧒 শিশু বোঝার অংশ</h3>
+<div class="kids-box">
+<strong>সহজ ভাষায়:</strong> Pronoun হলো এমন শব্দ যা Noun-এর জায়গায় ব্যবহৃত হয়।<br><br>
+<strong>উদাহরণ:</strong><br>
+• <span class="highlight">আমি</span> পড়তে ভালোবাসি। (I = Pronoun)<br>
+• <span class="highlight">সে</span> খুব ভালো ছেলে। (He = Pronoun)<br>
+• <span class="highlight">এটি</span> আমার বই। (It = Pronoun)
+</div>
+</div>
+
+<div class="tab-content" id="ch2-uni">
+<h3>🎓 বিশ্ববিদ্যালয় স্তর</h3>
+<div class="uni-box">
+<strong>Definition:</strong> A pronoun is a word used in place of a noun. Pronouns help avoid repetition and make sentences smoother.
+</div>
+
+<h4>Pronoun এর প্রকারভেদ</h4>
+
+<div class="rule-box">
+<strong>1. Personal Pronoun:</strong><br>
+<table>
+<tr><th>Person</th><th>Subject</th><th>Object</th><th>Possessive Adj</th><th>Possessive Pronoun</th><th>Reflexive</th></tr>
+<tr><td>1st</td><td>I</td><td>me</td><td>my</td><td>mine</td><td>myself</td></tr>
+<tr><td>2nd</td><td>you</td><td>you</td><td>your</td><td>yours</td><td>yourself</td></tr>
+<tr><td>3rd (m)</td><td>he</td><td>him</td><td>his</td><td>his</td><td>himself</td></tr>
+<tr><td>3rd (f)</td><td>she</td><td>her</td><td>her</td><td>hers</td><td>herself</td></tr>
+<tr><td>3rd (n)</td><td>it</td><td>it</td><td>its</td><td>its</td><td>itself</td></tr>
+<tr><td>Plural</td><td>we/they</td><td>us/them</td><td>our/their</td><td>ours/theirs</td><td>ourselves/themselves</td></tr>
+</table>
+</div>
+
+<div class="rule-box">
+<strong>2. Demonstrative Pronoun (নির্দেশক):</strong><br>
+• <em>this, that, these, those</em><br>
+• This is my book. / These are my books.
+</div>
+
+<div class="rule-box">
+<strong>3. Interrogative Pronoun (প্রশ্নবোধক):</strong><br>
+• <em>who, whom, whose, which, what</em><br>
+• Who are you? / What is this?
+</div>
+
+<div class="rule-box">
+<strong>4. Relative Pronoun (সম্পর্কবোধক):</strong><br>
+• <em>who, whom, whose, which, that</em><br>
+• The man <strong>who</strong> came here is my uncle.<br>
+• The book <strong>which</strong> I bought is interesting.
+</div>
+
+<div class="rule-box">
+<strong>5. Indefinite Pronoun (অনির্দিষ্ট):</strong><br>
+• <em>some, any, no, every + body/one/thing</em><br>
+• <em>all, each, every, both, few, many, several, some, any, none, nobody, everything, something, anything, nothing</em>
+</div>
+
+<div class="rule-box">
+<strong>6. Reciprocal Pronoun (পারস্পরিক):</strong><br>
+• <em>each other</em> (দুজনের জন্য), <em>one another</em> (বেশি জনের জন্য)<br>
+• They love <strong>each other</strong>.
+</div>
+
+<div class="rule-box">
+<strong>7. Distributive Pronoun (বিতরণমূলক):</strong><br>
+• <em>each, either, neither</em><br>
+• <strong>Each</strong> of the students has a book.
+</div>
+
+<h4>Common Errors</h4>
+<div class="rule-box">
+<strong>❌ I vs Me:</strong><br>
+• Wrong: Me and him went there.<br>
+• Correct: <strong>He</strong> and <strong>I</strong> went there.<br><br>
+<strong>❌ Who vs Whom:</strong><br>
+• Wrong: Who did you meet?<br>
+• Correct: <strong>Whom</strong> did you meet?<br><br>
+<strong>❌ Its vs It's:</strong><br>
+• Its = possessive (its color)<br>
+• It's = it is (it's beautiful)
+</div>
+</div>
+
+<div class="tab-content" id="ch2-bcs">
+<h3>📋 BCS প্রস্তুতি</h3>
+<div class="bcs-box">
+<strong>BCS-তে প্রায়ই আসে:</strong> Who vs Whom, Its vs It's, One of those who + singular/plural verb
+</div>
+
+<div class="quiz-box" data-answer="1">
+<div class="question">Q1. "One of my friends ___ a doctor." — সঠিক?</div>
+<div class="options">
+<label><input type="radio" name="q2_1" value="0"> a) are</label>
+<label><input type="radio" name="q2_1" value="1"> b) is</label>
+<label><input type="radio" name="q2_1" value="2"> c) were</label>
+<label><input type="radio" name="q2_1" value="3"> d) have</label>
+</div>
+<div class="feedback"></div>
+</div>
+
+<div class="quiz-box" data-answer="2">
+<div class="question">Q2. "The book ___ cover is red..." — সঠিক pronoun?</div>
+<div class="options">
+<label><input type="radio" name="q2_2" value="0"> a) who</label>
+<label><input type="radio" name="q2_2" value="1"> b) which</label>
+<label><input type="radio" name="q2_2" value="2"> c) whose</label>
+<label><input type="radio" name="q2_2" value="3"> d) whom</label>
+</div>
+<div class="feedback"></div>
+</div>
+
+<div class="quiz-box" data-answer="0">
+<div class="question">Q3. "It's" — এর অর্থ কী?</div>
+<div class="options">
+<label><input type="radio" name="q2_3" value="0"> a) It is</label>
+<label><input type="radio" name="q2_3" value="1"> b) Possessive of it</label>
+<label><input type="radio" name="q2_3" value="2"> c) It was</label>
+<label><input type="radio" name="q2_3" value="3"> d) It has</label>
+</div>
+<div class="feedback"></div>
+</div>
+
+<div class="quiz-box" data-answer="3">
+<div class="question">Q4. "___ did you give the book to?" — সঠিক?</div>
+<div class="options">
+<label><input type="radio" name="q2_4" value="0"> a) Who</label>
+<label><input type="radio" name="q2_4" value="1"> b) What</label>
+<label><input type="radio" name="q2_4" value="2"> c) Which</label>
+<label><input type="radio" name="q2_4" value="3"> d) Whom</label>
+</div>
+<div class="feedback"></div>
+</div>
+
+<div class="quiz-box" data-answer="1">
+<div class="question">Q5. "Each of the boys ___ present." — সঠিক?</div>
+<div class="options">
+<label><input type="radio" name="q2_5" value="0"> a) are</label>
+<label><input type="radio" name="q2_5" value="1"> b) is</label>
+<label><input type="radio" name="q2_5" value="2"> c) were</label>
+<label><input type="radio" name="q2_5" value="3"> d) have</label>
+</div>
+<div class="feedback"></div>
+</div>
+</div>
+
+<div class="tab-content" id="ch2-ielts">
+<h3>🌍 IELTS টিপস</h3>
+<div class="ielts-box">
+<strong>IELTS Writing:</strong> Pronoun-এর সঠিক ব্যবহার coherence বাড়ায়।<br><br>
+<strong>Tip:</strong> "It is widely believed that..." — formal pronoun usage<br>
+"They argue that..." — third person reference
+</div>
+</div>
+
+<div class="score-bar">Score: <span id="score-ch2">0</span> / 5 | Progress: <span id="progress-ch2">0</span>%</div>
+</section>
+
+<!-- ==================== CHAPTER 3: ADJECTIVE ==================== -->
+<section id="ch3" style="display:none">
+<h1>3. Adjective (বিশেষণ)</h1>
+
+<div class="tabs">
+<button class="tab-btn active" onclick="showTab(event,'ch3-kids')">🧒 শিশু বোঝার অংশ</button>
+<button class="tab-btn" onclick="showTab(event,'ch3-uni')">🎓 বিশ্ববিদ্যালয় স্তর</button>
+<button class="tab-btn" onclick="showTab(event,'ch3-bcs')">📋 BCS প্রস্তুতি</button>
+<button class="tab-btn" onclick="showTab(event,'ch3-ielts')">🌍 IELTS টিপস</button>
+</div>
+
+<div class="tab-content active" id="ch3-kids">
+<h3>🧒 শিশু বোঝার অংশ</h3>
+<div class="kids-box">
+<strong>সহজ ভাষায়:</strong> Adjective হলো Noun-এর বৈশিষ্ট্য বা গুণ বোঝায়।<br><br>
+<strong>উদাহরণ:</strong><br>
+• <span class="highlight">সুন্দর</span> মেয়ে (Beautiful = Adjective)<br>
+• <span class="highlight">বড়</span> ঘর (Big = Adjective)<br>
+• আমি <span class="highlight">ভালো</span> পড়ি। (Good = Adjective)
+</div>
+</div>
+
+<div class="tab-content" id="ch3-uni">
+<h3>🎓 বিশ্ববিদ্যালয় স্তর</h3>
+
+<h4>Adjective এর প্রকারভেদ</h4>
+
+<div class="rule-box">
+<strong>1. Descriptive (বর্ণনামূলক):</strong> <em>good, beautiful, tall, red, hard</em><br>
+<strong>2. Quantitative (পরিমাণবাচক):</strong> <em>some, much, many, little, enough, half, all</em><br>
+<strong>3. Numeral (সংখ্যাবাচক):</strong> <em>one, two, first, second, double</em><br>
+<strong>4. Demonstrative (নির্দেশক):</strong> <em>this, that, these, those, such, same</em><br>
+<strong>5. Interrogative (প্রশ্নবোধক):</strong> <em>what, which, whose</em><br>
+<strong>6. Possessive (সম্বন্ধবাচক):</strong> <em>my, your, his, her, its, our, their</em><br>
+<strong>7. Proper (নির্দিষ্ট):</strong> <em>Bangladeshi, Asian, Sunday</em>
+</div>
+
+<h4>Degrees of Comparison (তুলনামূলক)</h4>
+
+<div class="rule-box">
+<strong>Positive → Comparative → Superlative</strong><br>
+<table>
+<tr><th>Positive</th><th>Comparative</th><th>Superlative</th></tr>
+<tr><td>tall</td><td>taller</td><td>tallest</td></tr>
+<tr><td>good</td><td>better</td><td>best</td></tr>
+<tr><td>bad</td><td>worse</td><td>worst</td></tr>
+<tr><td>many/much</td><td>more</td><td>most</td></tr>
+<tr><td>little</td><td>less</td><td>least</td></tr>
+<tr><td>far</td><td>farther/further</td><td>farthest/furthest</td></tr>
+<tr><td>old</td><td>older/elder</td><td>oldest/eldest</td></tr>
+<tr><td>late</td><td>later/latter</td><td>latest/last</td></tr>
+<tr><td>near</td><td>nearer</td><td>nearest/next</td></tr>
+</table>
+</div>
+
+<h4>Order of Adjectives (OSASCOMP)</h4>
+<div class="rule-box">
+<strong>O</strong>pinion → <strong>S</strong>ize → <strong>A</strong>ge → <strong>S</strong>hape → <strong>C</strong>olour → <strong>O</strong>rigin → <strong>M</strong>aterial → <strong>P</strong>urpose<br>
+• <em>A <strong>beautiful</strong> <strong>large</strong> <strong>old</strong> <strong>round</strong> <strong>red</strong> <strong>Italian</strong> <strong>wooden</strong> <strong> dining</strong> table</em>
+</div>
+</div>
+
+<div class="tab-content" id="ch3-bcs">
+<h3>📋 BCS প্রস্তুতি</h3>
+<div class="quiz-box" data-answer="1">
+<div class="question">Q1. "He is ___ honest man." — সঠিক article?</div>
+<div class="options">
+<label><input type="radio" name="q3_1" value="0"> a) a</label>
+<label><input type="radio" name="q3_1" value="1"> b) an</label>
+<label><input type="radio" name="q3_1" value="2"> c) the</label>
+<label><input type="radio" name="q3_1" value="3"> d) no article</label>
+</div>
+<div class="feedback"></div>
+</div>
+<div class="quiz-box" data-answer="2">
+<div class="question">Q2. "This book is ___ than that one." — comparative form?</div>
+<div class="options">
+<label><input type="radio" name="q3_2" value="0"> a) good</label>
+<label><input type="radio" name="q3_2" value="1"> b) best</label>
+<label><input type="radio" name="q3_2" value="2"> c) better</label>
+<label><input type="radio" name="q3_2" value="3"> d) well</label>
+</div>
+<div class="feedback"></div>
+</div>
+<div class="quiz-box" data-answer="0">
+<div class="question">Q3. "She is the ___ girl in the class." — superlative?</div>
+<div class="options">
+<label><input type="radio" name="q3_3" value="0"> a) tallest</label>
+<label><input type="radio" name="q3_3" value="1"> b) taller</label>
+<label><input type="radio" name="q3_3" value="2"> c) tall</label>
+<label><input type="radio" name="q3_3" value="3"> d) tallly</label>
+</div>
+<div class="feedback"></div>
+</div>
+</div>
+
+<div class="tab-content" id="ch3-ielts">
+<h3>🌍 IELTS টিপস</h3>
+<div class="ielts-box">
+<strong>IELTS Writing:</strong> Adjective-এর সঠিক order ও degree ব্যবহার Band 7+ এ সাহায্য করে।<br>
+• "a significantly <strong>larger</strong> number of..." (comparative + adverb)<br>
+• "the <strong>most</strong> <strong>effective</strong> solution" (superlative + descriptive)
+</div>
+</div>
+<div class="score-bar">Score: <span id="score-ch3">0</span> / 3</div>
+</section>
+
+<!-- ==================== CHAPTER 4: VERB ==================== -->
+<section id="ch4" style="display:none">
+<h1>4. Verb (ক্রিয়া)</h1>
+<div class="tabs">
+<button class="tab-btn active" onclick="showTab(event,'ch4-kids')">🧒 শিশু</button>
+<button class="tab-btn" onclick="showTab(event,'ch4-uni')">🎓 বিশ্ববিদ্যালয়</button>
+<button class="tab-btn" onclick="showTab(event,'ch4-bcs')">📋 BCS</button>
+<button class="tab-btn" onclick="showTab(event,'ch4-ielts')">🌍 IELTS</button>
+</div>
+<div class="tab-content active" id="ch4-kids">
+<div class="kids-box">
+<strong>সহজ ভাষায়:</strong> Verb হলো কোনো কাজ বা অবস্থা বোঝায়।<br>
+• আমি <span class="highlight">পড়ি</span>। (read = Verb)<br>
+• সে <span class="highlight">খায়</span>। (eats = Verb)<br>
+• তারা <span class="highlight">ছাদে</span> আছে। (is = Verb)
+</div>
+</div>
+<div class="tab-content" id="ch4-uni">
+<h4>Verb এর প্রকার</h4>
+<div class="rule-box">
+<strong>1. Transitive:</strong> Object লাগে — <em>I <u>read</u> a book.</em><br>
+<strong>2. Intransitive:</strong> Object লাগে না — <em>He <u>sleeps</u>.</em><br>
+<strong>3. Linking:</strong> Subject-কে describe করে — <em>She <u>is</u> beautiful.</em><br>
+<strong>4. Auxiliary:</strong> Main verb-কে সাহায্য করে — <em>is, am, are, was, were, have, has, had, do, does, did</em><br>
+<strong>5. Modal:</strong> Possibility/ability express — <em>can, could, may, might, will, would, shall, should, must, need, ought to</em>
+</div>
+<h4>Regular vs Irregular Verbs</h4>
+<div class="rule-box">
+<strong>Regular:</strong> verb + ed → played, walked, talked<br>
+<strong>Irregular (তালিকা):</strong><br>
+go-went-gone, come-came-come, take-took-taken, give-gave-given, eat-ate-eaten, drink-drank-drunk, write-wrote-written, read-read-read, see-saw-seen, know-knew-known, think-thought-thought, buy-bought-bought, bring-brought-brought, catch-caught-caught, teach-taught-taught, keep-kept-kept, sleep-slept-slept, run-ran-run, swim-swam-swum, sing-sang-sung, begin-began-begun, drink-drank-drunk, ring-rang-rung, swim-swam-swum, drive-drove-driven, ride-rode-ridden, speak-spoke-spoken, break-broke-broken, choose-chose-chosen, freeze-froze-frozen, steal-stole-stolen, wake-woke-woken, fly-flew-flown, grow-grew-grown, know-knew-known, throw-threw-thrown, draw-drew-drawn, show-showed-shown, wear-wore-worn, tear-tore-torn, bear-bore-born, blow-blew-blown
+</div>
+<h4>Finite vs Non-Finite</h4>
+<div class="rule-box">
+<strong>Finite:</strong> Tense/person change হয় — <em>He <u>plays</u> football.</em><br>
+<strong>Non-Finite (3 প্রকার):</strong><br>
+• <strong>Infinitive:</strong> to + verb — <em>I want <u>to go</u>.</em><br>
+• <strong>Gerund:</strong> verb + ing (noun) — <em><u>Swimming</u> is good.</em><br>
+• <strong>Participle:</strong> verb + ing/ed (adjective) — <em>The <u>running</u> water. / The <u>tired</u> man.</em>
+</div>
+</div>
+<div class="tab-content" id="ch4-bcs">
+<h3>📋 BCS প্রস্তুতি</h3>
+<div class="quiz-box" data-answer="2">
+<div class="question">Q1. "He ___ to school every day." — সঠিক?</div>
+<div class="options">
+<label><input type="radio" name="q4_1" value="0"> a) go</label>
+<label><input type="radio" name="q4_1" value="1"> b) goes</label>
+<label><input type="radio" name="q4_1" value="2"> c) going</label>
+<label><input type="radio" name="q4_1" value="3"> d) gone</label>
+</div>
+<div class="feedback"></div>
+</div>
+<div class="quiz-box" data-answer="1">
+<div class="question">Q2. "She has ___ the letter." — past participle?</div>
+<div class="options">
+<label><input type="radio" name="q4_2" value="0"> a) write</label>
+<label><input type="radio" name="q4_2" value="1"> b) written</label>
+<label><input type="radio" name="q4_2" value="2"> c) wrote</label>
+<label><input type="radio" name="q4_2" value="3"> d) writing</label>
+</div>
+<div class="feedback"></div>
+</div>
+<div class="quiz-box" data-answer="3">
+<div class="question">Q3. "Swimming is good exercise." — "Swimming" কোন type?</div>
+<div class="options">
+<label><input type="radio" name="q4_3" value="0"> a) Participle</label>
+<label><input type="radio" name="q4_3" value="1"> b) Infinitive</label>
+<label><input type="radio" name="q4_3" value="2"> c) Finite verb</label>
+<label><input type="radio" name="q4_3" value="3"> d) Gerund</label>
+</div>
+<div class="feedback"></div>
+</div>
+</div>
+<div class="tab-content" id="ch4-ielts">
+<div class="ielts-box"><strong>IELTS Tip:</strong> Modal verbs দিয়ে speculation express করুন — "This <strong>could</strong> lead to...", "It <strong>may</strong> result in..."</div>
+</div>
+<div class="score-bar">Score: <span id="score-ch4">0</span> / 3</div>
+</section>
+
+<!-- ==================== CHAPTER 5: ADVERB ==================== -->
+<section id="ch5" style="display:none">
+<h1>5. Adverb (ক্রিয়া বিশেষণ)</h1>
+<div class="tabs">
+<button class="tab-btn active" onclick="showTab(event,'ch5-kids')">🧒 শিশু</button>
+<button class="tab-btn" onclick="showTab(event,'ch5-uni')">🎓 বিশ্ববিদ্যালয়</button>
+<button class="tab-btn" onclick="showTab(event,'ch5-bcs')">📋 BCS</button>
+</div>
+<div class="tab-content active" id="ch5-kids">
+<div class="kids-box">
+<strong>সহজ ভাষায়:</strong> Adverb Verb, Adjective বা অন্য Adverb-কে বর্ণনা করে।<br>
+• সে <span class="highlight">দ্রুত</span> দৌড়ায়। (quickly = Adverb)<br>
+• সে <span class="highlight">খুব</span> সুন্দর। (very = Adverb)
+</div>
+</div>
+<div class="tab-content" id="ch5-uni">
+<h4>Adverb এর প্রকার</h4>
+<div class="rule-box">
+<strong>1. Manner (কিভাবে):</strong> <em>quickly, slowly, carefully, well, badly, hard</em><br>
+<strong>2. Place (কোথায়):</strong> <em>here, there, everywhere, nowhere, outside</em><br>
+<strong>3. Time (কখন):</strong> <em>now, then, today, yesterday, already, yet, soon</em><br>
+<strong>4. Frequency (কতবার):</strong> <em>always, usually, often, sometimes, rarely, seldom, never, hardly</em><br>
+<strong>5. Degree (কতটুকু):</strong> <em>very, much, quite, rather, almost, too, enough</em><br>
+<strong>6. Interrogative:</strong> <em>how, when, where, why</em><br>
+<strong>7. Relative:</strong> <em>where, when, why</em><br>
+<strong>8. Conjunctive:</strong> <em>however, therefore, moreover, furthermore, nevertheless</em>
+</div>
+<h4>Adjective vs Adverb — Common Errors</h4>
+<div class="rule-box">
+❌ She sings <u>beautiful</u>. → ✅ She sings <strong>beautifully</strong>.<br>
+❌ He runs <u>quick</u>. → ✅ He runs <strong>quickly</strong>.<br>
+❌ This test is <u>easier</u> than that. → ✅ (correct - adjective after linking verb)
+</div>
+</div>
+<div class="tab-content" id="ch5-bcs">
+<div class="quiz-box" data-answer="0">
+<div class="question">Q1. "She speaks English ___." — সঠিক adverb?</div>
+<div class="options">
+<label><input type="radio" name="q5_1" value="0"> a) fluently</label>
+<label><input type="radio" name="q5_1" value="1"> b) fluent</label>
+<label><input type="radio" name="q5_1" value="2"> c) fluency</label>
+<label><input type="radio" name="q5_1" value="3"> d) fluentlyly</label>
+</div>
+<div class="feedback"></div>
+</div>
+<div class="quiz-box" data-answer="2">
+<div class="question">Q2. "He runs ___ fast ___ I can't catch him." — সঠিক?</div>
+<div class="options">
+<label><input type="radio" name="q5_2" value="0"> a) so... that</label>
+<label><input type="radio" name="q5_2" value="1"> b) such... that</label>
+<label><input type="radio" name="q5_2" value="2"> c) so... that</label>
+<label><input type="radio" name="q5_2" value="3"> d) too... that</label>
+</div>
+<div class="feedback"></div>
+</div>
+</div>
+<div class="score-bar">Score: <span id="score-ch5">0</span> / 2</div>
+</section>
+
+<!-- ==================== CHAPTER 6: PREPOSITION ==================== -->
+<section id="ch6" style="display:none">
+<h1>6. Preposition (পদান্বয়ী অব্যয়)</h1>
+<div class="tabs">
+<button class="tab-btn active" onclick="showTab(event,'ch6-kids')">🧒 শিশু</button>
+<button class="tab-btn" onclick="showTab(event,'ch6-uni')">🎓 বিশ্ববিদ্যালয়</button>
+<button class="tab-btn" onclick="showTab(event,'ch6-bcs')">📋 BCS</button>
+</div>
+<div class="tab-content active" id="ch6-kids">
+<div class="kids-box">
+<strong>সহজ ভাষায়:</strong> Preposition শব্দের আগে বসে সম্পর্ক বোঝায়।<br>
+• বইটি <span class="highlight">টেবিলের উপরে</span> আছে। (on = Preposition)<br>
+• আমি <span class="highlight">বাড়িতে</span> আছি। (at = Preposition)
+</div>
+</div>
+<div class="tab-content" id="ch6-uni">
+<h4>Preposition of Time: at / in / on</h4>
+<div class="rule-box">
+<table>
+<tr><th>Preposition</th><th>ব্যবহার</th><th>উদাহরণ</th></tr>
+<tr><td><strong>at</strong></td><td>নির্দিষ্ট সময়, festival</td><td>at 5 o'clock, at noon, at night, at dawn, at Christmas</td></tr>
+<tr><td><strong>in</strong></td><td>মাস, বছর, ঋতু, দিনের অংশ</td><td>in January, in 2025, in summer, in the morning, in a week</td></tr>
+<tr><td><strong>on</strong></td><td>নির্দিষ্ট দিন, date</td><td>on Monday, on June 15, on my birthday, on Christmas Day</td></tr>
+</table>
+</div>
+<h4>Preposition of Place: at / in / on</h4>
+<div class="rule-box">
+<table>
+<tr><th>Preposition</th><th>ব্যবহার</th><th>উদাহরণ</th></tr>
+<tr><td><strong>at</strong></td><td>নির্দিষ্ট বিন্দু, small places</td><td>at home, at school, at the door, at the station</td></tr>
+<tr><td><strong>in</strong></td><td>বড় জায়গা, enclosed spaces</td><td>in Dhaka, in Bangladesh, in the room, in the box</td></tr>
+<tr><td><strong>on</strong></td><td>পৃষ্ঠতল</td><td>on the table, on the wall, on the floor, on the page</td></tr>
+</table>
+</div>
+<h4>Common Prepositional Phrases (১০০+)</h4>
+<div class="rule-box">
+<strong>Time:</strong> at once, at last, at first, at the moment, at the same time, in advance, in time, on time, by now, by then, until/till now<br>
+<strong>Manner:</strong> by accident, by chance, by mistake, by heart, in addition, in detail, in fact, in general, in hurry, on purpose, with pleasure<br>
+<strong>Place:</strong> at home, at school, at work, in bed, in danger, in front of, in place of, on earth, on foot, on the other hand
+</div>
+</div>
+<div class="tab-content" id="ch6-bcs">
+<div class="quiz-box" data-answer="1">
+<div class="question">Q1. "He was born ___ 1990." — সঠিক?</div>
+<div class="options">
+<label><input type="radio" name="q6_1" value="0"> a) on</label>
+<label><input type="radio" name="q6_1" value="1"> b) in</label>
+<label><input type="radio" name="q6_1" value="2"> c) at</label>
+<label><input type="radio" name="q6_1" value="3"> d) by</label>
+</div>
+<div class="feedback"></div>
+</div>
+<div class="quiz-box" data-answer="2">
+<div class="question">Q2. "I'll meet you ___ Monday." — সঠিক?</div>
+<div class="options">
+<label><input type="radio" name="q6_2" value="0"> a) in</label>
+<label><input type="radio" name="q6_2" value="1"> b) at</label>
+<label><input type="radio" name="q6_2" value="2"> c) on</label>
+<label><input type="radio" name="q6_2" value="3"> d) by</label>
+</div>
+<div class="feedback"></div>
+</div>
+<div class="quiz-box" data-answer="0">
+<div class="question">Q3. "The meeting is ___ 3 o'clock." — সঠিক?</div>
+<div class="options">
+<label><input type="radio" name="q6_3" value="0"> a) at</label>
+<label><input type="radio" name="q6_3" value="1"> b) in</label>
+<label><input type="radio" name="q6_3" value="2"> c) on</label>
+<label><input type="radio" name="q6_3" value="3"> d) to</label>
+</div>
+<div class="feedback"></div>
+</div>
+</div>
+<div class="score-bar">Score: <span id="score-ch6">0</span> / 3</div>
+</section>
+
+<!-- ==================== CHAPTER 7: CONJUNCTION ==================== -->
+<section id="ch7" style="display:none">
+<h1>7. Conjunction (সমুচ্চয় অব্যয়)</h1>
+<div class="tabs">
+<button class="tab-btn active" onclick="showTab(event,'ch7-kids')">🧒 শিশু</button>
+<button class="tab-btn" onclick="showTab(event,'ch7-uni')">🎓 বিশ্ববিদ্যালয়</button>
+<button class="tab-btn" onclick="showTab(event,'ch7-bcs')">📋 BCS</button>
+</div>
+<div class="tab-content active" id="ch7-kids">
+<div class="kids-box">
+<strong>সহজ ভাষায়:</strong> Conjunction দুটি শব্দ বা বাক্যকে যুক্ত করে।<br>
+• আমি পড়ি <span class="highlight">এবং</span> খেলি। (and = Conjunction)<br>
+• সে এসেছে <span class="highlight">কিন্তু</span> সে থাকেনি। (but = Conjunction)
+</div>
+</div>
+<div class="tab-content" id="ch7-uni">
+<h4>Conjunction এর প্রকার</h4>
+<div class="rule-box">
+<strong>1. Coordinating (FANBOYS):</strong><br>
+<strong>F</strong>or, <strong>A</strong>nd, <strong>N</strong>or, <strong>B</strong>ut, <strong>O</strong>r, <strong>Y</strong>et, <strong>S</strong>o<br>
+• I like tea <strong>and</strong> coffee.<br>
+• He is poor <strong>but</strong> honest.
+</div>
+<div class="rule-box">
+<strong>2. Subordinating:</strong><br>
+<em>because, although, though, even though, while, when, if, unless, until, before, after, since, as, so that, whether, whereas, wherever, whenever, however, whatever, whichever, whoever</em><br>
+• <strong>Because</strong> he was tired, he slept.<br>
+• <strong>Although</strong> it rained, we went out.
+</div>
+<div class="rule-box">
+<strong>3. Correlative (জুটি):</strong><br>
+<em>both...and, either...or, neither...nor, not only...but also, whether...or</em><br>
+• <strong>Both</strong> he <strong>and</strong> I are students.<br>
+• <strong>Neither</strong> he <strong>nor</strong> she came.
+</div>
+<h4>Common Errors</h4>
+<div class="rule-box">
+❌ <strong>Although</strong> he is rich, <strong>but</strong> he is not happy. (Although + but = wrong)<br>
+✅ <strong>Although</strong> he is rich, he is not happy.<br>
+❌ He is rich <strong>but</strong> he is not happy, <strong>so</strong> he is unhappy. (but + so = wrong)
+</div>
+</div>
+<div class="tab-content" id="ch7-bcs">
+<div class="quiz-box" data-answer="0">
+<div class="question">Q1. "He is poor ___ honest." — সঠিক conjunction?</div>
+<div class="options">
+<label><input type="radio" name="q7_1" value="0"> a) but</label>
+<label><input type="radio" name="q7_1" value="1"> b) and</label>
+<label><input type="radio" name="q7_1" value="2"> c) or</label>
+<label><input type="radio" name="q7_1" value="3"> d) so</label>
+</div>
+<div class="feedback"></div>
+</div>
+<div class="quiz-box" data-answer="2">
+<div class="question">Q2. "___ he was tired, he kept working." — সঠিক?</div>
+<div class="options">
+<label><input type="radio" name="q7_2" value="0"> a) And</label>
+<label><input type="radio" name="q7_2" value="1"> b) But</label>
+<label><input type="radio" name="q7_2" value="2"> c) Although</label>
+<label><input type="radio" name="q7_2" value="3"> d) So</label>
+</div>
+<div class="feedback"></div>
+</div>
+</div>
+<div class="score-bar">Score: <span id="score-ch7">0</span> / 2</div>
+</section>
+
+<!-- ==================== CHAPTER 8: INTERJECTION ==================== -->
+<section id="ch8" style="display:none">
+<h1>8. Interjection (বিস্ময়সূচক অব্যয়)</h1>
+<div class="tab-content active">
+<div class="rule-box">
+<strong>Interjection:</strong> হঠাৎ আবেগ প্রকাশ করতে ব্যবহৃত হয়।<br>
+<table>
+<tr><th>Interjection</th><th>অর্থ</th><th>উদাহরণ</th></tr>
+<tr><td>Hurrah!</td><td>আনন্দ</td><td>Hurrah! We won!</td></tr>
+<tr><td>Alas!</td><td>দুঃখ</td><td>Alas! He is dead.</td></tr>
+<tr><td>Oh!</td><td>বিস্ময়/দুঃখ</td><td>Oh! What a beautiful flower!</td></tr>
+<tr><td>Aha!</td><td>সন্তোষ</td><td>Aha! Now I understand.</td></tr>
+<tr><td>Wow!</td><td>বিস্ময়</td><td>Wow! What a surprise!</td></tr>
+<tr><td>Bravo!</td><td>প্রশংসা</td><td>Bravo! Well done!</td></tr>
+<tr><td>Alack!</td><td>ভয়/দুঃখ</td><td>Alack! The house is on fire.</td></tr>
+</table>
+</div>
+<div class="bcs-box"><strong>BCS Tip:</strong> Interjection-এর পরে comma (!) বা exclamation mark বসে।</div>
+</div>
+</section>
+
+<!-- ==================== CHAPTER 9: ARTICLE ==================== -->
+<section id="ch9" style="display:none">
+<h1>9. Article (পদবাচক অব্যয়)</h1>
+<div class="tabs">
+<button class="tab-btn active" onclick="showTab(event,'ch9-kids')">🧒 শিশু</button>
+<button class="tab-btn" onclick="showTab(event,'ch9-uni')">🎓 বিশ্ববিদ্যালয়</button>
+<button class="tab-btn" onclick="showTab(event,'ch9-bcs')">📋 BCS</button>
+</div>
+<div class="tab-content active" id="ch9-kids">
+<div class="kids-box">
+<strong>সহজ ভাষায়:</strong> Article হলো ছোট শব্দ যা Noun-এর আগে বসে।<br>
+• <span class="highlight">a</span>, <span class="highlight">an</span>, <span class="highlight">the</span> — এগুলোই Article।<br>
+• <strong>a</strong> = একটি (consonant sound এর আগে)<br>
+• <strong>an</strong> = একটি (vowel sound এর আগে)<br>
+• <strong>the</strong> = নির্দিষ্ট
+</div>
+</div>
+<div class="tab-content" id="ch9-uni">
+<h4>A vs An — Phonetic Rule</h4>
+<div class="rule-box">
+<strong>গুরুত্বপূর্ণ:</strong> Letter নয়, <em>sound</em>-এর উপর নির্ভর করে।<br>
+• <strong>a</strong> university (উনিভার্সিটি = "y" sound)<br>
+• <strong>an</strong> hour (আওয়ার = "h" নেই)<br>
+• <strong>a</strong> European (ইউরোপিয়ান = "y" sound)<br>
+• <strong>an</strong> honest man (অনেস্ট = "h" নেই)<br>
+• <strong>a</strong> one-eyed man (ওয়ান = "w" sound)<br>
+• <strong>an</strong> MBA (এমবিএ = "em" sound)
+</div>
+<h4>The — Definite Article Rules</h4>
+<div class="rule-box">
+<strong>30+ নিয়ম:</strong><br>
+1. নির্দিষ্ট বস্তু: the book (on the table)<br>
+2. দ্বিতীয়বার উল্লেখ: I bought a book. <strong>The</strong> book is good.<br>
+3. সুপারলেটিভ: <strong>the</strong> best, <strong>the</strong> tallest<br>
+4. অদ্বিতীয়: the sun, the moon, the earth<br>
+5. পরিচিত: the Ganges, the Bible<br>
+6. Ordinal: the first, the second<br>
+7. Musical instruments: play <strong>the</strong> piano<br>
+8. Groups: the rich, the poor<br>
+9. দেশের নাম (plural/broader): the USA, the UK<br>
+10. River/sea: the Nile, the Pacific
+</div>
+<h4>Zero Article — কখন কোনো article নেই</h4>
+<div class="rule-box">
+• Proper nouns: <em>Bangladesh, Dhaka</em> (except the USA)<br>
+• Uncountable abstract: <em>love, freedom, water</em><br>
+• Plural generic: <em>Dogs are loyal.</em><br>
+• Meals: <em>breakfast, lunch, dinner</em><br>
+• Sports: <em>football, cricket</em><br>
+• Languages: <em>English, Bengali</em><br>
+• Diseases: <em>cancer, diabetes</em> (but <em>the flu</em>)
+</div>
+</div>
+<div class="tab-content" id="ch9-bcs">
+<div class="quiz-box" data-answer="1">
+<div class="question">Q1. "He is ___ honest man." — সঠিক?</div>
+<div class="options">
+<label><input type="radio" name="q9_1" value="0"> a) a</label>
+<label><input type="radio" name="q9_1" value="1"> b) an</label>
+<label><input type="radio" name="q9_1" value="2"> c) the</label>
+<label><input type="radio" name="q9_1" value="3"> d) no article</label>
+</div>
+<div class="feedback"></div>
+</div>
+<div class="quiz-box" data-answer="0">
+<div class="question">Q2. "He is ___ university student." — সঠিক?</div>
+<div class="options">
+<label><input type="radio" name="q9_2" value="0"> a) a</label>
+<label><input type="radio" name="q9_2" value="1"> b) an</label>
+<label><input type="radio" name="q9_2" value="2"> c) the</label>
+<label><input type="radio" name="q9_2" value="3"> d) no article</label>
+</div>
+<div class="feedback"></div>
+</div>
+<div class="quiz-box" data-answer="2">
+<div class="question">Q3. "___ sun rises in the east." — সঠিক?</div>
+<div class="options">
+<label><input type="radio" name="q9_3" value="0"> a) A</label>
+<label><input type="radio" name="q9_3" value="1"> b) An</label>
+<label><input type="radio" name="q9_3" value="2"> c) The</label>
+<label><input type="radio" name="q9_3" value="3"> d) No article</label>
+</div>
+<div class="feedback"></div>
+</div>
+<div class="quiz-box" data-answer="3">
+<div class="question">Q4. "I like ___ music." — সঠিক?</div>
+<div class="options">
+<label><input type="radio" name="q9_4" value="0"> a) a</label>
+<label><input type="radio" name="q9_4" value="1"> b) an</label>
+<label><input type="radio" name="q9_4" value="2"> c) the</label>
+<label><input type="radio" name="q9_4" value="3"> d) no article</label>
+</div>
+<div class="feedback"></div>
+</div>
+</div>
+<div class="score-bar">Score: <span id="score-ch9">0</span> / 4</div>
+</section>
+
+<!-- ==================== CHAPTER 10: TENSE ==================== -->
+<section id="ch10" style="display:none">
+<h1>10. Tense (কাল)</h1>
+<div class="tabs">
+<button class="tab-btn active" onclick="showTab(event,'ch10-kids')">🧒 শিশু</button>
+<button class="tab-btn" onclick="showTab(event,'ch10-uni')">🎓 বিশ্ববিদ্যালয়</button>
+<button class="tab-btn" onclick="showTab(event,'ch10-bcs')">📋 BCS</button>
+<button class="tab-btn" onclick="showTab(event,'ch10-ielts')">🌍 IELTS</button>
+</div>
+<div class="tab-content active" id="ch10-kids">
+<div class="kids-box">
+<strong>সহজ ভাষায়:</strong> Tense বলে কাজটা কখন হয়েছে — অতীত, বর্তমান, নাকি ভবিষ্যত।<br>
+• বর্তমান: আমি <span class="highlight">পড়ি</span>।<br>
+• অতীত: আমি <span class="highlight">পড়েছি</span>।<br>
+• ভবিষ্যত: আমি <span class="highlight">পড়ব</span>।
+</div>
+</div>
+<div class="tab-content" id="ch10-uni">
+<h4>12 Tenses — Complete System</h4>
+<div class="rule-box">
+<strong>PRESENT TENSE (বর্তমান কাল):</strong><br>
+<table>
+<tr><th>Tense</th><th>Structure</th><th>Example</th></tr>
+<tr><td>Simple Present</td><td>S + V1(s/es)</td><td>He <u>plays</u> football.</td></tr>
+<tr><td>Present Continuous</td><td>S + am/is/are + V-ing</td><td>He <u>is playing</u> football.</td></tr>
+<tr><td>Present Perfect</td><td>S + have/has + V3</td><td>He <u>has played</u> football.</td></tr>
+<tr><td>Present Perfect Continuous</td><td>S + have/has + been + V-ing</td><td>He <u>has been playing</u> football.</td></tr>
+</table>
+</div>
+<div class="rule-box">
+<strong>PAST TENSE (অতীত কাল):</strong><br>
+<table>
+<tr><th>Tense</th><th>Structure</th><th>Example</th></tr>
+<tr><td>Simple Past</td><td>S + V2</td><td>He <u>played</u> football.</td></tr>
+<tr><td>Past Continuous</td><td>S + was/were + V-ing</td><td>He <u>was playing</u> football.</td></tr>
+<tr><td>Past Perfect</td><td>S + had + V3</td><td>He <u>had played</u> football.</td></tr>
+<tr><td>Past Perfect Continuous</td><td>S + had + been + V-ing</td><td>He <u>had been playing</u> football.</td></tr>
+</table>
+</div>
+<div class="rule-box">
+<strong>FUTURE TENSE (ভবিষ্যৎ কাল):</strong><br>
+<table>
+<tr><th>Tense</th><th>Structure</th><th>Example</th></tr>
+<tr><td>Simple Future</td><td>S + will + V1</td><td>He <u>will play</u> football.</td></tr>
+<tr><td>Future Continuous</td><td>S + will + be + V-ing</td><td>He <u>will be playing</u> football.</td></tr>
+<tr><td>Future Perfect</td><td>S + will + have + V3</td><td>He <u>will have played</u> football.</td></tr>
+<tr><td>Future Perfect Continuous</td><td>S + will + have + been + V-ing</td><td>He <u>will have been playing</u> football.</td></tr>
+</table>
+</div>
+<h4>Signal Words</h4>
+<div class="rule-box">
+<strong>Simple Present:</strong> always, usually, often, sometimes, every day<br>
+<strong>Present Continuous:</strong> now, right now, at the moment, Look!, Listen!<br>
+<strong>Present Perfect:</strong> already, yet, just, ever, never, since, for<br>
+<strong>Simple Past:</strong> yesterday, ago, last week, in 2020, when I was young<br>
+<strong>Past Perfect:</strong> before, after, by the time, when, already<br>
+<strong>Simple Future:</strong> tomorrow, next week, in the future, soon, later
+</div>
+<h4>Tense Sequence (Narration)</h4>
+<div class="rule-box">
+Direct → Indirect তে কাল পরিবর্তন:<br>
+• Simple Present → Simple Past<br>
+• Present Continuous → Past Continuous<br>
+• Present Perfect → Past Perfect<br>
+• Simple Past → Past Perfect<br>
+• will → would
+</div>
+</div>
+<div class="tab-content" id="ch10-bcs">
+<h3>📋 BCS Tense MCQ (30 Questions)</h3>
+<div class="quiz-box" data-answer="1">
+<div class="question">Q1. "He ___ dinner at 8 pm yesterday." — সঠিক?</div>
+<div class="options">
+<label><input type="radio" name="q10_1" value="0"> a) was having</label>
+<label><input type="radio" name="q10_1" value="1"> b) had</label>
+<label><input type="radio" name="q10_1" value="2"> c) has had</label>
+<label><input type="radio" name="q10_1" value="3"> d) is having</label>
+</div>
+<div class="feedback"></div>
+</div>
+<div class="quiz-box" data-answer="0">
+<div class="question">Q2. "I ___ this movie before." — সঠিক?</div>
+<div class="options">
+<label><input type="radio" name="q10_2" value="0"> a) have seen</label>
+<label><input type="radio" name="q10_2" value="1"> b) saw</label>
+<label><input type="radio" name="q10_2" value="2"> c) had seen</label>
+<label><input type="radio" name="q10_2" value="3"> d) am seeing</label>
+</div>
+<div class="feedback"></div>
+</div>
+<div class="quiz-box" data-answer="2">
+<div class="question">Q3. "By next year, I ___ here for 10 years." — সঠিক?</div>
+<div class="options">
+<label><input type="radio" name="q10_3" value="0"> a) will work</label>
+<label><input type="radio" name="q10_3" value="1"> b) will have worked</label>
+<label><input type="radio" name="q10_3" value="2"> c) will have been working</label>
+<label><input type="radio" name="q10_3" value="3"> d) am working</label>
+</div>
+<div class="feedback"></div>
+</div>
+<div class="quiz-box" data-answer="3">
+<div class="question">Q4. "When I arrived, they ___ dinner." — সঠিক?</div>
+<div class="options">
+<label><input type="radio" name="q10_4" value="0"> a) cook</label>
+<label><input type="radio" name="q10_4" value="1"> b) were cooking</label>
+<label><input type="radio" name="q10_4" value="2"> c) have cooked</label>
+<label><input type="radio" name="q10_4" value="3"> d) had cooked</label>
+</div>
+<div class="feedback"></div>
+</div>
+<div class="quiz-box" data-answer="1">
+<div class="question">Q5. "She ___ English since 2010." — সঠিক?</div>
+<div class="options">
+<label><input type="radio" name="q10_5" value="0"> a) teaches</label>
+<label><input type="radio" name="q10_5" value="1"> b) has been teaching</label>
+<label><input type="radio" name="q10_5" value="2"> c) taught</label>
+<label><input type="radio" name="q10_5" value="3"> d) is teaching</label>
+</div>
+<div class="feedback"></div>
+</div>
+<div class="quiz-box" data-answer="0">
+<div class="question">Q6. "I ___ to the cinema tomorrow." — সঠিক?</div>
+<div class="options">
+<label><input type="radio" name="q10_6" value="0"> a) will go</label>
+<label><input type="radio" name="q10_6" value="1"> b) went</label>
+<label><input type="radio" name="q10_6" value="2"> c) go</label>
+<label><input type="radio" name="q10_6" value="3"> d) have gone</label>
+</div>
+<div class="feedback"></div>
+</div>
+</div>
+<div class="tab-content" id="ch10-ielts">
+<div class="ielts-box">
+<strong>IELTS Writing Task 1:</strong> Tense-এর সঠিক ব্যবহার অত্যন্ত গুরুত্বপূর্ণ।<br>
+• Graph বর্ণনা → Simple Past / Present Perfect<br>
+• Process diagram → Simple Present<br>
+• Future prediction → Simple Future<br><br>
+<strong>Example:</strong> "The graph <strong>shows</strong> (SP) that sales <strong>increased</strong> (SP) significantly between 2010 and 2020. Since 2020, they <strong>have remained</strong> (PP) stable."
+</div>
+</div>
+<div class="score-bar">Score: <span id="score-ch10">0</span> / 6</div>
+</section>
+
+<!-- ==================== CHAPTER 11: SENTENCE TYPES ==================== -->
+<section id="ch11" style="display:none">
+<h1>11. Sentence Types (বাক্যের প্রকার)</h1>
+<div class="tabs">
+<button class="tab-btn active" onclick="showTab(event,'ch11-kids')">🧒 শিশু</button>
+<button class="tab-btn" onclick="showTab(event,'ch11-uni')">🎓 বিশ্ববিদ্যালয়</button>
+</div>
+<div class="tab-content active" id="ch11-kids">
+<div class="kids-box">
+<strong>সহজ ভাষায়:</strong> বাক্য দুই রকম — কোনটা একটা কথা বলে, আবার কোনটা অনেক কথা একসাথে।
+</div>
+</div>
+<div class="tab-content" id="ch11-uni">
+<h4>By Structure</h4>
+<div class="rule-box">
+<strong>1. Simple (সরল):</strong> একটি independent clause<br>
+• <em>He goes to school.</em><br>
+<strong>2. Compound (যৌগিক):</strong> দুটি independent clause + coordinating conjunction<br>
+• <em>He goes to school, <strong>and</strong> she goes to college.</em><br>
+<strong>3. Complex (জটিল):</strong> একটি independent + একটি dependent clause<br>
+• <em><strong>When</strong> it rained, I stayed home.</em><br>
+<strong>4. Compound-Complex:</strong> দুটি independent + একটি dependent clause<br>
+• <em><strong>When</strong> it rained, I stayed home, <strong>and</strong> she went out.</em>
+</div>
+<h4>By Function</h4>
+<div class="rule-box">
+<strong>1. Declarative:</strong> He is a good boy.<br>
+<strong>2. Interrogative:</strong> Is he a good boy?<br>
+<strong>3. Imperative:</strong> Close the door. (Command/Request)<br>
+<strong>4. Exclamatory:</strong> What a beautiful flower!
+</div>
+<h4>Phrase vs Clause</h4>
+<div class="rule-box">
+<strong>Phrase:</strong> কোনো subject-verb নেই — <em>in the room, a beautiful girl, to go home</em><br>
+<strong>Clause:</strong> Subject + verb আছে — <em>when I was young, that he is honest</em>
+</div>
+</div>
+</section>
+
+<!-- ==================== CHAPTER 12: SUBJECT-VERB AGREEMENT ==================== -->
+<section id="ch12" style="display:none">
+<h1>12. Subject-Verb Agreement</h1>
+<div class="tab-content active">
+<div class="rule-box">
+<strong>25+ Rules:</strong><br>
+1. Singular subject → singular verb: <em>He <u>plays</u>.</em><br>
+2. Plural subject → plural verb: <em>They <u>play</u>.</em><br>
+3. Two subjects + and → plural: <em>He and she <u>are</u> friends.</em><br>
+4. Either...or / Neither...nor → verb agrees with nearest subject<br>
+5. Each/every + singular verb: <em>Each student <u>has</u> a book.</em><br>
+6. Collective noun → usually singular: <em>The team <u>has</u> won.</em><br>
+7. Uncountable noun → singular: <em>Water <u>is</u> wet.</em><br>
+8. Plural noun + singular meaning → singular: <em>News <u>is</u> good.</em><br>
+9. "One of those who" → plural: <em>One of those who <u>are</u> here.</em><br>
+10. Number of → singular: <em>The number of students <u>is</u> 50.</em><br>
+11. A number of → plural: <em>A number of students <u>are</u> present.</em>
+</div>
+<div class="quiz-box" data-answer="0">
+<div class="question">Q1. "The news ___ good." — সঠিক?</div>
+<div class="options">
+<label><input type="radio" name="q12_1" value="0"> a) is</label>
+<label><input type="radio" name="q12_1" value="1"> b) are</label>
+<label><input type="radio" name="q12_1" value="2"> c) were</label>
+<label><input type="radio" name="q12_1" value="3"> d) have been</label>
+</div>
+<div class="feedback"></div>
+</div>
+</div>
+</section>
+
+<!-- ==================== CHAPTER 13: VOICE ==================== -->
+<section id="ch13" style="display:none">
+<h1>13. Voice — Active & Passive</h1>
+<div class="tabs">
+<button class="tab-btn active" onclick="showTab(event,'ch13-kids')">🧒 শিশু</button>
+<button class="tab-btn" onclick="showTab(event,'ch13-uni')">🎓 বিশ্ববিদ্যালয়</button>
+<button class="tab-btn" onclick="showTab(event,'ch13-bcs')">📋 BCS</button>
+</div>
+<div class="tab-content active" id="ch13-kids">
+<div class="kids-box">
+<strong>Active Voice:</strong> কর্তা মূল ভূমিকায় — <em>I <u>write</u> a letter.</em><br>
+<strong>Passive Voice:</strong> কর্ম মূল ভূমিকায় — <em>A letter <u>is written</u> by me.</em>
+</div>
+</div>
+<div class="tab-content" id="ch13-uni">
+<h4>Passive Rules for All Tenses</h4>
+<div class="rule-box">
+<table>
+<tr><th>Tense</th><th>Active</th><th>Passive</th></tr>
+<tr><td>Simple Present</td><td>He writes a letter.</td><td>A letter <u>is written</u> by him.</td></tr>
+<tr><td>Present Continuous</td><td>He is writing a letter.</td><td>A letter <u>is being written</u> by him.</td></tr>
+<tr><td>Present Perfect</td><td>He has written a letter.</td><td>A letter <u>has been written</u> by him.</td></tr>
+<tr><td>Simple Past</td><td>He wrote a letter.</td><td>A letter <u>was written</u> by him.</td></tr>
+<tr><td>Past Continuous</td><td>He was writing a letter.</td><td>A letter <u>was being written</u> by him.</td></tr>
+<tr><td>Past Perfect</td><td>He had written a letter.</td><td>A letter <u>had been written</u> by him.</td></tr>
+<tr><td>Simple Future</td><td>He will write a letter.</td><td>A letter <u>will be written</u> by him.</td></tr>
+<tr><td>Modal</td><td>He can write a letter.</td><td>A letter <u>can be written</u> by him.</td></tr>
+</table>
+</div>
+</div>
+<div class="tab-content" id="ch13-bcs">
+<div class="quiz-box" data-answer="2">
+<div class="question">Q1. "The cake ___ by my mother." — passive?</div>
+<div class="options">
+<label><input type="radio" name="q13_1" value="0"> a) makes</label>
+<label><input type="radio" name="q13_1" value="1"> b) made</label>
+<label><input type="radio" name="q13_1" value="2"> c) was made</label>
+<label><input type="radio" name="q13_1" value="3"> d) is making</label>
+</div>
+<div class="feedback"></div>
+</div>
+</div>
+</section>
+
+<!-- ==================== CHAPTER 14: NARRATION ==================== -->
+<section id="ch14" style="display:none">
+<h1>14. Narration — Direct & Indirect Speech</h1>
+<div class="tabs">
+<button class="tab-btn active" onclick="showTab(event,'ch14-kids')">🧒 শিশু</button>
+<button class="tab-btn" onclick="showTab(event,'ch14-uni')">🎓 বিশ্ববিদ্যালয়</button>
+<button class="tab-btn" onclick="showTab(event,'ch14-bcs')">📋 BCS</button>
+</div>
+<div class="tab-content active" id="ch14-kids">
+<div class="kids-box">
+<strong>Direct Speech:</strong> সরাসরি উদ্ধৃতি — He said, "<strong>I am happy.</strong>"<br>
+<strong>Indirect Speech:</strong> পরোক্ষ উদ্ধৃতি — He said <strong>that he was happy</strong>.
+</div>
+</div>
+<div class="tab-content" id="ch14-uni">
+<h4>Reported Speech Rules</h4>
+<div class="rule-box">
+<strong>Pronoun Changes:</strong><br>
+I → he/she, my → his/her, we → they, our → their<br><br>
+<strong>Time/Place Changes:</strong><br>
+today → that day, tomorrow → the next day, yesterday → the previous day, ago → before, here → there, this → that, these → those<br><br>
+<strong>Tense Changes:</strong><br>
+Simple Present → Simple Past<br>
+Present Continuous → Past Continuous<br>
+Present Perfect → Past Perfect<br>
+Simple Past → Past Perfect<br>
+will → would, can → could, may → might, shall → should
+</div>
+<h4>Reporting Verbs</h4>
+<div class="rule-box">
+<strong>Statements:</strong> said, told, stated, remarked, exclaimed<br>
+<strong>Questions:</strong> asked, inquired, wanted to know<br>
+<strong>Commands:</strong> ordered, commanded, told, advised, suggested, requested, warned, reminded, begged
+</div>
+</div>
+<div class="tab-content" id="ch14-bcs">
+<div class="quiz-box" data-answer="1">
+<div class="question">Q1. He said, "I am busy." → Indirect?</div>
+<div class="options">
+<label><input type="radio" name="q14_1" value="0"> a) He said that I am busy.</label>
+<label><input type="radio" name="q14_1" value="1"> b) He said that he was busy.</label>
+<label><input type="radio" name="q14_1" value="2"> c) He said he is busy.</label>
+<label><input type="radio" name="q14_1" value="3"> d) He said that he is busy.</label>
+</div>
+<div class="feedback"></div>
+</div>
+</div>
+</section>
+
+<!-- ==================== CHAPTER 15: SENTENCE TRANSFORMATION ==================== -->
+<section id="ch15" style="display:none">
+<h1>15. Transformation of Sentences</h1>
+<div class="tab-content active">
+<div class="rule-box">
+<strong>Affirmative ↔ Negative:</strong><br>
+• He is a good boy → He is not a bad boy / He is no fool<br>
+• All students passed → Not all students failed<br><br>
+<strong>Simple ↔ Compound ↔ Complex:</strong><br>
+• <em>Being tired, he slept.</em> (Simple) → <em>He was tired, so he slept.</em> (Compound) → <em>Because he was tired, he slept.</em> (Complex)<br><br>
+<strong>Assertive ↔ Exclamatory:</strong><br>
+• He is very honest → What an honest man he is!<br><br>
+<strong>Degree Change:</strong><br>
+• He is the tallest boy → No other boy is as tall as he → He is taller than any other boy
+</div>
+</div>
+</section>
+
+<!-- ==================== CHAPTER 16: CONDITIONALS ==================== -->
+<section id="ch16" style="display:none">
+<h1>16. Conditionals (শর্তবোধক)</h1>
+<div class="tabs">
+<button class="tab-btn active" onclick="showTab(event,'ch16-kids')">🧒 শিশু</button>
+<button class="tab-btn" onclick="showTab(event,'ch16-uni')">🎓 বিশ্ববিদ্যালয়</button>
+<button class="tab-btn" onclick="showTab(event,'ch16-bcs')">📋 BCS</button>
+</div>
+<div class="tab-content active" id="ch16-kids">
+<div class="kids-box">
+<strong>সহজ ভাষায়:</strong> "যদি... তাহলে..." — এটাই Conditional।<br>
+• <strong>Zero:</strong> If you heat water, it boils. (সত্য)<br>
+• <strong>First:</strong> If it rains, I will stay home. (সম্ভাবনা)
+</div>
+</div>
+<div class="tab-content" id="ch16-uni">
+<h4>All 5 Conditionals</h4>
+<div class="rule-box">
+<table>
+<tr><th>Type</th><th>Condition (If)</th><th>Result</th><th>Meaning</th></tr>
+<tr><td>Zero</td><td>If + present, present</td><td>If you heat water, it boils.</td><td>সর্বদা সত্য</td></tr>
+<tr><td>First</td><td>If + present, will + V1</td><td>If it rains, I will stay.</td><td>সম্ভাব্য</td></tr>
+<tr><td>Second</td><td>If + past, would + V1</td><td>If I were rich, I would travel.</td><td>অসম্ভাব্য</td></tr>
+<tr><td>Third</td><td>If + had + V3, would have + V3</td><td>If I had studied, I would have passed.</td><td>অতীত অসম্ভাব্য</td></tr>
+<tr><td>Mixed</td><td>If + had + V3, would + V1</td><td>If I had studied, I would be a doctor.</td><td>মিশ্রিত</td></tr>
+</table>
+</div>
+<h4>Inverted Conditionals (without "if")</h4>
+<div class="rule-box">
+• If I were you → <strong>Were I you</strong>, I would accept.<br>
+• If he had known → <strong>Had he known</strong>, he would have come.<br>
+• If it should rain → <strong>Should it rain</strong>, we would cancel.
+</div>
+</div>
+<div class="tab-content" id="ch16-bcs">
+<div class="quiz-box" data-answer="0">
+<div class="question">Q1. "If I ___ rich, I would buy a car." — 2nd conditional?</div>
+<div class="options">
+<label><input type="radio" name="q16_1" value="0"> a) were</label>
+<label><input type="radio" name="q16_1" value="1"> b) am</label>
+<label><input type="radio" name="q16_1" value="2"> c) was</label>
+<label><input type="radio" name="q16_1" value="3"> d) had been</label>
+</div>
+<div class="feedback"></div>
+</div>
+<div class="quiz-box" data-answer="2">
+<div class="question">Q2. "Had I known, I ___ helped you." — 3rd conditional?</div>
+<div class="options">
+<label><input type="radio" name="q16_2" value="0"> a) will</label>
+<label><input type="radio" name="q16_2" value="1"> b) would</label>
+<label><input type="radio" name="q16_2" value="2"> c) would have</label>
+<label><input type="radio" name="q16_2" value="3"> d) could</label>
+</div>
+<div class="feedback"></div>
+</div>
+</div>
+</section>
+
+<!-- ==================== CHAPTER 17: MODAL VERBS ==================== -->
+<section id="ch17" style="display:none">
+<h1>17. Modal Verbs</h1>
+<div class="tab-content active">
+<div class="rule-box">
+<strong>Modal Verbs এর তালিকা ও ব্যবহার:</strong><br>
+<table>
+<tr><th>Modal</th><th>Meaning</th><th>Example</th></tr>
+<tr><td>can</td><td>ability, permission</td><td>I <u>can</u> swim.</td></tr>
+<tr><td>could</td><td>past ability, possibility</td><td>I <u>could</u> swim when I was 5.</td></tr>
+<tr><td>may</td><td>permission, possibility</td><td>You <u>may</u> go now.</td></tr>
+<tr><td>might</td><td>possibility (less certain)</td><td>It <u>might</u> rain.</td></tr>
+<tr><td>will</td><td>future, willingness</td><td>I <u>will</u> help you.</td></tr>
+<tr><td>would</td><td>conditional, polite request</td><td><u>Would</u> you help me?</td></tr>
+<tr><td>shall</td><td>future (I/we), suggestion</td><td><u>Shall</u> we go?</td></tr>
+<tr><td>should</td><td>advice, obligation</td><td>You <u>should</u> study.</td></tr>
+<tr><td>must</td><td>strong obligation, deduction</td><td>You <u>must</u> obey rules.</td></tr>
+<tr><td>need</td><td>necessity</td><td>You <u>need</u> not worry.</td></tr>
+<tr><td>dare</td><td>courage</td><td>He <u>dare</u> not speak.</td></tr>
+<tr><td>used to</td><td>past habit</td><td>I <u>used to</u> play cricket.</td></tr>
+<tr><td>ought to</td><td>moral obligation</td><td>You <u>ought to</u> respect elders.</td></tr>
+</table>
+</div>
+<h4>Past Modals</h4>
+<div class="rule-box">
+<strong>could have + V3:</strong> past ability (but didn't) — <em>I could have helped you.</em><br>
+<strong>should have + V3:</strong> regret — <em>I should have studied.</em><br>
+<strong>must have + V3:</strong> deduction — <em>He must have gone.</em><br>
+<strong>might have + V3:</strong> possibility — <em>She might have left.</em><br>
+<strong>would have + V3:</strong> unreal past — <em>I would have won.</em>
+</div>
+</div>
+</section>
+
+<!-- ==================== CHAPTER 18: NON-FINITE VERBS ==================== -->
+<section id="ch18" style="display:none">
+<h1>18. Non-Finite Verbs</h1>
+<div class="tab-content active">
+<div class="rule-box">
+<strong>1. Infinitive (to + V1):</strong><br>
+• I want <em>to go</em> home.<br>
+• <strong>Bare infinitive (without to):</strong> I can <em>swim</em>. / Let him <em>go</em>.<br><br>
+<strong>2. Gerund (V+ing as Noun):</strong><br>
+• <em>Swimming</em> is good exercise.<br>
+• I enjoy <em>reading</em>.<br>
+• Preposition-এর পরে gerund: interested in <em>learning</em><br><br>
+<strong>3. Participle (V+ing/ed as Adjective):</strong><br>
+• Present: The <em>running</em> water. / The man <em>standing</em> there.<br>
+• Past: The <em>broken</em> window. / A <em>tired</em> man.<br>
+• Perfect: <em>Having finished</em> the work, he went home.
+</div>
+<h4>Dangling Modifier Errors</h4>
+<div class="rule-box">
+❌ <em>Walking</em> to school, the rain started. (rain walked?)<br>
+✅ <em>Walking</em> to school, <strong>I</strong> got wet in the rain.
+</div>
+</div>
+</section>
+
+<!-- ==================== CHAPTER 19: PHRASES & CLAUSES ==================== -->
+<section id="ch19" style="display:none">
+<h1>19. Phrases & Clauses</h1>
+<div class="tab-content active">
+<div class="rule-box">
+<strong>Clauses (উপবাক্য):</strong><br>
+<table>
+<tr><th>Type</th><th>Function</th><th>Example</th></tr>
+<tr><td>Noun Clause</td><td>Noun-এর কাজ করে</td><td><em>What he said</em> is true.</td></tr>
+<tr><td>Adjective Clause</td><td>Adjective-এর কাজ করে</td><td>The man <em>who came here</em> is my uncle.</td></tr>
+<tr><td>Adverb Clause</td><td>Adverb-এর কাজ করে</td><td>I stayed home <em>because it rained</em>.</td></tr>
+</table>
+</div>
+<h4>Relative Clauses</h4>
+<div class="rule-box">
+<strong>Defining (Restrictive):</strong> যে clause ছাড়া meaning অসম্পূর্ণ — <em>The book <strong>that</strong> I bought is good.</em><br>
+<strong>Non-defining (Non-restrictive):</strong> extra info, commas দিয়ে — <em>My brother, <strong>who</strong> lives in Dhaka, is a doctor.</em><br>
+<strong>Rule:</strong> Non-defining clause-এ "that" ব্যবহার করা যায় না।
+</div>
+</div>
+</section>
+
+<!-- ==================== CHAPTER 20: PUNCTUATION ==================== -->
+<section id="ch20" style="display:none">
+<h1>20. Punctuation (বিরাম চিহ্ন)</h1>
+<div class="tab-content active">
+<div class="rule-box">
+<table>
+<tr><th>Mark</th><th>ব্যবহার</th><th>Example</th></tr>
+<tr><td>. (Full Stop)</td><td>বাক্য শেষ</td><td>He is a good boy.</td></tr>
+<tr><td>, (Comma)</td><td>বিরতি, listing, clause separation</td><td>I like tea, coffee, and juice.</td></tr>
+<tr><td>; (Semicolon)</td><td>দুটি independent clause যুক্ত করতে</td><td>It rained; I stayed home.</td></tr>
+<tr><td>: (Colon)</td><td>তালিকা, ব্যাখ্যা</td><td>Bring these: pen, paper, book.</td></tr>
+<tr><td>' (Apostrophe)</td><td>possessive, contraction</td><td>John's book. / It's = It is.</td></tr>
+<tr><td>" " (Quotation)</td><td>উদ্ধৃতি</td><td>He said, "Hello."</td></tr>
+<tr><td>- (Hyphen)</td><td>শব্দ যুক্ত করতে</td><td>well-known, mother-in-law</td></tr>
+<tr><td>— (Dash)</td><td>বিরতি/ব্যাখ্যা</td><td>He came — and left.</td></tr>
+<tr><td>( ) (Brackets)</td><td>অতিরিক্ত তথ্য</td><td>He (my brother) came.</td></tr>
+<tr><td>... (Ellipsis)</td><td>অনুচ্ছেদ</td><td>I was thinking...</td></tr>
+</table>
+</div>
+</div>
+</section>
+
+<!-- ==================== CHAPTER 21: WORD FORMATION ==================== -->
+<section id="ch21" style="display:none">
+<h1>21. Word Formation</h1>
+<div class="tab-content active">
+<div class="rule-box">
+<strong>Common Prefixes (100+):</strong><br>
+<table>
+<tr><th>Prefix</th><th>Meaning</th><th>Example</th></tr>
+<tr><td>un-</td><td>not</td><td>unhappy, unable, unusual</td></tr>
+<tr><td>re-</td><td>again</td><td>rewrite, return, rebuild</td></tr>
+<tr><td>dis-</td><td>not/opposite</td><td>disagree, disappear, disconnect</td></tr>
+<tr><td>pre-</td><td>before</td><td>preview, predict, prepay</td></tr>
+<tr><td>mis-</td><td>wrong</td><td>misunderstand, mislead</td></tr>
+<tr><td>over-</td><td>too much</td><td>overwork, overcome, overlook</td></tr>
+<tr><td>under-</td><td>too little</td><td>understand, underestimate</td></tr>
+<tr><td>inter-</td><td>between</td><td>international, interact</td></tr>
+<tr><td>trans-</td><td>across</td><td>transport, transform</td></tr>
+<tr><td>anti-</td><td>against</td><td>antibiotic, antisocial</td></tr>
+<tr><td>bio-</td><td>life</td><td>biology, biography</td></tr>
+<tr><td>tele-</td><td>far</td><td>telephone, television</td></tr>
+</table>
+</div>
+<div class="rule-box">
+<strong>Common Suffixes (80+):</strong><br>
+<table>
+<tr><th>Suffix</th><th>Meaning</th><th>Example</th></tr>
+<tr><td>-tion/-sion</td><td>noun</td><td>education, decision</td></tr>
+<tr><td>-ment</td><td>noun</td><td>government, development</td></tr>
+<tr><td>-ness</td><td>noun</td><td>happiness, kindness</td></tr>
+<tr><td>-able/-ible</td><td>adjective</td><td>comfortable, flexible</td></tr>
+<tr><td>-ful</td><td>full of</td><td>beautiful, hopeful</td></tr>
+<tr><td>-less</td><td>without</td><td>homeless, careless</td></tr>
+<tr><td>-ous/-ious</td><td>adjective</td><td>famous, curious</td></tr>
+<tr><td>-ly</td><td>adverb</td><td>quickly, slowly</td></tr>
+<tr><td>-er/-or</td><td>person</td><td>teacher, director</td></tr>
+<tr><td>-ist</td><td>person</td><td>scientist, artist</td></tr>
+<tr><td>-ize</td><td>verb</td><td>modernize, organize</td></tr>
+</table>
+</div>
+</div>
+</section>
+
+<!-- ==================== CHAPTER 22: SYNONYMS & ANTONYMS ==================== -->
+<section id="ch22" style="display:none">
+<h1>22. Synonyms & Antonyms</h1>
+<div class="tab-content active">
+<div class="rule-box">
+<strong>Important Words for BCS (500+ pairs):</strong><br>
+<table>
+<tr><th>Word</th><th>Synonym</th><th>Antonym</th></tr>
+<tr><td>beautiful</td><td>gorgeous, attractive</td><td>ugly</td></tr>
+<tr><td>brave</td><td>courageous, bold</td><td>cowardly</td></tr>
+<tr><td>begin</td><td>commence, start</td><td>end, finish</td></tr>
+<tr><td>big</td><td>large, huge</td><td>small, tiny</td></tr>
+<tr><td>clever</td><td>intelligent, smart</td><td>foolish, stupid</td></tr>
+<tr><td>create</td><td>make, produce</td><td>destroy</td></tr>
+<tr><td>happy</td><td>joyful, cheerful</td><td>sad, unhappy</td></tr>
+<tr><td>help</td><td>assist, support</td><td>hinder, obstruct</td></tr>
+<tr><td>important</td><td>significant, crucial</td><td>unimportant</td></tr>
+<tr><td>love</td><td>adore, cherish</td><td>hate, despise</td></tr>
+<tr><td>rich</td><td>wealthy, affluent</td><td>poor, destitute</td></tr>
+<tr><td>strong</td><td>powerful, mighty</td><td>weak, feeble</td></tr>
+<tr><td>quick</td><td>fast, rapid</td><td>slow</td></tr>
+<tr><td>ancient</td><td>old, antique</td><td>modern, new</td></tr>
+<tr><td>empty</td><td>vacant, void</td><td>full</td></tr>
+</table>
+</div>
+</div>
+</section>
+
+<!-- ==================== CHAPTER 23: IDIOMS & PHRASES ==================== -->
+<section id="ch23" style="display:none">
+<h1>23. Idioms & Phrases</h1>
+<div class="tab-content active">
+<div class="rule-box">
+<strong>200+ Common Idioms:</strong><br>
+<table>
+<tr><th>Idiom</th><th>অর্থ (Bengali)</th><th>Example</th></tr>
+<tr><td>Break the ice</td><td>প্রথম পদক্ষেপ নেওয়া</td><td>He broke the ice with a joke.</td></tr>
+<tr><td>Hit the nail on the head</td><td>সঠিক কথা বলা</td><td>You hit the nail on the head.</td></tr>
+<tr><td>Once in a blue moon</td><td>খুব কদাচিৎ</td><td>He visits once in a blue moon.</td></tr>
+<tr><td>Break a leg</td><td>শুভেচ্ছা (performer-কে)</td><td>Break a leg tonight!</td></tr>
+<tr><td>Cost an arm and a leg</td><td>খুব দামি</td><td>It cost an arm and a leg.</td></tr>
+<tr><td>Get out of hand</td><td>নিয়ন্ত্রণের বাইরে</td><td>Things got out of hand.</td></tr>
+<tr><td>Under the weather</td><td>অসুস্থ</td><td>I'm feeling under the weather.</td></tr>
+<tr><td>Spill the beans</td><td>গোপন কথা ফাঁস করা</td><td>Who spilled the beans?</td></tr>
+<tr><td>Bite the bullet</td><td>সাহস করে কাজ করা</td><td>He bit the bullet and confessed.</td></tr>
+<tr><td>Let the cat out of the bag</td><td>গোপন কথা জানানো</td><td>She let the cat out of the bag.</td></tr>
+<tr><td>Piece of cake</td><td>সহজ কাজ</td><td>The exam was a piece of cake.</td></tr>
+<tr><td>Actions speak louder than words</td><td>কাজের মাধ্যমে প্রমাণিত হয়</td><td>Actions speak louder than words.</td></tr>
+<tr><td>By the skin of my teeth</td><td>কোনোমতে</td><td>I passed by the skin of my teeth.</td></tr>
+<tr><td>Hit the sack</td><td>ঘুমাতে যাওয়া</td><td>I'm going to hit the sack.</td></tr>
+<tr><td>On the ball</td><td>সতর্ক</td><td>She's really on the ball.</td></tr>
+</table>
+</div>
+</div>
+</section>
+
+<!-- ==================== CHAPTER 24: PHRASAL VERBS ==================== -->
+<section id="ch24" style="display:none">
+<h1>24. Phrasal Verbs</h1>
+<div class="tab-content active">
+<div class="rule-box">
+<strong>150+ Phrasal Verbs:</strong><br>
+<table>
+<tr><th>Phrasal Verb</th><th>Meaning</th><th>Example</th></tr>
+<tr><td>look after</td><td>দেখভাল করা</td><td>She looks after her children.</td></tr>
+<tr><td>give up</td><td>হার মানা</td><td>Don't give up.</td></tr>
+<tr><td>put off</td><td>মুলতুবি করা</td><td>Don't put off until tomorrow.</td></tr>
+<tr><td>take off</td><td>উড়ান নেওয়া / খুলে ফেলা</td><td>The plane took off.</td></tr>
+<tr><td>get along</td><td>ভালো সম্পর্ক</td><td>They get along well.</td></tr>
+<tr><td>break down</td><td>ভেঙে পড়া</td><td>The car broke down.</td></tr>
+<tr><td>carry on</td><td>চালিয়ে যাওয়া</td><td>Carry on with your work.</td></tr>
+<tr><td>run out</td><td>শেষ হয়ে যাওয়া</td><td>We ran out of milk.</td></tr>
+<tr><td>turn down</td><td>প্রত্যাখ্যান করা</td><td>She turned down the offer.</td></tr>
+<tr><td>bring up</td><td>লালনপালন করা</td><td>He was brought up by his grandmother.</td></tr>
+<tr><td>figure out</td><td>বুঝে ফেলা</td><td>I can't figure it out.</td></tr>
+<tr><td>set up</td><td>প্রতিষ্ঠা করা</td><td>He set up a new company.</td></tr>
+</table>
+</div>
+<h4>Separable vs Inseparable</h4>
+<div class="rule-box">
+<strong>Separable:</strong> Object মাঝখানে আসতে পারে — <em>Turn off the light. = Turn the light off.</em><br>
+<strong>Inseparable:</strong> Object আলাদা হয় না — <em>Look after the children. (NOT: Look the children after.)</em>
+</div>
+</div>
+</section>
+
+<!-- ==================== CHAPTER 25: ONE WORD SUBSTITUTION ==================== -->
+<section id="ch25" style="display:none">
+<h1>25. One Word Substitution</h1>
+<div class="tab-content active">
+<div class="rule-box">
+<strong>200+ for BCS + University:</strong><br>
+<table>
+<tr><th>Phrase</th><th>One Word</th></tr>
+<tr><td>A person who loves books</td><td>Bibliophile</td></tr>
+<tr><td>A person who hates women</td><td>Misogynist</td></tr>
+<tr><td>A person who loves mankind</td><td>Philanthropist</td></tr>
+<tr><td>A person who talks too much</td><td>Talkative / Windbag</td></tr>
+<tr><td>A person who knows many languages</td><td>Polyglot</td></tr>
+<tr><td>A lover of food</td><td>Gastronome / Foodie</td></tr>
+<tr><td>A person who has no money</td><td>Pauper / Destitute</td></tr>
+<tr><td>A government by the rich</td><td>Plutocracy</td></tr>
+<tr><td>A government by the people</td><td>Democracy</td></tr>
+<tr><td>A government by one person</td><td>Autocracy / Dictatorship</td></tr>
+<tr><td>Killing of a race</td><td>Genocide</td></tr>
+<tr><td>Killing of a king</td><td>Regicide</td></tr>
+<tr><td>Fear of enclosed spaces</td><td>Claustrophobia</td></tr>
+<tr><td>Fear of heights</td><td>Acrophobia</td></tr>
+<tr><td>A place for burial</td><td>Cemetery / Graveyard</td></tr>
+<tr><td>A person who writes a diary</td><td>Diary keeper / Diarist</td></tr>
+<tr><td>One who walks in sleep</td><td>Sleepwalker / Somnambulist</td></tr>
+<tr><td>A person who does not believe in God</td><td>Atheist</td></tr>
+<tr><td>A person who believes in God</td><td>Theist</td></tr>
+<tr><td>A lover of learning</td><td>Philomath</td></tr>
+</table>
+</div>
+</div>
+</section>
+
+<!-- ==================== CHAPTER 26: PARAGRAPH WRITING ==================== -->
+<section id="ch26" style="display:none">
+<h1>26. Paragraph Writing</h1>
+<div class="tab-content active">
+<div class="rule-box">
+<strong>Structure:</strong><br>
+1. <strong>Topic Sentence:</strong> মূল বিষয় উপস্থাপন<br>
+2. <strong>Supporting Sentences:</strong> বিস্তারিত ব্যাখ্যা, উদাহরণ<br>
+3. <strong>Concluding Sentence:</strong> সারসংক্ষেপ<br><br>
+<strong>Cohesive Devices:</strong><br>
+• Addition: moreover, furthermore, in addition<br>
+• Contrast: however, nevertheless, on the other hand<br>
+• Result: therefore, consequently, as a result<br>
+• Example: for instance, for example, such as<br>
+• Sequence: first, second, finally, then
+</div>
+<div class="example-box">
+<strong>Sample Paragraph:</strong><br>
+"<strong>Education is the key to success.</strong> (Topic) It provides knowledge and skills needed for personal and professional growth. <strong>Moreover,</strong> it helps develop critical thinking and problem-solving abilities. <strong>For instance,</strong> educated individuals are more likely to secure better job opportunities. <strong>Therefore,</strong> investing in education is essential for national development." (Conclusion)
+</div>
+</div>
+</section>
+
+<!-- ==================== CHAPTER 27: ESSAY WRITING ==================== -->
+<section id="ch27" style="display:none">
+<h1>27. Essay Writing (IELTS Task 2)</h1>
+<div class="tab-content active">
+<div class="rule-box">
+<strong>Essay Types:</strong><br>
+1. <strong>Argument (Agree/Disagree):</strong> "To what extent do you agree?"<br>
+2. <strong>Discussion (Both views):</strong> "Discuss both views and give your opinion."<br>
+3. <strong>Problem-Solution:</strong> "What are the problems? What solutions?"<br>
+4. <strong>Direct Question:</strong> "Why is this happening? Is this positive?"
+</div>
+<h4>IELTS Task 2 Structure</h4>
+<div class="rule-box">
+<strong>Introduction (50 words):</strong> Paraphrase question + thesis statement<br>
+<strong>Body 1 (100 words):</strong> Main idea + explanation + example<br>
+<strong>Body 2 (100 words):</strong> Second idea + explanation + example<br>
+<strong>Conclusion (50 words):</strong> Summary + final thought<br><br>
+<strong>Band 7+ Vocabulary:</strong><br>
+• "It is widely acknowledged that..."<br>
+• "One of the most significant factors is..."<br>
+• "This has led to a growing concern regarding..."<br>
+• "In my opinion / From my perspective..."
+</div>
+</div>
+</section>
+
+<!-- ==================== CHAPTER 28: LETTER/EMAIL WRITING ==================== -->
+<section id="ch28" style="display:none">
+<h1>28. Letter/Email Writing</h1>
+<div class="tab-content active">
+<div class="rule-box">
+<strong>Formal Letter Format:</strong><br>
+• Sender's address<br>
+• Date<br>
+• Receiver's designation & address<br>
+• Subject line<br>
+• Dear Sir/Madam,<br>
+• Body paragraphs<br>
+• Yours faithfully/sincerely<br><br>
+<strong>Informal Letter Format:</strong><br>
+• Sender's address<br>
+• Date<br>
+• Dear [Name],<br>
+• Body (casual tone)<br>
+• Yours lovingly/affectionately
+</div>
+</div>
+</section>
+
+<!-- ==================== CHAPTER 29: COMPREHENSION ==================== -->
+<section id="ch29" style="display:none">
+<h1>29. Comprehension Skills</h1>
+<div class="tab-content active">
+<div class="rule-box">
+<strong>Reading Strategies:</strong><br>
+1. Skim for main idea<br>
+2. Scan for specific details<br>
+3. Look for context clues for vocabulary<br>
+4. Identify the writer's opinion/tone<br>
+5. Practice inference questions<br><br>
+<strong>IELTS Reading Tips:</strong><br>
+• Read questions first, then passage<br>
+• Time management: 20 mins per passage<br>
+• True/False/Not Given — careful with "Not Given"<br>
+• Matching headings — read first sentence of each paragraph
+</div>
+</div>
+</section>
+
+<!-- ==================== CHAPTER 30: BCS ENGLISH ==================== -->
+<section id="ch30" style="display:none">
+<h1>30. BCS English — Complete Preparation</h1>
+<div class="tab-content active">
+<div class="rule-box">
+<strong>BCS English MCQ Collection (BCS 10th–45th):</strong><br><br>
+<strong>High-Frequency Topics:</strong><br>
+1. Tense (সবচেয়ে বেশি আসে)<br>
+2. Subject-Verb Agreement<br>
+3. Preposition<br>
+4. Article<br>
+5. Voice (Active/Passive)<br>
+6. Narration (Direct/Indirect)<br>
+7. Conditional<br>
+8. Vocabulary (Synonym/Antonym)<br>
+9. Idioms<br>
+10. One Word Substitution
+</div>
+<h4>BCS Trick Shortcuts</h4>
+<div class="rule-box">
+<strong>1. "One of those who" → plural verb:</strong> One of those who <u>are</u> present.<br>
+<strong>2. "A number of" → plural, "The number of" → singular</strong><br>
+<strong>3. "News" → singular (looks plural)</strong><br>
+<strong>4. "Each/Every" → singular verb</strong><br>
+<strong>5. "Neither...nor" → verb agrees with nearest subject</strong><br>
+<strong>6. "Although...but" → wrong (use only one)</strong><br>
+<strong>7. "Because...so" → wrong (use only one)</strong><br>
+<strong>8. "Unless...not" → wrong (unless = if...not)</strong><br>
+<strong>9. "Machinery" → singular (uncountable)</strong><br>
+<strong>10. "Scenery" → singular (uncountable)</strong>
+</div>
+</div>
+</section>
+
+<!-- ==================== CHAPTER 31: UNIVERSITY ADMISSION ==================== -->
+<section id="ch31" style="display:none">
+<h1>31. University Admission English</h1>
+<div class="tab-content active">
+<div class="rule-box">
+<strong>DU, BUET, Medical Admission Pattern:</strong><br>
+• Reading Comprehension (10-15 questions)<br>
+• Grammar (Tense, Preposition, Article, Voice, Narration)<br>
+• Vocabulary (Synonym, Antonym, Word Substitution)<br>
+• Paragraph Writing<br><br>
+<strong>High-Frequency Areas:</strong><br>
+1. Tense & Sequence of Tenses<br>
+2. Preposition (at/in/on)<br>
+3. Article (a/an/the)<br>
+4. Active/Passive Voice<br>
+5. Direct/Indirect Speech<br>
+6. Vocabulary from context
+</div>
+</div>
+</section>
+
+<!-- ==================== CHAPTER 32: IELTS ==================== -->
+<section id="ch32" style="display:none">
+<h1>32. IELTS Complete Guide</h1>
+<div class="tab-content active">
+<div class="rule-box">
+<strong>Band Score System:</strong><br>
+<table>
+<tr><th>Band</th><th>Level</th><th>Description</th></tr>
+<tr><td>9</td><td>Expert</td><td>Full command of the language</td></tr>
+<tr><td>8</td><td>Very Good</td><td>Few errors</td></tr>
+<tr><td>7</td><td>Good</td><td>Operational command</td></tr>
+<tr><td>6</td><td>Competent</td><td>Effective command</td></tr>
+<tr><td>5</td><td>Modest</td><td>Partial command</td></tr>
+</table>
+</div>
+<h4>Writing Task 1 & 2</h4>
+<div class="rule-box">
+<strong>Task 1 (Academic):</strong> Graph, chart, table, diagram description (150+ words)<br>
+<strong>Task 1 (General):</strong> Letter writing (150+ words)<br>
+<strong>Task 2 (Both):</strong> Essay (250+ words)<br><br>
+<strong>Grammar for Band 7+:</strong><br>
+• Use a variety of sentence structures<br>
+• Mix complex and compound sentences<br>
+• Use conditionals: "If this trend continues, it could lead to..."<br>
+• Use passive: "It has been observed that..."<br>
+• Use participles: "Having considered all factors, I believe..."
+</div>
+<h4>Speaking Tips</h4>
+<div class="rule-box">
+<strong>Part 1 (4-5 mins):</strong> General questions about yourself<br>
+<strong>Part 2 (3-4 mins):</strong> Cue card topic (2 mins talk)<br>
+<strong>Part 3 (4-5 mins):</strong> Abstract discussion<br><br>
+<strong>Band 7+ Speaking:</strong><br>
+• Use discourse markers: "Well, I think...", "To be honest..."<br>
+• Use idioms naturally: "It's a piece of cake."<br>
+• Extend answers with examples<br>
+• Use mix of tenses
+</div>
+<h4>Reading & Listening Strategies</h4>
+<div class="rule-box">
+<strong>Reading:</strong> 3 passages, 40 questions, 60 minutes<br>
+• Read questions first<br>
+• Locate keywords in passage<br>
+• Watch for paraphrasing<br><br>
+<strong>Listening:</strong> 4 sections, 40 questions, 30 minutes<br>
+• Read ahead in question paper<br>
+• Listen for signposting words<br>
+• Check spelling for fill-in-the-blank
+</div>
+</div>
+</section>
+
+</main>
+
+<button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+// ==================== CHAPTER DATA ====================
+const chapters = [
+{id:'home',title:'হোম',part:''},
+{id:'ch1',title:'1. Noun (বিশেষ্য)',part:'PART A — Foundation'},
+{id:'ch2',title:'2. Pronoun (সর্বনাম)',part:'PART A — Foundation'},
+{id:'ch3',title:'3. Adjective (বিশেষণ)',part:'PART A — Foundation'},
+{id:'ch4',title:'4. Verb (ক্রিয়া)',part:'PART A — Foundation'},
+{id:'ch5',title:'5. Adverb (ক্রিয়া বিশেষণ)',part:'PART A — Foundation'},
+{id:'ch6',title:'6. Preposition (পদান্বয়ী)',part:'PART A — Foundation'},
+{id:'ch7',title:'7. Conjunction (সমুচ্চয়)',part:'PART A — Foundation'},
+{id:'ch8',title:'8. Interjection (বিস্ময়সূচক)',part:'PART A — Foundation'},
+{id:'ch9',title:'9. Article (পদবাচক)',part:'PART A — Foundation'},
+{id:'ch10',title:'10. Tense (কাল)',part:'PART B — Tenses'},
+{id:'ch11',title:'11. Sentence Types',part:'PART C — Sentence Structure'},
+{id:'ch12',title:'12. Subject-Verb Agreement',part:'PART C — Sentence Structure'},
+{id:'ch13',title:'13. Voice (Active/Passive)',part:'PART C — Sentence Structure'},
+{id:'ch14',title:'14. Narration (Direct/Indirect)',part:'PART C — Sentence Structure'},
+{id:'ch15',title:'15. Sentence Transformation',part:'PART C — Sentence Structure'},
+{id:'ch16',title:'16. Conditionals',part:'PART D — Advanced Grammar'},
+{id:'ch17',title:'17. Modal Verbs',part:'PART D — Advanced Grammar'},
+{id:'ch18',title:'18. Non-Finite Verbs',part:'PART D — Advanced Grammar'},
+{id:'ch19',title:'19. Phrases & Clauses',part:'PART D — Advanced Grammar'},
+{id:'ch20',title:'20. Punctuation',part:'PART D — Advanced Grammar'},
+{id:'ch21',title:'21. Word Formation',part:'PART E — Vocabulary'},
+{id:'ch22',title:'22. Synonyms & Antonyms',part:'PART E — Vocabulary'},
+{id:'ch23',title:'23. Idioms & Phrases',part:'PART E — Vocabulary'},
+{id:'ch24',title:'24. Phrasal Verbs',part:'PART E — Vocabulary'},
+{id:'ch25',title:'25. One Word Substitution',part:'PART E — Vocabulary'},
+{id:'ch26',title:'26. Paragraph Writing',part:'PART F — Writing Skills'},
+{id:'ch27',title:'27. Essay Writing',part:'PART F — Writing Skills'},
+{id:'ch28',title:'28. Letter/Email Writing',part:'PART F — Writing Skills'},
+{id:'ch29',title:'29. Comprehension Skills',part:'PART F — Writing Skills'},
+{id:'ch30',title:'30. BCS English',part:'PART G — Exam Sections'},
+{id:'ch31',title:'31. University Admission',part:'PART G — Exam Sections'},
+{id:'ch32',title:'32. IELTS Complete Guide',part:'PART G — Exam Sections'}
+];
+
+// ==================== SIDEBAR ====================
+function buildSidebar(){
+const nav=document.getElementById('sidebarNav');
+let html='';
+let lastPart='';
+chapters.forEach(ch=>{
+if(ch.part && ch.part!==lastPart){
+lastPart=ch.part;
+html+=`<div class="part-title" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'">📁 ${lastPart} <span>▼</span></div>`;
+}
+html+=`<div class="chapter-link" data-id="${ch.id}" onclick="showChapter('${ch.id}')">${ch.title}<span class="progress-dot ${getProgress(ch.id)?'done':'todo'}"></span></div>`;
+});
+nav.innerHTML=html;
+}
+
+function getProgress(id){return localStorage.getItem('prog_'+id)==='1';}
+function setProgress(id){localStorage.setItem('prog_'+id,'1');buildSidebar();updateGlobalProgress();}
+
+function showChapter(id){
+document.querySelectorAll('.main section').forEach(s=>s.style.display='none');
+const sec=document.getElementById(id);
+if(sec)sec.style.display='block';
+document.querySelectorAll('.chapter-link').forEach(l=>l.classList.remove('active'));
+const link=document.querySelector(`.chapter-link[data-id="${id}"]`);
+if(link)link.classList.add('active');
+window.scrollTo({top:0,behavior:'smooth'});
+document.querySelector('.sidebar').classList.remove('open');
+}
+
+// ==================== TABS ====================
+function showTab(e,id){
+const parent=e.target.closest('section');
+parent.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+parent.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+e.target.classList.add('active');
+const tab=document.getElementById(id);
+if(tab)tab.classList.add('active');
+}
+
+// ==================== QUIZ ====================
+document.addEventListener('click',function(e){
+if(e.target.type==='radio'){
+const box=e.target.closest('.quiz-box');
+if(!box)return;
+const correct=parseInt(box.dataset.answer);
+const val=parseInt(e.target.value);
+const fb=box.querySelector('.feedback');
+const section=box.closest('section');
+const chId=section?id:box.closest('section')?.id||'';
+if(val===correct){
+fb.className='feedback correct';
+fb.innerHTML='✅ <strong>সঠিক!</strong>';
+}else{
+fb.className='feedback wrong';
+fb.innerHTML='❌ <strong>ভুল!</strong> সঠিক উত্তর: '+String.fromCharCode(65+correct);
+}
+}
+});
+
+// ==================== THEME ====================
+function toggleTheme(){
+const t=document.documentElement.getAttribute('data-theme');
+document.documentElement.setAttribute('data-theme',t==='light'?'dark':'light');
+}
+
+// ==================== BOOKMARK ====================
+function bookmarkPage(){
+const active=document.querySelector('.main section[style*="block"],.main section:not([style*="none"])');
+if(!active)return;
+const bookmarks=JSON.parse(localStorage.getItem('bookmarks')||'[]');
+const id=active.id;
+if(!bookmarks.includes(id)){
+bookmarks.push(id);
+localStorage.setItem('bookmarks',JSON.stringify(bookmarks));
+alert('🔖 বুকমার্কে যোগ হয়েছে: '+id);
+}
+}
+
+// ==================== SEARCH ====================
+document.getElementById('searchBox').addEventListener('input',function(e){
+const q=e.target.value.toLowerCase();
+document.querySelectorAll('.chapter-link').forEach(l=>{
+l.style.display=l.textContent.toLowerCase().includes(q)?'block':'none';
+});
+});
+
+// ==================== BACK TO TOP ====================
+window.addEventListener('scroll',function(){
+document.getElementById('backToTop').style.display=window.scrollY>300?'block':'none';
+});
+
+// ==================== GLOBAL PROGRESS ====================
+function updateGlobalProgress(){
+const done=chapters.filter(c=>getProgress(c.id)).length;
+const pct=Math.round((done/chapters.length)*100);
+document.getElementById('globalProgress').textContent=`Progress: ${pct}% (${done}/${chapters.length})`;
+}
+
+// ==================== INIT ====================
+buildSidebar();
+updateGlobalProgress();
+showChapter('home');
+</script>
+</body>
+</html>

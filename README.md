@@ -41,6 +41,12 @@ All academic work organized by subject. Labs, assignments, presentations, and pr
 | [LCD Display](./presentations/lcd-display/) | LCD technical presentation | [▶ View](https://html-preview.github.io/?url=https://github.com/PavelGoblin/academics/blob/main/presentations/lcd-display/lcd_presentation.html) |
 | [EDI in E-commerce](./presentations/edi-ecommerce/) | Electronic Data Interchange | 📁 Code |
 
+## 📚 English Grammar
+
+| Folder | Description | Live |
+|--------|-------------|------|
+| [english-grammar](./english-grammar/) | Complete English Grammar in Bengali — 32 chapters, 450+ MCQ, IELTS/BCS prep | 📁 Code |
+
 ## 🛠️ Projects
 
 | Folder | Description | Live |
