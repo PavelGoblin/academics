@@ -186,10 +186,10 @@
     <div class="section-label">2.3 Source Code (Python)</div>
     <div class="code-block"><pre><span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt
 
-x1 = <span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"x1 = "</span>))
-y1 = <span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"y1 = "</span>))
-x2 = <span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"x2 = "</span>))
-y2 = <span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"y2 = "</span>))
+x1 = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">&quot;x1 = &quot;</span>))
+y1 = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">&quot;y1 = &quot;</span>))
+x2 = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">&quot;x2 = &quot;</span>))
+y2 = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">&quot;y2 = &quot;</span>))
 
 dx = x2 - x1
 dy = y2 - y1
@@ -197,24 +197,68 @@ steps = <span class="fn">max</span>(<span class="fn">abs</span>(dx), <span class
 x_inc = dx / steps
 y_inc = dy / steps
 
-<span class="fn">print</span>(<span class="str">f"dx = {dx}, dy = {dy}"</span>)
-<span class="fn">print</span>(<span class="str">f"steps = {steps}"</span>)
-<span class="fn">print</span>(<span class="str">f"x_inc = {x_inc:.4f}, y_inc = {y_inc:.4f}"</span>)
+<span class="fn">print</span>(<span class="str">f&quot;\nDDA Line: ({x1},{y1}) -&gt; ({x2},{y2})&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;dx = {dx}, dy = {dy}&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;steps = max(|dx|,|dy|) = {steps}&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;x_inc = dx/steps = {dx}/{steps} = {x_inc:.4f}&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;y_inc = dy/steps = {dy}/{steps} = {y_inc:.4f}&quot;</span>)
 
-x, y = <span class="kw">float</span>(x1), <span class="kw">float</span>(y1)
+<span class="fn">print</span>(<span class="str">f&quot;\n{&#x27;</span>Step<span class="str">&#x27;:&lt;6} {&#x27;</span>x<span class="str">&#x27;:&lt;10} {&#x27;</span>y<span class="str">&#x27;:&lt;10} {&#x27;</span><span class="fn">round</span>(x)<span class="str">&#x27;:&lt;10} {&#x27;</span><span class="fn">round</span>(y)<span class="str">&#x27;:&lt;10}&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">50</span>)
+
+x, y = <span class="fn">float</span>(x1), <span class="fn">float</span>(y1)
 pixels = []
 <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(steps + <span class="num">1</span>):
     rx, ry = <span class="fn">round</span>(x), <span class="fn">round</span>(y)
     pixels.append((rx, ry))
-    <span class="fn">print</span>(<span class="str">f"{i}  {x:.4f} {y:.4f} {rx} {ry}"</span>)
+    <span class="fn">print</span>(<span class="str">f&quot;{i:&lt;6} {x:&lt;10.4f} {y:&lt;10.4f} {rx:&lt;10} {ry:&lt;10}&quot;</span>)
     x += x_inc
     y += y_inc
 
-fig, ax = plt.<span class="fn">subplots</span>(figsize=(<span class="num">8</span>, <span class="num">6</span>))
+fig, ax = plt.subplots(figsize=(<span class="num">8</span>, <span class="num">6</span>))
+ax.set_title(<span class="str">f&quot;DDA Line Algorithm&quot;</span>, color=<span class="str">&quot;white&quot;</span>, fontsize=<span class="num">13</span>)
+ax.axhline(<span class="num">0</span>, color=<span class="str">&quot;gray&quot;</span>, linewidth=<span class="num">0.8</span>, alpha=<span class="num">0.4</span>)
+ax.axvline(<span class="num">0</span>, color=<span class="str">&quot;gray&quot;</span>, linewidth=<span class="num">0.8</span>, alpha=<span class="num">0.4</span>)
+
+margin = <span class="fn">max</span>(<span class="fn">abs</span>(x1), <span class="fn">abs</span>(x2), <span class="fn">abs</span>(y1), <span class="fn">abs</span>(y2)) + <span class="num">30</span>
+ax.set_xlim(-margin, margin)
+ax.set_ylim(-margin, margin)
+
 xs, ys = <span class="fn">zip</span>(*pixels)
-ax.<span class="fn">scatter</span>(xs, ys, c=<span class="str">"yellow"</span>, s=<span class="num">30</span>)
-ax.<span class="fn">plot</span>([x1, x2], [y1, y2], <span class="str">"r--"</span>)
-plt.<span class="fn">show</span>()</pre></div>
+ax.scatter(xs, ys, c=<span class="str">&quot;yellow&quot;</span>, s=<span class="num">30</span>, label=<span class="str">&quot;DDA Pixels&quot;</span>, zorder=<span class="num">3</span>)
+ax.plot([x1, x2], [y1, y2], <span class="str">&quot;r--&quot;</span>, linewidth=<span class="num">1.2</span>, alpha=<span class="num">0.6</span>, label=<span class="str">&quot;True line&quot;</span>)
+
+ax.scatter([x1, x2], [y1, y2], c=<span class="str">&quot;red&quot;</span>, s=<span class="num">100</span>, zorder=<span class="num">5</span>, edgecolors=<span class="str">&quot;white&quot;</span>, linewidth=<span class="num">0.5</span>)
+ax.annotate(<span class="str">f&quot;A({x1},{y1})&quot;</span>, (x1, y1), xytext=(<span class="num">8</span>, <span class="num">8</span>),
+            textcoords=<span class="str">&quot;offset points&quot;</span>, color=<span class="str">&quot;red&quot;</span>, fontsize=<span class="num">10</span>, fontweight=<span class="str">&quot;bold&quot;</span>)
+ax.annotate(<span class="str">f&quot;B({x2},{y2})&quot;</span>, (x2, y2), xytext=(<span class="num">8</span>, <span class="num">8</span>),
+            textcoords=<span class="str">&quot;offset points&quot;</span>, color=<span class="str">&quot;red&quot;</span>, fontsize=<span class="num">10</span>, fontweight=<span class="str">&quot;bold&quot;</span>)
+
+info = (
+    <span class="str">f&quot;dx = {dx}   dy = {dy}\n&quot;</span>
+    <span class="str">f&quot;steps = {steps}\n&quot;</span>
+    <span class="str">f&quot;x_inc = {x_inc:.4f}\n&quot;</span>
+    <span class="str">f&quot;y_inc = {y_inc:.4f}\n&quot;</span>
+    <span class="str">f&quot;Total pixels: {len(pixels)}&quot;</span>
+)
+ax.text(<span class="num">0.02</span>, <span class="num">0.98</span>, info, transform=ax.transAxes,
+        fontsize=<span class="num">9</span>, verticalalignment=<span class="str">&quot;top&quot;</span>, color=<span class="str">&quot;black&quot;</span>,
+        bbox=dict(boxstyle=<span class="str">&quot;round&quot;</span>, facecolor=<span class="str">&quot;wheat&quot;</span>, alpha=<span class="num">0.9</span>))
+
+ax.set_xlabel(<span class="str">&quot;X&quot;</span>)
+ax.set_ylabel(<span class="str">&quot;Y&quot;</span>)
+ax.grid(<span class="kw">True</span>, alpha=<span class="num">0.3</span>)
+ax.legend(fontsize=<span class="num">9</span>)
+ax.set_aspect(<span class="str">&quot;equal&quot;</span>)
+ax.set_facecolor(<span class="str">&quot;#2b2b2b&quot;</span>)
+ax.tick_params(colors=<span class="str">&quot;white&quot;</span>)
+ax.xaxis.label.set_color(<span class="str">&quot;white&quot;</span>)
+ax.yaxis.label.set_color(<span class="str">&quot;white&quot;</span>)
+fig.patch.set_facecolor(<span class="str">&quot;#2b2b2b&quot;</span>)
+
+plt.tight_layout()
+plt.show()
+</pre></div>
     <div class="section-label">2.4 Interactive Simulation</div>
     <div class="canvas-wrapper">
       <div class="canvas-controls">
@@ -251,41 +295,107 @@ plt.<span class="fn">show</span>()</pre></div>
     <div class="section-label">3.3 Source Code (Python)</div>
     <div class="code-block"><pre><span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt
 
-<span class="kw">def</span> <span class="fn">bresenham_line</span>(x1, y1, x2, y2):
+<span class="kw">def</span> bresenham_line(x1, y1, x2, y2):
     dx = <span class="fn">abs</span>(x2 - x1)
     dy = <span class="fn">abs</span>(y2 - y1)
     sx = <span class="num">1</span> <span class="kw">if</span> x1 &lt; x2 <span class="kw">else</span> -<span class="num">1</span>
     sy = <span class="num">1</span> <span class="kw">if</span> y1 &lt; y2 <span class="kw">else</span> -<span class="num">1</span>
+
     swapped = <span class="num">0</span>
     <span class="kw">if</span> dy &gt; dx:
         dx, dy = dy, dx
         swapped = <span class="num">1</span>
+
     p = <span class="num">2</span> * dy - dx
     x, y = x1, y1
     pixels = []
-    <span class="kw">for</span> _ <span class="kw">in</span> <span class="fn">range</span>(dx + <span class="num">1</span>):
+    steps_data = []
+
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(dx + <span class="num">1</span>):
         pixels.append((x, y))
+        steps_data.append((i, x, y, p))
+
         <span class="kw">while</span> p &gt;= <span class="num">0</span>:
-            <span class="kw">if</span> swapped: x += sx
-            <span class="kw">else</span>: y += sy
+            <span class="kw">if</span> swapped:
+                x += sx
+            <span class="kw">else</span>:
+                y += sy
             p -= <span class="num">2</span> * dx
-        <span class="kw">if</span> swapped: y += sy
-        <span class="kw">else</span>: x += sx
+
+        <span class="kw">if</span> swapped:
+            y += sy
+        <span class="kw">else</span>:
+            x += sx
         p += <span class="num">2</span> * dy
-    <span class="kw">return</span> pixels
 
-x1 = <span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"x1 = "</span>))
-y1 = <span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"y1 = "</span>))
-x2 = <span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"x2 = "</span>))
-y2 = <span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"y2 = "</span>))
-pixels = <span class="fn">bresenham_line</span>(x1, y1, x2, y2)
+    <span class="kw">return</span> pixels, steps_data, swapped
 
-fig, ax = plt.<span class="fn">subplots</span>()
-colors = plt.cm.plasma_r([i/<span class="fn">len</span>(pixels) <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(pixels))])
+x1 = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">&quot;x1 = &quot;</span>))
+y1 = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">&quot;y1 = &quot;</span>))
+x2 = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">&quot;x2 = &quot;</span>))
+y2 = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">&quot;y2 = &quot;</span>))
+
+pixels, steps_data, swapped = bresenham_line(x1, y1, x2, y2)
+
+dx_abs = <span class="fn">abs</span>(x2 - x1)
+dy_abs = <span class="fn">abs</span>(y2 - y1)
+
+<span class="fn">print</span>(<span class="str">f&quot;\nBresenham Line: ({x1},{y1}) -&gt; ({x2},{y2})&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;|dx| = {dx_abs}, |dy| = {dy_abs}&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;sx = {&#x27;</span>+<span class="num">1</span><span class="str">&#x27; if x1 &lt; x2 else &#x27;</span>-<span class="num">1</span><span class="str">&#x27;}, sy = {&#x27;</span>+<span class="num">1</span><span class="str">&#x27; if y1 &lt; y2 else &#x27;</span>-<span class="num">1</span><span class="str">&#x27;}&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;swapped = {swapped}  ({&#x27;</span>dy&gt;dx<span class="str">&#x27; if swapped else &#x27;</span>dx&gt;=dy<span class="str">&#x27;})&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;Initial p = 2*dy - dx = 2*{dy_abs} - {dx_abs} = {2*dy_abs - dx_abs}&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;\n{&#x27;</span>Step<span class="str">&#x27;:&lt;6} {&#x27;</span>x<span class="str">&#x27;:&lt;6} {&#x27;</span>y<span class="str">&#x27;:&lt;6} {&#x27;</span>p<span class="str">&#x27;:&lt;8}&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">28</span>)
+
+<span class="kw">for</span> step, x, y, p_val <span class="kw">in</span> steps_data:
+    <span class="fn">print</span>(<span class="str">f&quot;{step:&lt;6} {x:&lt;6} {y:&lt;6} {p_val:&lt;8}&quot;</span>)
+
+fig, ax = plt.subplots(figsize=(<span class="num">8</span>, <span class="num">6</span>))
+ax.set_title(<span class="str">&quot;Bresenham Line Algorithm (Integer Arithmetic)&quot;</span>, color=<span class="str">&quot;white&quot;</span>, fontsize=<span class="num">13</span>)
+ax.axhline(<span class="num">0</span>, color=<span class="str">&quot;gray&quot;</span>, linewidth=<span class="num">0.8</span>, alpha=<span class="num">0.4</span>)
+ax.axvline(<span class="num">0</span>, color=<span class="str">&quot;gray&quot;</span>, linewidth=<span class="num">0.8</span>, alpha=<span class="num">0.4</span>)
+
+margin = <span class="fn">max</span>(<span class="fn">abs</span>(x1), <span class="fn">abs</span>(x2), <span class="fn">abs</span>(y1), <span class="fn">abs</span>(y2)) + <span class="num">30</span>
+ax.set_xlim(-margin, margin)
+ax.set_ylim(-margin, margin)
+
+colors = plt.cm.plasma_r([i / <span class="fn">len</span>(pixels) <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(pixels))])
 <span class="kw">for</span> i, (px, py) <span class="kw">in</span> <span class="fn">enumerate</span>(pixels):
-    ax.<span class="fn">scatter</span>(px, py, c=[colors[i]], s=<span class="num">40</span>)
-ax.<span class="fn">plot</span>([x1, x2], [y1, y2], <span class="str">"r--"</span>)
-plt.<span class="fn">show</span>()</pre></div>
+    ax.scatter(px, py, c=[colors[i]], s=<span class="num">40</span>, zorder=<span class="num">3</span>, edgecolors=<span class="str">&quot;white&quot;</span>, linewidth=<span class="num">0.3</span>)
+
+ax.plot([x1, x2], [y1, y2], <span class="str">&quot;r--&quot;</span>, linewidth=<span class="num">1.2</span>, alpha=<span class="num">0.5</span>, label=<span class="str">&quot;True line&quot;</span>)
+
+ax.scatter([x1, x2], [y1, y2], c=<span class="str">&quot;red&quot;</span>, s=<span class="num">100</span>, zorder=<span class="num">5</span>, edgecolors=<span class="str">&quot;white&quot;</span>, linewidth=<span class="num">0.5</span>)
+ax.annotate(<span class="str">f&quot;A({x1},{y1})&quot;</span>, (x1, y1), xytext=(<span class="num">8</span>, <span class="num">8</span>),
+            textcoords=<span class="str">&quot;offset points&quot;</span>, color=<span class="str">&quot;red&quot;</span>, fontsize=<span class="num">10</span>, fontweight=<span class="str">&quot;bold&quot;</span>)
+ax.annotate(<span class="str">f&quot;B({x2},{y2})&quot;</span>, (x2, y2), xytext=(<span class="num">8</span>, <span class="num">8</span>),
+            textcoords=<span class="str">&quot;offset points&quot;</span>, color=<span class="str">&quot;red&quot;</span>, fontsize=<span class="num">10</span>, fontweight=<span class="str">&quot;bold&quot;</span>)
+
+info = (
+    <span class="str">f&quot;|dx| = {dx_abs}  |dy| = {dy_abs}\n&quot;</span>
+    <span class="str">f&quot;Initial p0 = {2*dy_abs - dx_abs}\n&quot;</span>
+    <span class="str">f&quot;swapped = {swapped}\n&quot;</span>
+    <span class="str">f&quot;Total pixels: {len(pixels)}&quot;</span>
+)
+ax.text(<span class="num">0.02</span>, <span class="num">0.98</span>, info, transform=ax.transAxes,
+        fontsize=<span class="num">9</span>, verticalalignment=<span class="str">&quot;top&quot;</span>, color=<span class="str">&quot;black&quot;</span>,
+        bbox=dict(boxstyle=<span class="str">&quot;round&quot;</span>, facecolor=<span class="str">&quot;lightcyan&quot;</span>, alpha=<span class="num">0.9</span>))
+
+ax.set_xlabel(<span class="str">&quot;X&quot;</span>)
+ax.set_ylabel(<span class="str">&quot;Y&quot;</span>)
+ax.grid(<span class="kw">True</span>, alpha=<span class="num">0.3</span>)
+ax.legend(fontsize=<span class="num">9</span>)
+ax.set_aspect(<span class="str">&quot;equal&quot;</span>)
+ax.set_facecolor(<span class="str">&quot;#2b2b2b&quot;</span>)
+ax.tick_params(colors=<span class="str">&quot;white&quot;</span>)
+ax.xaxis.label.set_color(<span class="str">&quot;white&quot;</span>)
+ax.yaxis.label.set_color(<span class="str">&quot;white&quot;</span>)
+fig.patch.set_facecolor(<span class="str">&quot;#2b2b2b&quot;</span>)
+
+plt.tight_layout()
+plt.show()
+</pre></div>
     <div class="section-label">3.4 Interactive Simulation</div>
     <div class="canvas-wrapper">
       <div class="canvas-controls">
@@ -332,27 +442,90 @@ plt.<span class="fn">show</span>()</pre></div>
     <div class="code-block"><pre><span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt
 <span class="kw">import</span> matplotlib.patches <span class="kw">as</span> mpatches
 
-<span class="kw">def</span> <span class="fn">draw_triangle</span>(ax, x1, y1, x2, y2, x3, y3, color, label):
-    tri = mpatches.<span class="fn">Polygon</span>(
+<span class="kw">def</span> draw_triangle(ax, x1, y1, x2, y2, x3, y3, color, label=<span class="kw">None</span>):
+    tri = mpatches.Polygon(
         [(x1, y1), (x2, y2), (x3, y3)],
         fill=<span class="kw">False</span>, edgecolor=color, linewidth=<span class="num">2</span>, label=label
     )
-    ax.<span class="fn">add_patch</span>(tri)
+    ax.add_patch(tri)
 
-<span class="cm"># Interactive input</span>
-x1 = <span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"x1 = "</span>)); y1 = <span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"y1 = "</span>))
-x2 = <span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"x2 = "</span>)); y2 = <span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"y2 = "</span>))
-x3 = <span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"x3 = "</span>)); y3 = <span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"y3 = "</span>))
-tx = <span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"tx = "</span>)); ty = <span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"ty = "</span>))
+<span class="fn">print</span>(<span class="str">&quot;=== Original Triangle ===&quot;</span>)
+x1 = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">&quot;x1 = &quot;</span>))
+y1 = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">&quot;y1 = &quot;</span>))
+x2 = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">&quot;x2 = &quot;</span>))
+y2 = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">&quot;y2 = &quot;</span>))
+x3 = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">&quot;x3 = &quot;</span>))
+y3 = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">&quot;y3 = &quot;</span>))
+
+<span class="fn">print</span>(<span class="str">&quot;\n=== Translation Vector ===&quot;</span>)
+tx = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">&quot;tx = &quot;</span>))
+ty = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">&quot;ty = &quot;</span>))
 
 nx1, ny1 = x1 + tx, y1 + ty
 nx2, ny2 = x2 + tx, y2 + ty
 nx3, ny3 = x3 + tx, y3 + ty
 
-fig, ax = plt.<span class="fn">subplots</span>()
-<span class="fn">draw_triangle</span>(ax, x1, y1, x2, y2, x3, y3, <span class="str">"white"</span>, <span class="str">"Original"</span>)
-<span class="fn">draw_triangle</span>(ax, nx1, ny1, nx2, ny2, nx3, ny3, <span class="str">"cyan"</span>, <span class="str">f"Translated"</span>)
-plt.<span class="fn">show</span>()</pre></div>
+<span class="fn">print</span>(<span class="str">f&quot;\n--- 2D Translation ---&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;Original Triangle: ({x1},{y1}), ({x2},{y2}), ({x3},{y3})&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;Translation vector: tx={tx}, ty={ty}&quot;</span>)
+
+<span class="fn">print</span>(<span class="str">f&quot;\n{&#x27;</span>Vertex<span class="str">&#x27;:&lt;8} {&#x27;</span>Original<span class="str">&#x27;:&lt;16} {&#x27;</span>Translated<span class="str">&#x27;:&lt;16}&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">42</span>)
+<span class="fn">print</span>(<span class="str">f&quot;{&#x27;</span>A<span class="str">&#x27;:&lt;8} ({x1:&lt;3},{y1:&lt;3})        ({nx1:&lt;3},{ny1:&lt;3})&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;{&#x27;</span><span class="str">B&#x27;:&lt;8} ({x2:&lt;3},{y2:&lt;3})        ({nx2:&lt;3},{ny2:&lt;3})&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;{&#x27;</span>C<span class="str">&#x27;:&lt;8} ({x3:&lt;3},{y3:&lt;3})        ({nx3:&lt;3},{ny3:&lt;3})&quot;</span>)
+
+fig, ax = plt.subplots(figsize=(<span class="num">8</span>, <span class="num">7</span>))
+ax.set_title(<span class="str">f&quot;2D Translation: tx={tx}, ty={ty}&quot;</span>, color=<span class="str">&quot;white&quot;</span>, fontsize=<span class="num">13</span>)
+
+all_x = [x1, x2, x3, nx1, nx2, nx3]
+all_y = [y1, y2, y3, ny1, ny2, ny3]
+margin = <span class="num">30</span>
+ax.set_xlim(<span class="fn">min</span>(all_x) - margin, <span class="fn">max</span>(all_x) + margin)
+ax.set_ylim(<span class="fn">min</span>(all_y) - margin, <span class="fn">max</span>(all_y) + margin)
+ax.set_aspect(<span class="str">&quot;equal&quot;</span>)
+ax.grid(<span class="kw">True</span>, alpha=<span class="num">0.3</span>)
+
+ax.axhline(<span class="num">0</span>, color=<span class="str">&quot;gray&quot;</span>, linewidth=<span class="num">0.8</span>, alpha=<span class="num">0.3</span>)
+ax.axvline(<span class="num">0</span>, color=<span class="str">&quot;gray&quot;</span>, linewidth=<span class="num">0.8</span>, alpha=<span class="num">0.3</span>)
+
+draw_triangle(ax, x1, y1, x2, y2, x3, y3, <span class="str">&quot;white&quot;</span>, <span class="str">&quot;Original&quot;</span>)
+draw_triangle(ax, nx1, ny1, nx2, ny2, nx3, ny3, <span class="str">&quot;cyan&quot;</span>, <span class="str">f&quot;Translated (tx={tx}, ty={ty})&quot;</span>)
+
+ax.scatter([x1, x2, x3], [y1, y2, y3], c=<span class="str">&quot;white&quot;</span>, s=<span class="num">60</span>, zorder=<span class="num">4</span>, edgecolors=<span class="str">&quot;gray&quot;</span>)
+ax.scatter([nx1, nx2, nx3], [ny1, ny2, ny3], c=<span class="str">&quot;cyan&quot;</span>, s=<span class="num">60</span>, zorder=<span class="num">4</span>, edgecolors=<span class="str">&quot;darkcyan&quot;</span>)
+
+<span class="kw">for</span> (ox, oy), (nx, ny), label <span class="kw">in</span> [
+    ((x1, y1), (nx1, ny1), <span class="str">&quot;A&quot;</span>), ((x2, y2), (nx2, ny2), <span class="str">&quot;B&quot;</span>), ((x3, y3), (nx3, ny3), <span class="str">&quot;C&quot;</span>)
+]:
+    ax.annotate(<span class="str">f&quot;{label}({ox},{oy})&quot;</span>, (ox, oy), xytext=(<span class="num">5</span>, <span class="num">8</span>),
+                textcoords=<span class="str">&quot;offset points&quot;</span>, color=<span class="str">&quot;white&quot;</span>, fontsize=<span class="num">9</span>, fontweight=<span class="str">&quot;bold&quot;</span>)
+    ax.annotate(<span class="str">f&quot;{label}&#x27;</span>({nx},{ny})<span class="str">&quot;, (nx, ny), xytext=(5, 8),
+                textcoords=&quot;</span>offset points<span class="str">&quot;, color=&quot;</span>cyan<span class="str">&quot;, fontsize=9, fontweight=&quot;</span>bold<span class="str">&quot;)
+    ax.annotate(&quot;</span><span class="str">&quot;, xy=(nx, ny), xytext=(ox, oy),
+                arrowprops=dict(arrowstyle=&quot;</span>-&gt;<span class="str">&quot;, color=&quot;</span>yellow<span class="str">&quot;, lw=1.5, alpha=0.6))
+
+info = (
+    f&quot;</span>Translation: (x<span class="str">&#x27;, y&#x27;</span>) = (x + tx, y + ty)\n<span class="str">&quot;
+    f&quot;</span>x<span class="str">&#x27; = x + {tx}\n&quot;</span>
+    <span class="str">f&quot;y&#x27;</span> = y + {ty}<span class="str">&quot;
+)
+ax.text(0.02, 0.98, info, transform=ax.transAxes,
+        fontsize=10, verticalalignment=&quot;</span>top<span class="str">&quot;, color=&quot;</span>black<span class="str">&quot;,
+        bbox=dict(boxstyle=&quot;</span><span class="fn">round</span><span class="str">&quot;, facecolor=&quot;</span>wheat<span class="str">&quot;, alpha=0.9))
+
+ax.set_xlabel(&quot;</span>X<span class="str">&quot;, color=&quot;</span>white<span class="str">&quot;)
+ax.set_ylabel(&quot;</span>Y<span class="str">&quot;, color=&quot;</span>white<span class="str">&quot;)
+ax.legend(fontsize=9, loc=&quot;</span>lower right<span class="str">&quot;)
+ax.set_facecolor(&quot;</span><span class="cm">#2b2b2b&quot;)
+ax.tick_params(colors=&quot;white&quot;)
+ax.xaxis.label.set_color(&quot;white&quot;)
+ax.yaxis.label.set_color(&quot;white&quot;)
+fig.patch.set_facecolor(&quot;#2b2b2b&quot;)
+
+plt.tight_layout()
+plt.show()
+</span></pre></div>
     <div class="section-label">4.4 Interactive Simulation</div>
     <div class="canvas-wrapper">
       <div class="canvas-controls">
@@ -390,29 +563,82 @@ plt.<span class="fn">show</span>()</pre></div>
     <div class="code-block"><pre><span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt
 <span class="kw">import</span> numpy <span class="kw">as</span> np
 
-<span class="kw">def</span> <span class="fn">get_8way_points</span>(cx, cy, x, y):
-    <span class="kw">return</span> [
-        (cx + x, cy + y), (cx - x, cy + y),
-        (cx + x, cy - y), (cx - x, cy - y),
-        (cx + y, cy + x), (cx - y, cy + x),
-        (cx + y, cy - x), (cx - y, cy - x),
-    ]
+cx = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">&quot;cx (center x) = &quot;</span>))
+cy = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">&quot;cy (center y) = &quot;</span>))
+x = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">&quot;x (from center) = &quot;</span>))
+y = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">&quot;y (from center) = &quot;</span>))
+r = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">&quot;r = &quot;</span>))
 
-cx = <span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"cx = "</span>)); cy = <span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"cy = "</span>))
-x  = <span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"x = "</span>));  y  = <span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"y = "</span>))
-r  = <span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"r = "</span>))
+pts_local = [
+    (x, y), (-x, y), (x, -y), (-x, -y),
+    (y, x), (-y, x), (y, -x), (-y, -x),
+]
 
-pts_global = <span class="fn">get_8way_points</span>(cx, cy, x, y)
+pts_global = [(cx+px, cy+py) <span class="kw">for</span> px, py <span class="kw">in</span> pts_local]
 
-fig, ax = plt.<span class="fn">subplots</span>(figsize=(<span class="num">9</span>, <span class="num">9</span>))
-colors = [<span class="str">"#e74c3c"</span>, <span class="str">"#3498db"</span>, <span class="str">"#2ecc71"</span>, <span class="str">"#f39c12"</span>,
-          <span class="str">"#9b59b6"</span>, <span class="str">"#1abc9c"</span>, <span class="str">"#e67e22"</span>, <span class="str">"#34495e"</span>]
-<span class="kw">for</span> i, (gx, gy) <span class="kw">in</span> <span class="fn">enumerate</span>(pts_global):
-    ax.<span class="fn">scatter</span>(gx, gy, c=colors[i], s=<span class="num">120</span>, edgecolors=<span class="str">"black"</span>)
+<span class="fn">print</span>(<span class="str">f&quot;\nCenter = ({cx}, {cy})&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;Local point = ({x}, {y}) relative to center&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;x^2 + y^2 = {x*x + y*y}, r^2 = {r*r}&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;\n{&#x27;</span>Point<span class="str">&#x27;:&lt;8} {&#x27;</span>Local<span class="str">&#x27;:&lt;14} {&#x27;</span>Global<span class="str">&#x27;:&lt;14} {&#x27;</span>Formula<span class="str">&#x27;:&lt;20}&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span>*<span class="num">56</span>)
+formulas = [
+    <span class="str">&quot;( x,  y)&quot;</span>, <span class="str">&quot;(-x,  y)&quot;</span>, <span class="str">&quot;( x, -y)&quot;</span>, <span class="str">&quot;(-x, -y)&quot;</span>,
+    <span class="str">&quot;( y,  x)&quot;</span>, <span class="str">&quot;(-y,  x)&quot;</span>, <span class="str">&quot;( y, -x)&quot;</span>, <span class="str">&quot;(-y, -x)&quot;</span>,
+]
+<span class="kw">for</span> i, ((px, py), (gx, gy), f) <span class="kw">in</span> <span class="fn">enumerate</span>(<span class="fn">zip</span>(pts_local, pts_global, formulas)):
+    <span class="fn">print</span>(<span class="str">f&quot;P{i:&lt;6} ({px:&lt;3},{py:&lt;3})    ({gx:&lt;3},{gy:&lt;3})    cx+{f} -&gt; ({gx},{gy})&quot;</span>)
 
-theta = np.<span class="fn">linspace</span>(<span class="num">0</span>, <span class="num">2</span>*np.pi, <span class="num">500</span>)
-ax.<span class="fn">plot</span>(cx + r*np.<span class="fn">cos</span>(theta), cy + r*np.<span class="fn">sin</span>(theta), <span class="str">"r-"</span>)
-plt.<span class="fn">show</span>()</pre></div>
+fig, ax = plt.subplots(figsize=(<span class="num">9</span>, <span class="num">9</span>))
+
+lim = <span class="fn">max</span>(<span class="fn">abs</span>(cx), <span class="fn">abs</span>(cy), <span class="fn">abs</span>(x), <span class="fn">abs</span>(y), r) + <span class="num">5</span>
+
+ax.axhline(<span class="num">0</span>, color=<span class="str">&quot;gray&quot;</span>, linewidth=<span class="num">0.8</span>, linestyle=<span class="str">&quot;--&quot;</span>, alpha=<span class="num">0.4</span>)
+ax.axvline(<span class="num">0</span>, color=<span class="str">&quot;gray&quot;</span>, linewidth=<span class="num">0.8</span>, linestyle=<span class="str">&quot;--&quot;</span>, alpha=<span class="num">0.4</span>)
+ax.text(lim*<span class="num">0.95</span>, <span class="num">0.3</span>, <span class="str">&quot;X&quot;</span>, fontsize=<span class="num">10</span>, color=<span class="str">&quot;gray&quot;</span>, ha=<span class="str">&quot;right&quot;</span>)
+ax.text(<span class="num">0.3</span>, lim*<span class="num">0.95</span>, <span class="str">&quot;Y&quot;</span>, fontsize=<span class="num">10</span>, color=<span class="str">&quot;gray&quot;</span>, ha=<span class="str">&quot;right&quot;</span>)
+
+ax.axhline(cy, color=<span class="str">&quot;black&quot;</span>, linewidth=<span class="num">1</span>)
+ax.axvline(cx, color=<span class="str">&quot;black&quot;</span>, linewidth=<span class="num">1</span>)
+ax.annotate(<span class="str">f&quot;X&#x27;</span> (through C)<span class="str">&quot;, (lim*0.95, cy), fontsize=9, color=&quot;</span>black<span class="str">&quot;,
+            ha=&quot;</span>right<span class="str">&quot;, va=&quot;</span>bottom<span class="str">&quot;, fontweight=&quot;</span>bold<span class="str">&quot;)
+ax.annotate(f&quot;</span>Y<span class="str">&#x27; (through C)&quot;</span>, (cx, lim*<span class="num">0.95</span>), fontsize=<span class="num">9</span>, color=<span class="str">&quot;black&quot;</span>,
+            ha=<span class="str">&quot;left&quot;</span>, va=<span class="str">&quot;top&quot;</span>, fontweight=<span class="str">&quot;bold&quot;</span>)
+
+ax.set_xlim(-lim, lim)
+ax.set_ylim(-lim, lim)
+ax.set_aspect(<span class="str">&quot;equal&quot;</span>)
+ax.grid(<span class="kw">True</span>, alpha=<span class="num">0.15</span>)
+ax.set_title(<span class="str">f&quot;8-Way Circle Symmetry — Center ({cx},{cy}),  Local Point ({x},{y}),  r={r}&quot;</span>, fontsize=<span class="num">12</span>)
+
+ax.spines[<span class="str">&quot;top&quot;</span>].set_visible(<span class="kw">False</span>)
+ax.spines[<span class="str">&quot;right&quot;</span>].set_visible(<span class="kw">False</span>)
+ax.spines[<span class="str">&quot;left&quot;</span>].set_position((<span class="str">&quot;data&quot;</span>, cx))
+ax.spines[<span class="str">&quot;bottom&quot;</span>].set_position((<span class="str">&quot;data&quot;</span>, cy))
+
+colors = [<span class="str">&quot;#e74c3c&quot;</span>, <span class="str">&quot;#3498db&quot;</span>, <span class="str">&quot;#2ecc71&quot;</span>, <span class="str">&quot;#f39c12&quot;</span>,
+          <span class="str">&quot;#9b59b6&quot;</span>, <span class="str">&quot;#1abc9c&quot;</span>, <span class="str">&quot;#e67e22&quot;</span>, <span class="str">&quot;#34495e&quot;</span>]
+
+<span class="kw">for</span> i, ((gx, gy), (px, py), f, c) <span class="kw">in</span> <span class="fn">enumerate</span>(<span class="fn">zip</span>(pts_global, pts_local, formulas, colors)):
+    ax.scatter(gx, gy, c=c, s=<span class="num">120</span>, zorder=<span class="num">5</span>, edgecolors=<span class="str">&quot;black&quot;</span>, linewidth=<span class="num">0.8</span>)
+    ax.annotate(<span class="str">f&quot;P{i}({gx},{gy})&quot;</span>, (gx, gy), xytext=(<span class="num">8</span>, <span class="num">8</span>),
+                textcoords=<span class="str">&quot;offset points&quot;</span>, fontsize=<span class="num">8</span>, fontweight=<span class="str">&quot;bold&quot;</span>,
+                color=c, bbox=dict(boxstyle=<span class="str">&quot;round,pad=0.2&quot;</span>, facecolor=<span class="str">&quot;white&quot;</span>, alpha=<span class="num">0.7</span>, edgecolor=c))
+    ax.plot([cx, gx], [cy, gy], <span class="str">&quot;--&quot;</span>, color=c, alpha=<span class="num">0.2</span>, linewidth=<span class="num">0.8</span>)
+
+theta = np.linspace(<span class="num">0</span>, <span class="num">2</span>*np.pi, <span class="num">500</span>)
+ax.plot(cx + r*np.cos(theta), cy + r*np.sin(theta), <span class="str">&quot;-&quot;</span>,
+        color=<span class="str">&quot;red&quot;</span>, alpha=<span class="num">0.6</span>, linewidth=<span class="num">2</span>, label=<span class="str">f&quot;Circle r={r}&quot;</span>)
+
+ax.scatter(cx, cy, c=<span class="str">&quot;red&quot;</span>, s=<span class="num">150</span>, marker=<span class="str">&quot;*&quot;</span>, edgecolors=<span class="str">&quot;darkred&quot;</span>,
+           linewidths=<span class="num">1.5</span>, zorder=<span class="num">7</span>)
+ax.annotate(<span class="str">f&quot;C({cx},{cy})&quot;</span>, (cx, cy), xytext=(<span class="num">10</span>, -<span class="num">15</span>),
+            textcoords=<span class="str">&quot;offset points&quot;</span>, fontsize=<span class="num">11</span>, fontweight=<span class="str">&quot;bold&quot;</span>,
+            color=<span class="str">&quot;darkred&quot;</span>)
+
+ax.legend(fontsize=<span class="num">10</span>, loc=<span class="str">&quot;upper right&quot;</span>)
+plt.tight_layout()
+plt.show()
+</pre></div>
     <div class="section-label">5.4 Interactive Simulation</div>
     <div class="canvas-wrapper">
       <div class="canvas-controls">
@@ -453,36 +679,115 @@ plt.<span class="fn">show</span>()</pre></div>
       3. Translate back: T(cx, cy)
     </div>
     <div class="section-label">6.3 Source Code (Python)</div>
-    <div class="code-block"><pre><span class="kw">import</span> math, matplotlib.pyplot <span class="kw">as</span> plt
+    <div class="code-block"><pre><span class="kw">import</span> math
+<span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt
 <span class="kw">import</span> matplotlib.patches <span class="kw">as</span> mpatches
 
-<span class="kw">def</span> <span class="fn">rotate_point</span>(x, y, cx, cy, angle):
-    rad = math.<span class="fn">radians</span>(angle)
-    cos_a, sin_a = math.<span class="fn">cos</span>(rad), math.<span class="fn">sin</span>(rad)
+<span class="kw">def</span> rotate_point(x, y, cx, cy, angle):
+    rad = math.radians(angle)
+    cos_a, sin_a = math.cos(rad), math.sin(rad)
     x_rel, y_rel = x - cx, y - cy
     x_rot = x_rel * cos_a - y_rel * sin_a
     y_rot = x_rel * sin_a + y_rel * cos_a
     <span class="kw">return</span> <span class="fn">round</span>(cx + x_rot), <span class="fn">round</span>(cy + y_rot)
 
-<span class="kw">def</span> <span class="fn">draw_triangle</span>(ax, x1, y1, x2, y2, x3, y3, color, label):
-    tri = mpatches.<span class="fn">Polygon</span>([(x1,y1),(x2,y2),(x3,y3)],
-        fill=<span class="kw">False</span>, edgecolor=color, linewidth=<span class="num">2</span>, label=label)
-    ax.<span class="fn">add_patch</span>(tri)
+<span class="kw">def</span> draw_triangle(ax, x1, y1, x2, y2, x3, y3, color, label=<span class="kw">None</span>):
+    tri = mpatches.Polygon(
+        [(x1, y1), (x2, y2), (x3, y3)],
+        fill=<span class="kw">False</span>, edgecolor=color, linewidth=<span class="num">2</span>, label=label
+    )
+    ax.add_patch(tri)
 
-x1=<span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"x1 = "</span>)); y1=<span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"y1 = "</span>))
-x2=<span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"x2 = "</span>)); y2=<span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"y2 = "</span>))
-x3=<span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"x3 = "</span>)); y3=<span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"y3 = "</span>))
-cx=<span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"pivot x = "</span>)); cy=<span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"pivot y = "</span>))
-angle=<span class="kw">float</span>(<span class="fn">input</span>(<span class="str">"angle = "</span>))
+<span class="fn">print</span>(<span class="str">&quot;=== Triangle Vertices ===&quot;</span>)
+x1 = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">&quot;x1 = &quot;</span>))
+y1 = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">&quot;y1 = &quot;</span>))
+x2 = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">&quot;x2 = &quot;</span>))
+y2 = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">&quot;y2 = &quot;</span>))
+x3 = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">&quot;x3 = &quot;</span>))
+y3 = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">&quot;y3 = &quot;</span>))
 
-r1 = <span class="fn">rotate_point</span>(x1, y1, cx, cy, angle)
-r2 = <span class="fn">rotate_point</span>(x2, y2, cx, cy, angle)
-r3 = <span class="fn">rotate_point</span>(x3, y3, cx, cy, angle)
+<span class="fn">print</span>(<span class="str">&quot;\n=== Rotation ===&quot;</span>)
+cx = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">&quot;pivot x = &quot;</span>))
+cy = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">&quot;pivot y = &quot;</span>))
+angle = <span class="fn">float</span>(<span class="fn">input</span>(<span class="str">&quot;angle (degrees) = &quot;</span>))
 
-fig, ax = plt.<span class="fn">subplots</span>()
-<span class="fn">draw_triangle</span>(ax, x1, y1, x2, y2, x3, y3, <span class="str">"white"</span>, <span class="str">"Original"</span>)
-<span class="fn">draw_triangle</span>(ax, r1[0], r1[1], r2[0], r2[1], r3[0], r3[1], <span class="str">"magenta"</span>, <span class="str">f"Rotated"</span>)
-plt.<span class="fn">show</span>()</pre></div>
+r1 = rotate_point(x1, y1, cx, cy, angle)
+r2 = rotate_point(x2, y2, cx, cy, angle)
+r3 = rotate_point(x3, y3, cx, cy, angle)
+
+rad = math.radians(angle)
+cos_a = <span class="fn">round</span>(math.cos(rad), <span class="num">4</span>)
+sin_a = <span class="fn">round</span>(math.sin(rad), <span class="num">4</span>)
+
+<span class="fn">print</span>(<span class="str">f&quot;\n--- 2D Rotation ---&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;Pivot: ({cx}, {cy})&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;Angle: {angle} deg ({rad:.4f} rad)&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;cos = {cos_a}, sin = {sin_a}&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;\nRotation formula: x&#x27;</span> = cx + (x-cx)*cos - (y-cy)*sin<span class="str">&quot;)
+print(f&quot;</span>                 y<span class="str">&#x27; = cy + (x-cx)*sin + (y-cy)*cos&quot;</span>)
+
+<span class="fn">print</span>(<span class="str">f&quot;\n{&#x27;</span>Vertex<span class="str">&#x27;:&lt;8} {&#x27;</span>Original<span class="str">&#x27;:&lt;16} {&#x27;</span>Rotated<span class="str">&#x27;:&lt;16} {&#x27;</span>Calculation<span class="str">&#x27;:&lt;30}&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">72</span>)
+<span class="kw">for</span> (ox, oy), (rx, ry), label <span class="kw">in</span> [
+    ((x1, y1), r1, <span class="str">&quot;A&quot;</span>), ((x2, y2), r2, <span class="str">&quot;B&quot;</span>), ((x3, y3), r3, <span class="str">&quot;C&quot;</span>)
+]:
+    x_rel, y_rel = ox - cx, oy - cy
+    <span class="fn">print</span>(<span class="str">f&quot;{label:&lt;8} ({ox:&lt;3},{oy:&lt;3})        ({rx:&lt;3},{ry:&lt;3})        &quot;</span>
+          <span class="str">f&quot;({x_rel}*{cos_a} - {y_rel}*{sin_a}, {x_rel}*{sin_a} + {y_rel}*{cos_a})&quot;</span>)
+
+fig, ax = plt.subplots(figsize=(<span class="num">8</span>, <span class="num">7</span>))
+ax.set_title(<span class="str">f&quot;2D Rotation: {angle} deg about ({cx},{cy})&quot;</span>, color=<span class="str">&quot;white&quot;</span>, fontsize=<span class="num">13</span>)
+
+all_x = [x1, x2, x3, r1[<span class="num">0</span>], r2[<span class="num">0</span>], r3[<span class="num">0</span>], cx]
+all_y = [y1, y2, y3, r1[<span class="num">1</span>], r2[<span class="num">1</span>], r3[<span class="num">1</span>], cy]
+margin = <span class="num">30</span>
+max_r = <span class="fn">max</span>(<span class="fn">max</span>(all_x), <span class="fn">max</span>(all_y), -<span class="fn">min</span>(all_x), -<span class="fn">min</span>(all_y))
+ax.set_xlim(-max_r - margin, max_r + margin)
+ax.set_ylim(-max_r - margin, max_r + margin)
+ax.set_aspect(<span class="str">&quot;equal&quot;</span>)
+ax.grid(<span class="kw">True</span>, alpha=<span class="num">0.3</span>)
+
+ax.axhline(<span class="num">0</span>, color=<span class="str">&quot;gray&quot;</span>, linewidth=<span class="num">0.8</span>, alpha=<span class="num">0.3</span>)
+ax.axvline(<span class="num">0</span>, color=<span class="str">&quot;gray&quot;</span>, linewidth=<span class="num">0.8</span>, alpha=<span class="num">0.3</span>)
+
+draw_triangle(ax, x1, y1, x2, y2, x3, y3, <span class="str">&quot;white&quot;</span>, <span class="str">&quot;Original&quot;</span>)
+draw_triangle(ax, r1[<span class="num">0</span>], r1[<span class="num">1</span>], r2[<span class="num">0</span>], r2[<span class="num">1</span>], r3[<span class="num">0</span>], r3[<span class="num">1</span>], <span class="str">&quot;magenta&quot;</span>, <span class="str">f&quot;Rotated {angle} deg&quot;</span>)
+
+ax.scatter([x1, x2, x3], [y1, y2, y3], c=<span class="str">&quot;white&quot;</span>, s=<span class="num">60</span>, zorder=<span class="num">4</span>, edgecolors=<span class="str">&quot;gray&quot;</span>)
+ax.scatter([r1[<span class="num">0</span>], r2[<span class="num">0</span>], r3[<span class="num">0</span>]], [r1[<span class="num">1</span>], r2[<span class="num">1</span>], r3[<span class="num">1</span>]], c=<span class="str">&quot;magenta&quot;</span>, s=<span class="num">60</span>, zorder=<span class="num">4</span>, edgecolors=<span class="str">&quot;darkmagenta&quot;</span>)
+ax.scatter([cx], [cy], c=<span class="str">&quot;red&quot;</span>, s=<span class="num">120</span>, zorder=<span class="num">5</span>, marker=<span class="str">&quot;*&quot;</span>, edgecolors=<span class="str">&quot;darkred&quot;</span>)
+ax.annotate(<span class="str">f&quot;Pivot({cx},{cy})&quot;</span>, (cx, cy), xytext=(<span class="num">8</span>, -<span class="num">12</span>),
+            textcoords=<span class="str">&quot;offset points&quot;</span>, color=<span class="str">&quot;red&quot;</span>, fontsize=<span class="num">10</span>, fontweight=<span class="str">&quot;bold&quot;</span>)
+
+<span class="kw">for</span> (ox, oy), (rx, ry), label <span class="kw">in</span> [
+    ((x1, y1), r1, <span class="str">&quot;A&quot;</span>), ((x2, y2), r2, <span class="str">&quot;B&quot;</span>), ((x3, y3), r3, <span class="str">&quot;C&quot;</span>)
+]:
+    ax.annotate(<span class="str">f&quot;{label}({ox},{oy})&quot;</span>, (ox, oy), xytext=(<span class="num">5</span>, <span class="num">8</span>),
+                textcoords=<span class="str">&quot;offset points&quot;</span>, color=<span class="str">&quot;white&quot;</span>, fontsize=<span class="num">9</span>, fontweight=<span class="str">&quot;bold&quot;</span>)
+    ax.annotate(<span class="str">f&quot;{label}&#x27;</span>({rx},{ry})<span class="str">&quot;, (rx, ry), xytext=(5, 8),
+                textcoords=&quot;</span>offset points<span class="str">&quot;, color=&quot;</span>magenta<span class="str">&quot;, fontsize=9, fontweight=&quot;</span>bold<span class="str">&quot;)
+
+info = (
+    f&quot;</span>Pivot: ({cx},{cy})\n<span class="str">&quot;
+    f&quot;</span>Angle: {angle} deg\n<span class="str">&quot;
+    f&quot;</span>cos = {cos_a}, sin = {sin_a}<span class="str">&quot;
+)
+ax.text(0.02, 0.98, info, transform=ax.transAxes,
+        fontsize=10, verticalalignment=&quot;</span>top<span class="str">&quot;, color=&quot;</span>black<span class="str">&quot;,
+        bbox=dict(boxstyle=&quot;</span><span class="fn">round</span><span class="str">&quot;, facecolor=&quot;</span>wheat<span class="str">&quot;, alpha=0.9))
+
+ax.set_xlabel(&quot;</span>X<span class="str">&quot;, color=&quot;</span>white<span class="str">&quot;)
+ax.set_ylabel(&quot;</span>Y<span class="str">&quot;, color=&quot;</span>white<span class="str">&quot;)
+ax.legend(fontsize=9, loc=&quot;</span>lower right<span class="str">&quot;)
+ax.set_facecolor(&quot;</span><span class="cm">#2b2b2b&quot;)
+ax.tick_params(colors=&quot;white&quot;)
+ax.xaxis.label.set_color(&quot;white&quot;)
+ax.yaxis.label.set_color(&quot;white&quot;)
+fig.patch.set_facecolor(&quot;#2b2b2b&quot;)
+
+plt.tight_layout()
+plt.show()
+</span></pre></div>
     <div class="section-label">6.4 Interactive Simulation</div>
     <div class="canvas-wrapper">
       <div class="canvas-controls">
@@ -529,29 +834,104 @@ plt.<span class="fn">show</span>()</pre></div>
     <div class="code-block"><pre><span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt
 <span class="kw">import</span> matplotlib.patches <span class="kw">as</span> mpatches
 
-<span class="kw">def</span> <span class="fn">scale_point</span>(x, y, fx, fy, sx, sy):
-    <span class="kw">return</span> (<span class="fn">round</span>(fx + (x - fx) * sx),
-            <span class="fn">round</span>(fy + (y - fy) * sy))
+<span class="kw">def</span> scale_point(x, y, fx, fy, sx, sy):
+    <span class="kw">return</span> <span class="fn">round</span>(fx + (x - fx) * sx), <span class="fn">round</span>(fy + (y - fy) * sy)
 
-<span class="kw">def</span> <span class="fn">draw_triangle</span>(ax, x1, y1, x2, y2, x3, y3, color, label):
-    tri = mpatches.<span class="fn">Polygon</span>([(x1,y1),(x2,y2),(x3,y3)],
-        fill=<span class="kw">False</span>, edgecolor=color, linewidth=<span class="num">2</span>, label=label)
-    ax.<span class="fn">add_patch</span>(tri)
+<span class="kw">def</span> draw_triangle(ax, x1, y1, x2, y2, x3, y3, color, label=<span class="kw">None</span>):
+    tri = mpatches.Polygon(
+        [(x1, y1), (x2, y2), (x3, y3)],
+        fill=<span class="kw">False</span>, edgecolor=color, linewidth=<span class="num">2</span>, label=label
+    )
+    ax.add_patch(tri)
 
-x1=<span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"x1 = "</span>)); y1=<span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"y1 = "</span>))
-x2=<span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"x2 = "</span>)); y2=<span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"y2 = "</span>))
-x3=<span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"x3 = "</span>)); y3=<span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"y3 = "</span>))
-fx=<span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"fixed x = "</span>)); fy=<span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"fixed y = "</span>))
-sx=<span class="kw">float</span>(<span class="fn">input</span>(<span class="str">"sx = "</span>)); sy=<span class="kw">float</span>(<span class="fn">input</span>(<span class="str">"sy = "</span>))
+<span class="fn">print</span>(<span class="str">&quot;=== Triangle Vertices ===&quot;</span>)
+x1 = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">&quot;x1 = &quot;</span>))
+y1 = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">&quot;y1 = &quot;</span>))
+x2 = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">&quot;x2 = &quot;</span>))
+y2 = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">&quot;y2 = &quot;</span>))
+x3 = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">&quot;x3 = &quot;</span>))
+y3 = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">&quot;y3 = &quot;</span>))
 
-s1 = <span class="fn">scale_point</span>(x1, y1, fx, fy, sx, sy)
-s2 = <span class="fn">scale_point</span>(x2, y2, fx, fy, sx, sy)
-s3 = <span class="fn">scale_point</span>(x3, y3, fx, fy, sx, sy)
+<span class="fn">print</span>(<span class="str">&quot;\n=== Scaling ===&quot;</span>)
+fx = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">&quot;fixed point x = &quot;</span>))
+fy = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">&quot;fixed point y = &quot;</span>))
+sx = <span class="fn">float</span>(<span class="fn">input</span>(<span class="str">&quot;scale x (sx) = &quot;</span>))
+sy = <span class="fn">float</span>(<span class="fn">input</span>(<span class="str">&quot;scale y (sy) = &quot;</span>))
 
-fig, ax = plt.<span class="fn">subplots</span>()
-<span class="fn">draw_triangle</span>(ax, x1, y1, x2, y2, x3, y3, <span class="str">"white"</span>, <span class="str">"Original"</span>)
-<span class="fn">draw_triangle</span>(ax, s1[0], s1[1], s2[0], s2[1], s3[0], s3[1], <span class="str">"lime"</span>, <span class="str">f"Scaled"</span>)
-plt.<span class="fn">show</span>()</pre></div>
+s1 = scale_point(x1, y1, fx, fy, sx, sy)
+s2 = scale_point(x2, y2, fx, fy, sx, sy)
+s3 = scale_point(x3, y3, fx, fy, sx, sy)
+
+<span class="fn">print</span>(<span class="str">f&quot;\n--- 2D Scaling ---&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;Fixed point: ({fx}, {fy})&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;Scale factors: sx={sx}, sy={sy}&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;\nFormula: x&#x27;</span> = fx + (x - fx) * sx<span class="str">&quot;)
+print(f&quot;</span>         y<span class="str">&#x27; = fy + (y - fy) * sy&quot;</span>)
+
+<span class="fn">print</span>(<span class="str">f&quot;\n{&#x27;</span>Vertex<span class="str">&#x27;:&lt;8} {&#x27;</span>Original<span class="str">&#x27;:&lt;16} {&#x27;</span>Scaled<span class="str">&#x27;:&lt;16} {&#x27;</span>Calculation<span class="str">&#x27;:&lt;30}&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">72</span>)
+<span class="kw">for</span> (ox, oy), (sx_p, sy_p), label <span class="kw">in</span> [
+    ((x1, y1), s1, <span class="str">&quot;A&quot;</span>), ((x2, y2), s2, <span class="str">&quot;B&quot;</span>), ((x3, y3), s3, <span class="str">&quot;C&quot;</span>)
+]:
+    <span class="fn">print</span>(<span class="str">f&quot;{label:&lt;8} ({ox:&lt;3},{oy:&lt;3})        ({sx_p:&lt;3},{sy_p:&lt;3})        &quot;</span>
+          <span class="str">f&quot;({ox}-{fx})*{sx}, ({oy}-{fy})*{sy})&quot;</span>)
+
+fig, ax = plt.subplots(figsize=(<span class="num">8</span>, <span class="num">7</span>))
+ax.set_title(<span class="str">f&quot;2D Scaling: sx={sx}, sy={sy} about ({fx},{fy})&quot;</span>, color=<span class="str">&quot;white&quot;</span>, fontsize=<span class="num">13</span>)
+
+all_x = [x1, x2, x3, s1[<span class="num">0</span>], s2[<span class="num">0</span>], s3[<span class="num">0</span>], fx]
+all_y = [y1, y2, y3, s1[<span class="num">1</span>], s2[<span class="num">1</span>], s3[<span class="num">1</span>], fy]
+margin = <span class="num">30</span> + <span class="fn">max</span>(
+    <span class="fn">max</span>(all_x) - <span class="fn">min</span>(all_x), <span class="fn">max</span>(all_y) - <span class="fn">min</span>(all_y)
+) // <span class="num">2</span>
+
+ax.set_xlim(<span class="fn">min</span>(all_x) - margin, <span class="fn">max</span>(all_x) + margin)
+ax.set_ylim(<span class="fn">min</span>(all_y) - margin, <span class="fn">max</span>(all_y) + margin)
+ax.set_aspect(<span class="str">&quot;equal&quot;</span>)
+ax.grid(<span class="kw">True</span>, alpha=<span class="num">0.3</span>)
+
+ax.axhline(<span class="num">0</span>, color=<span class="str">&quot;gray&quot;</span>, linewidth=<span class="num">0.8</span>, alpha=<span class="num">0.3</span>)
+ax.axvline(<span class="num">0</span>, color=<span class="str">&quot;gray&quot;</span>, linewidth=<span class="num">0.8</span>, alpha=<span class="num">0.3</span>)
+
+draw_triangle(ax, x1, y1, x2, y2, x3, y3, <span class="str">&quot;white&quot;</span>, <span class="str">&quot;Original&quot;</span>)
+draw_triangle(ax, s1[<span class="num">0</span>], s1[<span class="num">1</span>], s2[<span class="num">0</span>], s2[<span class="num">1</span>], s3[<span class="num">0</span>], s3[<span class="num">1</span>], <span class="str">&quot;lime&quot;</span>, <span class="str">f&quot;Scaled (sx={sx}, sy={sy})&quot;</span>)
+
+ax.scatter([x1, x2, x3], [y1, y2, y3], c=<span class="str">&quot;white&quot;</span>, s=<span class="num">60</span>, zorder=<span class="num">4</span>, edgecolors=<span class="str">&quot;gray&quot;</span>)
+ax.scatter([s1[<span class="num">0</span>], s2[<span class="num">0</span>], s3[<span class="num">0</span>]], [s1[<span class="num">1</span>], s2[<span class="num">1</span>], s3[<span class="num">1</span>]], c=<span class="str">&quot;lime&quot;</span>, s=<span class="num">60</span>, zorder=<span class="num">4</span>, edgecolors=<span class="str">&quot;darkgreen&quot;</span>)
+ax.scatter([fx], [fy], c=<span class="str">&quot;red&quot;</span>, s=<span class="num">120</span>, zorder=<span class="num">5</span>, marker=<span class="str">&quot;*&quot;</span>, edgecolors=<span class="str">&quot;darkred&quot;</span>)
+ax.annotate(<span class="str">f&quot;Fixed({fx},{fy})&quot;</span>, (fx, fy), xytext=(<span class="num">8</span>, -<span class="num">12</span>),
+            textcoords=<span class="str">&quot;offset points&quot;</span>, color=<span class="str">&quot;red&quot;</span>, fontsize=<span class="num">10</span>, fontweight=<span class="str">&quot;bold&quot;</span>)
+
+<span class="kw">for</span> (ox, oy), (rx, ry), label <span class="kw">in</span> [
+    ((x1, y1), s1, <span class="str">&quot;A&quot;</span>), ((x2, y2), s2, <span class="str">&quot;B&quot;</span>), ((x3, y3), s3, <span class="str">&quot;C&quot;</span>)
+]:
+    ax.annotate(<span class="str">f&quot;{label}({ox},{oy})&quot;</span>, (ox, oy), xytext=(<span class="num">5</span>, <span class="num">8</span>),
+                textcoords=<span class="str">&quot;offset points&quot;</span>, color=<span class="str">&quot;white&quot;</span>, fontsize=<span class="num">9</span>, fontweight=<span class="str">&quot;bold&quot;</span>)
+    ax.annotate(<span class="str">f&quot;{label}&#x27;</span>({rx},{ry})<span class="str">&quot;, (rx, ry), xytext=(5, 8),
+                textcoords=&quot;</span>offset points<span class="str">&quot;, color=&quot;</span>lime<span class="str">&quot;, fontsize=9, fontweight=&quot;</span>bold<span class="str">&quot;)
+
+info = (
+    f&quot;</span>Fixed point: ({fx},{fy})\n<span class="str">&quot;
+    f&quot;</span>sx = {sx}, sy = {sy}\n<span class="str">&quot;
+    f&quot;</span>x<span class="str">&#x27; = fx + (x-fx)*sx\n&quot;</span>
+    <span class="str">f&quot;y&#x27;</span> = fy + (y-fy)*sy<span class="str">&quot;
+)
+ax.text(0.02, 0.98, info, transform=ax.transAxes,
+        fontsize=10, verticalalignment=&quot;</span>top<span class="str">&quot;, color=&quot;</span>black<span class="str">&quot;,
+        bbox=dict(boxstyle=&quot;</span><span class="fn">round</span><span class="str">&quot;, facecolor=&quot;</span>wheat<span class="str">&quot;, alpha=0.9))
+
+ax.set_xlabel(&quot;</span>X<span class="str">&quot;, color=&quot;</span>white<span class="str">&quot;)
+ax.set_ylabel(&quot;</span>Y<span class="str">&quot;, color=&quot;</span>white<span class="str">&quot;)
+ax.legend(fontsize=9, loc=&quot;</span>lower right<span class="str">&quot;)
+ax.set_facecolor(&quot;</span><span class="cm">#2b2b2b&quot;)
+ax.tick_params(colors=&quot;white&quot;)
+ax.xaxis.label.set_color(&quot;white&quot;)
+ax.yaxis.label.set_color(&quot;white&quot;)
+fig.patch.set_facecolor(&quot;#2b2b2b&quot;)
+
+plt.tight_layout()
+plt.show()
+</span></pre></div>
     <div class="section-label">7.4 Interactive Simulation</div>
     <div class="canvas-wrapper">
       <div class="canvas-controls">
@@ -594,48 +974,127 @@ plt.<span class="fn">show</span>()</pre></div>
       screen_y = world_y + world_z * 0.5 * sin(30 deg)
     </div>
     <div class="section-label">8.3 Source Code (Python)</div>
-    <div class="code-block"><pre><span class="kw">import</span> math, matplotlib.pyplot <span class="kw">as</span> plt
+    <div class="code-block"><pre><span class="kw">import</span> math
+<span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt
 <span class="kw">from</span> mpl_toolkits.mplot3d <span class="kw">import</span> Axes3D
 
-<span class="kw">def</span> <span class="fn">rotate_about_axis</span>(point, a1, a2, angle):
+<span class="kw">def</span> rotate_about_axis(point, a1, a2, angle):
     px = point[<span class="num">0</span>] - a1[<span class="num">0</span>]
     py = point[<span class="num">1</span>] - a1[<span class="num">1</span>]
     pz = point[<span class="num">2</span>] - a1[<span class="num">2</span>]
+
     ax = a2[<span class="num">0</span>] - a1[<span class="num">0</span>]
     ay = a2[<span class="num">1</span>] - a1[<span class="num">1</span>]
     az = a2[<span class="num">2</span>] - a1[<span class="num">2</span>]
-    length = math.<span class="fn">sqrt</span>(ax*ax + ay*ay + az*az)
+
+    length = math.sqrt(ax*ax + ay*ay + az*az)
     ux, uy, uz = ax/length, ay/length, az/length
-    rad = math.<span class="fn">radians</span>(angle)
-    cos_a, sin_a = math.<span class="fn">cos</span>(rad), math.<span class="fn">sin</span>(rad)
+
+    rad = math.radians(angle)
+    cos_a, sin_a = math.cos(rad), math.sin(rad)
+
     dot = px*ux + py*uy + pz*uz
     cross_x = uy*pz - uz*py
     cross_y = uz*px - ux*pz
     cross_z = ux*py - uy*px
+
     new_x = px*cos_a + cross_x*sin_a + ux*dot*(<span class="num">1</span> - cos_a)
     new_y = py*cos_a + cross_y*sin_a + uy*dot*(<span class="num">1</span> - cos_a)
     new_z = pz*cos_a + cross_z*sin_a + uz*dot*(<span class="num">1</span> - cos_a)
-    <span class="kw">return</span> (<span class="fn">round</span>(new_x + a1[<span class="num">0</span>], <span class="num">2</span>),
-            <span class="fn">round</span>(new_y + a1[<span class="num">1</span>], <span class="num">2</span>),
-            <span class="fn">round</span>(new_z + a1[<span class="num">2</span>], <span class="num">2</span>))
 
-<span class="kw">def</span> <span class="fn">draw_cube_3d</span>(ax, vertices, color):
-    edges = [(<span class="num">0</span>,<span class="num">1</span>),(<span class="num">1</span>,<span class="num">2</span>),(<span class="num">2</span>,<span class="num">3</span>),(<span class="num">3</span>,<span class="num">0</span>),
-             (<span class="num">4</span>,<span class="num">5</span>),(<span class="num">5</span>,<span class="num">6</span>),(<span class="num">6</span>,<span class="num">7</span>),(<span class="num">7</span>,<span class="num">4</span>),
-             (<span class="num">0</span>,<span class="num">4</span>),(<span class="num">1</span>,<span class="num">5</span>),(<span class="num">2</span>,<span class="num">6</span>),(<span class="num">3</span>,<span class="num">7</span>)]
+    <span class="kw">return</span> (<span class="fn">round</span>(new_x + a1[<span class="num">0</span>], <span class="num">2</span>), <span class="fn">round</span>(new_y + a1[<span class="num">1</span>], <span class="num">2</span>), <span class="fn">round</span>(new_z + a1[<span class="num">2</span>], <span class="num">2</span>))
+
+<span class="kw">def</span> draw_cube_3d(ax, vertices, color, label=<span class="kw">None</span>):
+    edges = [
+        (<span class="num">0</span>, <span class="num">1</span>), (<span class="num">1</span>, <span class="num">2</span>), (<span class="num">2</span>, <span class="num">3</span>), (<span class="num">3</span>, <span class="num">0</span>),
+        (<span class="num">4</span>, <span class="num">5</span>), (<span class="num">5</span>, <span class="num">6</span>), (<span class="num">6</span>, <span class="num">7</span>), (<span class="num">7</span>, <span class="num">4</span>),
+        (<span class="num">0</span>, <span class="num">4</span>), (<span class="num">1</span>, <span class="num">5</span>), (<span class="num">2</span>, <span class="num">6</span>), (<span class="num">3</span>, <span class="num">7</span>)
+    ]
     xs, ys, zs = <span class="fn">zip</span>(*vertices)
     <span class="kw">for</span> i, j <span class="kw">in</span> edges:
-        ax.<span class="fn">plot3D</span>(*<span class="fn">zip</span>(vertices[i], vertices[j]), color=color)
+        ax.plot3D(*<span class="fn">zip</span>(vertices[i], vertices[j]), color=color, linewidth=<span class="num">1.5</span>)
+    ax.scatter(xs, ys, zs, c=color, s=<span class="num">40</span>, label=label)
 
-ccx=<span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"center x = "</span>)); ccy=<span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"center y = "</span>))
-ccz=<span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"center z = "</span>)); half=<span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"half-size = "</span>))
-<span class="cm"># ... input axis points, angle ...</span>
-cube = [(ccx-half,ccy-half,ccz-half), (ccx+half,ccy-half,ccz-half), ...]
-rotated = [<span class="fn">rotate_about_axis</span>(v, a1, a2, angle) <span class="kw">for</span> v <span class="kw">in</span> cube]
-fig = plt.<span class="fn">figure</span>(); ax = fig.<span class="fn">add_subplot</span>(<span class="num">111</span>, projection=<span class="str">"3d"</span>)
-<span class="fn">draw_cube_3d</span>(ax, cube, <span class="str">"white"</span>)
-<span class="fn">draw_cube_3d</span>(ax, rotated, <span class="str">"yellow"</span>)
-plt.<span class="fn">show</span>()</pre></div>
+<span class="fn">print</span>(<span class="str">&quot;=== 3D Rotation About Arbitrary Axis ===&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;Enter cube center:&quot;</span>)
+ccx = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">&quot;center x = &quot;</span>))
+ccy = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">&quot;center y = &quot;</span>))
+ccz = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">&quot;center z = &quot;</span>))
+half = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">&quot;half-size (edge = 2*half) = &quot;</span>))
+
+cube = [
+    (ccx - half, ccy - half, ccz - half),
+    (ccx + half, ccy - half, ccz - half),
+    (ccx + half, ccy + half, ccz - half),
+    (ccx - half, ccy + half, ccz - half),
+    (ccx - half, ccy - half, ccz + half),
+    (ccx + half, ccy - half, ccz + half),
+    (ccx + half, ccy + half, ccz + half),
+    (ccx - half, ccy + half, ccz + half),
+]
+
+<span class="fn">print</span>(<span class="str">&quot;\nRotation axis (two points):&quot;</span>)
+ax1_x = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">&quot;axis point1 x = &quot;</span>))
+ax1_y = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">&quot;axis point1 y = &quot;</span>))
+ax1_z = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">&quot;axis point1 z = &quot;</span>))
+ax2_x = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">&quot;axis point2 x = &quot;</span>))
+ax2_y = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">&quot;axis point2 y = &quot;</span>))
+ax2_z = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">&quot;axis point2 z = &quot;</span>))
+
+angle = <span class="fn">float</span>(<span class="fn">input</span>(<span class="str">&quot;rotation angle (degrees) = &quot;</span>))
+
+a1 = (ax1_x, ax1_y, ax1_z)
+a2 = (ax2_x, ax2_y, ax2_z)
+
+rotated = [rotate_about_axis(v, a1, a2, angle) <span class="kw">for</span> v <span class="kw">in</span> cube]
+
+<span class="fn">print</span>(<span class="str">f&quot;\n--- 3D Rotation ---&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;Center: ({ccx},{ccy},{ccz}), half-size: {half}&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;Axis: ({ax1_x},{ax1_y},{ax1_z}) -&gt; ({ax2_x},{ax2_y},{ax2_z})&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;Angle: {angle} deg&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;\n{&#x27;</span>Vertex<span class="str">&#x27;:&lt;8} {&#x27;</span>Original<span class="str">&#x27;:&lt;30} {&#x27;</span>Rotated<span class="str">&#x27;:&lt;30}&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">70</span>)
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">8</span>):
+    <span class="fn">print</span>(<span class="str">f&quot;V{i:&lt;6} ({cube[i][0]:&lt;5},{cube[i][1]:&lt;5},{cube[i][2]:&lt;5})       &quot;</span>
+          <span class="str">f&quot;({rotated[i][0]:&lt;6},{rotated[i][1]:&lt;6},{rotated[i][2]:&lt;6})&quot;</span>)
+
+fig = plt.figure(figsize=(<span class="num">10</span>, <span class="num">8</span>))
+ax = fig.add_subplot(<span class="num">111</span>, projection=<span class="str">&quot;3d&quot;</span>)
+ax.set_title(<span class="str">f&quot;3D Rotation: {angle} deg About Custom Axis&quot;</span>, color=<span class="str">&quot;white&quot;</span>, fontsize=<span class="num">13</span>)
+
+draw_cube_3d(ax, cube, <span class="str">&quot;white&quot;</span>, <span class="str">&quot;Original&quot;</span>)
+draw_cube_3d(ax, rotated, <span class="str">&quot;yellow&quot;</span>, <span class="str">f&quot;Rotated {angle} deg&quot;</span>)
+
+axis_xs = [ax1_x, ax2_x]
+axis_ys = [ax1_y, ax2_y]
+axis_zs = [ax1_z, ax2_z]
+ax.plot3D(axis_xs, axis_ys, axis_zs, <span class="str">&quot;r--&quot;</span>, linewidth=<span class="num">2</span>, label=<span class="str">&quot;Rotation axis&quot;</span>)
+ax.scatter([ax1_x, ax2_x], [ax1_y, ax2_y], [ax1_z, ax2_z],
+           c=<span class="str">&quot;red&quot;</span>, s=<span class="num">60</span>, marker=<span class="str">&quot;*&quot;</span>, zorder=<span class="num">5</span>)
+
+info = (
+    <span class="str">f&quot;Axis: ({ax1_x},{ax1_y},{ax1_z})-&gt;({ax2_x},{ax2_y},{ax2_z})\n&quot;</span>
+    <span class="str">f&quot;Angle: {angle} deg&quot;</span>
+)
+ax.text(<span class="num">0.02</span>, <span class="num">0.98</span>, <span class="num">0.98</span>, info, transform=ax.transAxes,
+        fontsize=<span class="num">10</span>, verticalalignment=<span class="str">&quot;top&quot;</span>, color=<span class="str">&quot;black&quot;</span>,
+        bbox=dict(boxstyle=<span class="str">&quot;round&quot;</span>, facecolor=<span class="str">&quot;wheat&quot;</span>, alpha=<span class="num">0.9</span>))
+
+ax.set_xlabel(<span class="str">&quot;X&quot;</span>, color=<span class="str">&quot;white&quot;</span>)
+ax.set_ylabel(<span class="str">&quot;Y&quot;</span>, color=<span class="str">&quot;white&quot;</span>)
+ax.set_zlabel(<span class="str">&quot;Z&quot;</span>, color=<span class="str">&quot;white&quot;</span>)
+ax.legend(fontsize=<span class="num">9</span>, loc=<span class="str">&quot;lower right&quot;</span>)
+ax.set_facecolor(<span class="str">&quot;#2b2b2b&quot;</span>)
+fig.patch.set_facecolor(<span class="str">&quot;#2b2b2b&quot;</span>)
+ax.xaxis.label.set_color(<span class="str">&quot;white&quot;</span>)
+ax.yaxis.label.set_color(<span class="str">&quot;white&quot;</span>)
+ax.zaxis.label.set_color(<span class="str">&quot;white&quot;</span>)
+ax.title.set_color(<span class="str">&quot;white&quot;</span>)
+ax.tick_params(colors=<span class="str">&quot;white&quot;</span>)
+
+plt.tight_layout()
+plt.show()
+</pre></div>
     <div class="section-label">8.4 Interactive Simulation</div>
     <div class="canvas-wrapper">
       <div class="canvas-controls">
@@ -675,41 +1134,169 @@ plt.<span class="fn">show</span>()</pre></div>
     <div class="code-block"><pre><span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt
 <span class="kw">import</span> matplotlib.patches <span class="kw">as</span> mpatches
 
-INSIDE, LEFT, RIGHT, BOTTOM, TOP = <span class="num">0</span>, <span class="num">1</span>, <span class="num">2</span>, <span class="num">4</span>, <span class="num">8</span>
-XMIN, YMIN, XMAX, YMAX = <span class="num">150</span>, <span class="num">100</span>, <span class="num">450</span>, <span class="num">300</span>
+INSIDE = <span class="num">0</span>
+LEFT = <span class="num">1</span>
+RIGHT = <span class="num">2</span>
+BOTTOM = <span class="num">4</span>
+TOP = <span class="num">8</span>
 
-<span class="kw">def</span> <span class="fn">compute_code</span>(x, y):
+XMIN, YMIN = <span class="num">150</span>, <span class="num">100</span>
+XMAX, YMAX = <span class="num">450</span>, <span class="num">300</span>
+
+<span class="kw">def</span> compute_code(x, y):
     code = INSIDE
-    <span class="kw">if</span> x &lt; XMIN: code |= LEFT
-    <span class="kw">elif</span> x &gt; XMAX: code |= RIGHT
-    <span class="kw">if</span> y &lt; YMIN: code |= TOP
-    <span class="kw">elif</span> y &gt; YMAX: code |= BOTTOM
+    <span class="kw">if</span> x &lt; XMIN:
+        code |= LEFT
+    <span class="kw">elif</span> x &gt; XMAX:
+        code |= RIGHT
+    <span class="kw">if</span> y &lt; YMIN:
+        code |= TOP
+    <span class="kw">elif</span> y &gt; YMAX:
+        code |= BOTTOM
     <span class="kw">return</span> code
 
-<span class="kw">def</span> <span class="fn">cohen_sutherland_clip</span>(x1, y1, x2, y2):
-    code1 = <span class="fn">compute_code</span>(x1, y1)
-    code2 = <span class="fn">compute_code</span>(x2, y2)
+<span class="kw">def</span> code_to_str(code):
+    parts = []
+    <span class="kw">if</span> code == <span class="num">0</span>:
+        <span class="kw">return</span> <span class="str">&quot;INSIDE&quot;</span>
+    <span class="kw">if</span> code &amp; LEFT:
+        parts.append(<span class="str">&quot;LEFT&quot;</span>)
+    <span class="kw">if</span> code &amp; RIGHT:
+        parts.append(<span class="str">&quot;RIGHT&quot;</span>)
+    <span class="kw">if</span> code &amp; TOP:
+        parts.append(<span class="str">&quot;TOP&quot;</span>)
+    <span class="kw">if</span> code &amp; BOTTOM:
+        parts.append(<span class="str">&quot;BOTTOM&quot;</span>)
+    <span class="kw">return</span> <span class="str">&quot;|&quot;</span>.join(parts)
+
+<span class="kw">def</span> cohen_sutherland_clip(x1, y1, x2, y2):
+    code1 = compute_code(x1, y1)
+    code2 = compute_code(x2, y2)
     accept = <span class="kw">False</span>
+    steps = []
+
     <span class="kw">while</span> <span class="kw">True</span>:
+        steps.append((x1, y1, x2, y2, code1, code2, <span class="str">&quot;accept&quot;</span> <span class="kw">if</span> accept <span class="kw">else</span> <span class="str">&quot;processing&quot;</span>))
+
         <span class="kw">if</span> code1 == <span class="num">0</span> <span class="kw">and</span> code2 == <span class="num">0</span>:
-            accept = <span class="kw">True</span>; <span class="kw">break</span>
-        <span class="kw">elif</span> code1 &amp; code2: <span class="kw">break</span>
+            accept = <span class="kw">True</span>
+            steps.append((x1, y1, x2, y2, code1, code2, <span class="str">&quot;ACCEPTED&quot;</span>))
+            <span class="kw">break</span>
+        <span class="kw">elif</span> code1 &amp; code2:
+            steps.append((x1, y1, x2, y2, code1, code2, <span class="str">&quot;REJECTED (trivial)&quot;</span>))
+            <span class="kw">break</span>
         <span class="kw">else</span>:
             code_out = code1 <span class="kw">if</span> code1 != <span class="num">0</span> <span class="kw">else</span> code2
+
             <span class="kw">if</span> code_out &amp; TOP:
-                x = x1 + (x2-x1)*(YMIN-y1)/(y2-y1); y = YMIN
+                x = x1 + (x2 - x1) * (YMIN - y1) / (y2 - y1)
+                y = YMIN
             <span class="kw">elif</span> code_out &amp; BOTTOM:
-                x = x1 + (x2-x1)*(YMAX-y1)/(y2-y1); y = YMAX
+                x = x1 + (x2 - x1) * (YMAX - y1) / (y2 - y1)
+                y = YMAX
             <span class="kw">elif</span> code_out &amp; RIGHT:
-                y = y1 + (y2-y1)*(XMAX-x1)/(x2-x1); x = XMAX
+                y = y1 + (y2 - y1) * (XMAX - x1) / (x2 - x1)
+                x = XMAX
             <span class="kw">elif</span> code_out &amp; LEFT:
-                y = y1 + (y2-y1)*(XMIN-x1)/(x2-x1); x = XMIN
+                y = y1 + (y2 - y1) * (XMIN - x1) / (x2 - x1)
+                x = XMIN
+
             <span class="kw">if</span> code_out == code1:
-                x1, y1 = x, y; code1 = <span class="fn">compute_code</span>(x1, y1)
+                x1, y1 = x, y
+                code1 = compute_code(x1, y1)
             <span class="kw">else</span>:
-                x2, y2 = x, y; code2 = <span class="fn">compute_code</span>(x2, y2)
-    <span class="kw">if</span> accept: <span class="kw">return</span> (<span class="fn">round</span>(x1), <span class="fn">round</span>(y1), <span class="fn">round</span>(x2), <span class="fn">round</span>(y2))
-    <span class="kw">return</span> <span class="kw">None</span></pre></div>
+                x2, y2 = x, y
+                code2 = compute_code(x2, y2)
+
+    <span class="kw">if</span> accept:
+        <span class="kw">return</span> (<span class="fn">round</span>(x1), <span class="fn">round</span>(y1), <span class="fn">round</span>(x2), <span class="fn">round</span>(y2)), steps
+    <span class="kw">return</span> <span class="kw">None</span>, steps
+
+<span class="fn">print</span>(<span class="str">&quot;=== Cohen-Sutherland Line Clipping ===&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;Clipping window: ({XMIN},{YMIN}) to ({XMAX},{YMAX})&quot;</span>)
+x1 = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">&quot;x1 = &quot;</span>))
+y1 = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">&quot;y1 = &quot;</span>))
+x2 = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">&quot;x2 = &quot;</span>))
+y2 = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">&quot;y2 = &quot;</span>))
+
+code1_init = compute_code(x1, y1)
+code2_init = compute_code(x2, y2)
+
+<span class="fn">print</span>(<span class="str">f&quot;\nInitial region codes:&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;  P1({x1},{y1}) -&gt; {code_to_str(code1_init)} (binary: {code1_init:04b})&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;  P2({x2},{y2}) -&gt; {code_to_str(code2_init)} (binary: {code2_init:04b})&quot;</span>)
+
+clipped, steps = cohen_sutherland_clip(x1, y1, x2, y2)
+
+<span class="fn">print</span>(<span class="str">f&quot;\n{&#x27;</span>Step<span class="str">&#x27;:&lt;6} {&#x27;</span>x1<span class="str">&#x27;:&lt;6} {&#x27;</span>y1<span class="str">&#x27;:&lt;6} {&#x27;</span>x2<span class="str">&#x27;:&lt;6} {&#x27;</span>y2<span class="str">&#x27;:&lt;6} {&#x27;</span>code1<span class="str">&#x27;:&lt;16} {&#x27;</span>code2<span class="str">&#x27;:&lt;16} {&#x27;</span>Status<span class="str">&#x27;:&lt;20}&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">92</span>)
+<span class="kw">for</span> i, (sx1, sy1, sx2, sy2, c1, c2, status) <span class="kw">in</span> <span class="fn">enumerate</span>(steps):
+    <span class="fn">print</span>(<span class="str">f&quot;{i:&lt;6} {sx1:&lt;6} {sy1:&lt;6} {sx2:&lt;6} {sy2:&lt;6} &quot;</span>
+          <span class="str">f&quot;{code_to_str(c1):&lt;16} {code_to_str(c2):&lt;16} {status:&lt;20}&quot;</span>)
+
+fig, ax = plt.subplots(figsize=(<span class="num">8</span>, <span class="num">6</span>))
+ax.set_title(<span class="str">&quot;Cohen-Sutherland Line Clipping&quot;</span>, color=<span class="str">&quot;white&quot;</span>, fontsize=<span class="num">13</span>)
+
+ax.axhline(<span class="num">0</span>, color=<span class="str">&quot;gray&quot;</span>, linewidth=<span class="num">0.8</span>, alpha=<span class="num">0.3</span>)
+ax.axvline(<span class="num">0</span>, color=<span class="str">&quot;gray&quot;</span>, linewidth=<span class="num">0.8</span>, alpha=<span class="num">0.3</span>)
+
+margin = <span class="num">30</span>
+ax.set_xlim(<span class="fn">min</span>(x1, x2, XMIN) - margin, <span class="fn">max</span>(x1, x2, XMAX) + margin)
+ax.set_ylim(<span class="fn">min</span>(y1, y2, YMIN) - margin, <span class="fn">max</span>(y1, y2, YMAX) + margin)
+ax.set_aspect(<span class="str">&quot;equal&quot;</span>)
+ax.grid(<span class="kw">True</span>, alpha=<span class="num">0.3</span>)
+
+win = mpatches.Rectangle(
+    (XMIN, YMIN), XMAX - XMIN, YMAX - YMIN,
+    fill=<span class="kw">True</span>, facecolor=<span class="str">&quot;white&quot;</span>, alpha=<span class="num">0.08</span>,
+    edgecolor=<span class="str">&quot;white&quot;</span>, linewidth=<span class="num">2</span>, label=<span class="str">&quot;Clipping Window&quot;</span>
+)
+ax.add_patch(win)
+ax.text((XMIN + XMAX) // <span class="num">2</span> - <span class="num">40</span>, YMIN - <span class="num">18</span>, <span class="str">&quot;Clipping Window&quot;</span>,
+        color=<span class="str">&quot;white&quot;</span>, fontsize=<span class="num">8</span>, fontweight=<span class="str">&quot;bold&quot;</span>, alpha=<span class="num">0.7</span>)
+
+ax.plot([x1, x2], [y1, y2], <span class="str">&quot;w-&quot;</span>, linewidth=<span class="num">1.5</span>, alpha=<span class="num">0.5</span>, label=<span class="str">&quot;Original line&quot;</span>)
+ax.scatter([x1, x2], [y1, y2], c=<span class="str">&quot;white&quot;</span>, s=<span class="num">60</span>, zorder=<span class="num">4</span>)
+
+<span class="kw">if</span> clipped:
+    cx1, cy1, cx2, cy2 = clipped
+    ax.plot([cx1, cx2], [cy1, cy2], <span class="str">&quot;y-&quot;</span>, linewidth=<span class="num">3</span>, label=<span class="str">&quot;Clipped (visible)&quot;</span>)
+    ax.scatter([cx1, cx2], [cy1, cy2], c=<span class="str">&quot;yellow&quot;</span>, s=<span class="num">80</span>, zorder=<span class="num">5</span>, edgecolors=<span class="str">&quot;darkgoldenrod&quot;</span>)
+    ax.annotate(<span class="str">f&quot;({cx1},{cy1})&quot;</span>, (cx1, cy1), xytext=(<span class="num">5</span>, <span class="num">5</span>),
+                textcoords=<span class="str">&quot;offset points&quot;</span>, color=<span class="str">&quot;yellow&quot;</span>, fontsize=<span class="num">9</span>, fontweight=<span class="str">&quot;bold&quot;</span>)
+    ax.annotate(<span class="str">f&quot;({cx2},{cy2})&quot;</span>, (cx2, cy2), xytext=(<span class="num">5</span>, <span class="num">5</span>),
+                textcoords=<span class="str">&quot;offset points&quot;</span>, color=<span class="str">&quot;yellow&quot;</span>, fontsize=<span class="num">9</span>, fontweight=<span class="str">&quot;bold&quot;</span>)
+    result_text = <span class="str">&quot;Line: PARTIALLY / FULLY VISIBLE&quot;</span>
+<span class="kw">else</span>:
+    result_text = <span class="str">&quot;Line: REJECTED (outside window)&quot;</span>
+
+ax.annotate(<span class="str">f&quot;P1({x1},{y1})&quot;</span>, (x1, y1), xytext=(<span class="num">5</span>, <span class="num">5</span>),
+            textcoords=<span class="str">&quot;offset points&quot;</span>, color=<span class="str">&quot;white&quot;</span>, fontsize=<span class="num">9</span>)
+ax.annotate(<span class="str">f&quot;P2({x2},{y2})&quot;</span>, (x2, y2), xytext=(<span class="num">5</span>, <span class="num">5</span>),
+            textcoords=<span class="str">&quot;offset points&quot;</span>, color=<span class="str">&quot;white&quot;</span>, fontsize=<span class="num">9</span>)
+
+info = (
+    <span class="str">f&quot;Window: ({XMIN},{YMIN})-({XMAX},{YMAX})\n&quot;</span>
+    <span class="str">f&quot;P1 code: {code_to_str(code1_init)} ({code1_init:04b})\n&quot;</span>
+    <span class="str">f&quot;P2 code: {code_to_str(code2_init)} ({code2_init:04b})\n&quot;</span>
+    <span class="str">f&quot;Result: {result_text}&quot;</span>
+)
+ax.text(<span class="num">0.02</span>, <span class="num">0.98</span>, info, transform=ax.transAxes,
+        fontsize=<span class="num">9</span>, verticalalignment=<span class="str">&quot;top&quot;</span>, color=<span class="str">&quot;black&quot;</span>,
+        bbox=dict(boxstyle=<span class="str">&quot;round&quot;</span>, facecolor=<span class="str">&quot;wheat&quot;</span>, alpha=<span class="num">0.9</span>))
+
+ax.set_xlabel(<span class="str">&quot;X&quot;</span>, color=<span class="str">&quot;white&quot;</span>)
+ax.set_ylabel(<span class="str">&quot;Y&quot;</span>, color=<span class="str">&quot;white&quot;</span>)
+ax.legend(fontsize=<span class="num">9</span>, loc=<span class="str">&quot;lower right&quot;</span>)
+ax.set_facecolor(<span class="str">&quot;#2b2b2b&quot;</span>)
+ax.tick_params(colors=<span class="str">&quot;white&quot;</span>)
+ax.xaxis.label.set_color(<span class="str">&quot;white&quot;</span>)
+ax.yaxis.label.set_color(<span class="str">&quot;white&quot;</span>)
+fig.patch.set_facecolor(<span class="str">&quot;#2b2b2b&quot;</span>)
+
+plt.tight_layout()
+plt.show()
+</pre></div>
     <div class="section-label">9.4 Interactive Simulation</div>
     <div class="canvas-wrapper">
       <div class="canvas-controls">
@@ -746,35 +1333,160 @@ XMIN, YMIN, XMAX, YMAX = <span class="num">150</span>, <span class="num">100</sp
     <div class="code-block"><pre><span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt
 <span class="kw">import</span> matplotlib.patches <span class="kw">as</span> mpatches
 
-XMIN, YMIN, XMAX, YMAX = <span class="num">150</span>, <span class="num">100</span>, <span class="num">450</span>, <span class="num">300</span>
+XMIN, YMIN = <span class="num">150</span>, <span class="num">100</span>
+XMAX, YMAX = <span class="num">450</span>, <span class="num">300</span>
 
-<span class="kw">def</span> <span class="fn">inside</span>(p, edge):
+EDGE_NAMES = [<span class="str">&quot;LEFT (x &gt;= XMIN)&quot;</span>, <span class="str">&quot;RIGHT (x &lt;= XMAX)&quot;</span>, <span class="str">&quot;TOP (y &gt;= YMIN)&quot;</span>, <span class="str">&quot;BOTTOM (y &lt;= YMAX)&quot;</span>]
+
+<span class="kw">def</span> inside(p, edge):
     x, y = p
-    <span class="kw">if</span> edge == <span class="num">0</span>: <span class="kw">return</span> x &gt;= XMIN
-    <span class="kw">if</span> edge == <span class="num">1</span>: <span class="kw">return</span> x &lt;= XMAX
-    <span class="kw">if</span> edge == <span class="num">2</span>: <span class="kw">return</span> y &gt;= YMIN
-    <span class="kw">if</span> edge == <span class="num">3</span>: <span class="kw">return</span> y &lt;= YMAX
+    <span class="kw">if</span> edge == <span class="num">0</span>:
+        <span class="kw">return</span> x &gt;= XMIN
+    <span class="kw">if</span> edge == <span class="num">1</span>:
+        <span class="kw">return</span> x &lt;= XMAX
+    <span class="kw">if</span> edge == <span class="num">2</span>:
+        <span class="kw">return</span> y &gt;= YMIN
+    <span class="kw">if</span> edge == <span class="num">3</span>:
+        <span class="kw">return</span> y &lt;= YMAX
+    <span class="kw">return</span> <span class="kw">False</span>
 
-<span class="kw">def</span> <span class="fn">intersect</span>(p1, p2, edge):
-    x1, y1 = p1; x2, y2 = p2
-    m = (y2 - y1) / (x2 - x1) <span class="kw">if</span> x2 != x1 <span class="kw">else</span> <span class="num">1e10</span>
-    <span class="kw">if</span> edge == <span class="num">0</span>: <span class="kw">return</span> (XMIN, <span class="fn">round</span>(y1 + m*(XMIN - x1)))
-    <span class="kw">if</span> edge == <span class="num">1</span>: <span class="kw">return</span> (XMAX, <span class="fn">round</span>(y1 + m*(XMAX - x1)))
-    <span class="kw">if</span> edge == <span class="num">2</span>: <span class="kw">return</span> (<span class="fn">round</span>(x1 + (YMIN-y1)/m), YMIN)
-    <span class="kw">if</span> edge == <span class="num">3</span>: <span class="kw">return</span> (<span class="fn">round</span>(x1 + (YMAX-y1)/m), YMAX)
+<span class="kw">def</span> intersect(p1, p2, edge):
+    x1, y1 = p1
+    x2, y2 = p2
+    <span class="kw">if</span> x2 != x1:
+        m = (y2 - y1) / (x2 - x1)
+    <span class="kw">else</span>:
+        m = <span class="num">1e10</span>
+    <span class="kw">if</span> edge == <span class="num">0</span>:
+        <span class="kw">return</span> (XMIN, <span class="fn">round</span>(y1 + m * (XMIN - x1)))
+    <span class="kw">if</span> edge == <span class="num">1</span>:
+        <span class="kw">return</span> (XMAX, <span class="fn">round</span>(y1 + m * (XMAX - x1)))
+    <span class="kw">if</span> edge == <span class="num">2</span>:
+        x = <span class="fn">round</span>(x1 + (YMIN - y1) / m) <span class="kw">if</span> x2 != x1 <span class="kw">else</span> x1
+        <span class="kw">return</span> (x, YMIN)
+    <span class="kw">if</span> edge == <span class="num">3</span>:
+        x = <span class="fn">round</span>(x1 + (YMAX - y1) / m) <span class="kw">if</span> x2 != x1 <span class="kw">else</span> x1
+        <span class="kw">return</span> (x, YMAX)
+    <span class="kw">return</span> (<span class="num">0</span>, <span class="num">0</span>)
 
-<span class="kw">def</span> <span class="fn">clip_against_edge</span>(poly, edge):
-    <span class="kw">if</span> <span class="kw">not</span> poly: <span class="kw">return</span> []
-    result = []; n = <span class="fn">len</span>(poly)
+<span class="kw">def</span> clip_against_edge(poly, edge):
+    <span class="kw">if</span> <span class="kw">not</span> poly:
+        <span class="kw">return</span> []
+    result = []
+    n = <span class="fn">len</span>(poly)
     <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
-        curr = poly[i]; nxt = poly[(i+<span class="num">1</span>) % n]
-        ci = <span class="fn">inside</span>(curr, edge); ni = <span class="fn">inside</span>(nxt, edge)
-        <span class="kw">if</span> ci <span class="kw">and</span> ni: result.append(nxt)
-        <span class="kw">elif</span> ci <span class="kw">and</span> <span class="kw">not</span> ni: result.<span class="fn">append</span>(<span class="fn">intersect</span>(curr, nxt, edge))
-        <span class="kw">elif</span> <span class="kw">not</span> ci <span class="kw">and</span> ni:
-            result.<span class="fn">append</span>(<span class="fn">intersect</span>(curr, nxt, edge))
+        curr = poly[i]
+        nxt = poly[(i + <span class="num">1</span>) % n]
+        curr_inside = inside(curr, edge)
+        nxt_inside = inside(nxt, edge)
+
+        <span class="kw">if</span> curr_inside <span class="kw">and</span> nxt_inside:
             result.append(nxt)
-    <span class="kw">return</span> result</pre></div>
+        <span class="kw">elif</span> curr_inside <span class="kw">and</span> <span class="kw">not</span> nxt_inside:
+            result.append(intersect(curr, nxt, edge))
+        <span class="kw">elif</span> <span class="kw">not</span> curr_inside <span class="kw">and</span> nxt_inside:
+            result.append(intersect(curr, nxt, edge))
+            result.append(nxt)
+    <span class="kw">return</span> result
+
+<span class="kw">def</span> draw_polygon(ax, poly, color, linewidth=<span class="num">2</span>, label=<span class="kw">None</span>):
+    <span class="kw">if</span> <span class="fn">len</span>(poly) &lt; <span class="num">3</span>:
+        <span class="kw">return</span>
+    xs, ys = <span class="fn">zip</span>(*(poly + [poly[<span class="num">0</span>]]))
+    ax.plot(xs, ys, color=color, linewidth=linewidth, label=label)
+
+<span class="fn">print</span>(<span class="str">&quot;=== Sutherland-Hodgman Polygon Clipping ===&quot;</span>)
+<span class="fn">print</span>(<span class="str">f&quot;Clipping window: ({XMIN},{YMIN}) to ({XMAX},{YMAX})&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;Enter polygon vertices (enter &#x27;</span>done<span class="str">&#x27; when finished):&quot;</span>)
+
+polygon = []
+<span class="kw">while</span> <span class="kw">True</span>:
+    inp = <span class="fn">input</span>(<span class="str">&quot;  x y (or &#x27;</span>done<span class="str">&#x27;): &quot;</span>).strip()
+    <span class="kw">if</span> inp.lower() == <span class="str">&quot;done&quot;</span>:
+        <span class="kw">break</span>
+    <span class="kw">try</span>:
+        px, py = <span class="fn">map</span>(<span class="fn">int</span>, inp.split())
+        polygon.append((px, py))
+    <span class="kw">except</span>:
+        <span class="fn">print</span>(<span class="str">&quot;  Invalid. Enter: x y&quot;</span>)
+
+<span class="kw">if</span> <span class="fn">len</span>(polygon) &lt; <span class="num">3</span>:
+    <span class="fn">print</span>(<span class="str">&quot;Need at least 3 vertices!&quot;</span>)
+    <span class="kw">exit</span>()
+
+<span class="fn">print</span>(<span class="str">f&quot;\nOriginal polygon ({len(polygon)} vertices):&quot;</span>)
+<span class="kw">for</span> i, (px, py) <span class="kw">in</span> <span class="fn">enumerate</span>(polygon):
+    <span class="fn">print</span>(<span class="str">f&quot;  V{i}: ({px}, {py})&quot;</span>)
+
+<span class="fn">print</span>(<span class="str">f&quot;\n{&#x27;</span>Edge<span class="str">&#x27;:&lt;28} {&#x27;</span>Vertices before<span class="str">&#x27;:&lt;6} {&#x27;</span>Vertices after<span class="str">&#x27;:&lt;6}&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">60</span>)
+clipped = polygon[:]
+<span class="kw">for</span> edge <span class="kw">in</span> <span class="fn">range</span>(<span class="num">4</span>):
+    before = <span class="fn">len</span>(clipped)
+    clipped = clip_against_edge(clipped, edge)
+    <span class="fn">print</span>(<span class="str">f&quot;{EDGE_NAMES[edge]:&lt;28} {before:&lt;16} {len(clipped):&lt;14}&quot;</span>)
+
+<span class="fn">print</span>(<span class="str">f&quot;\nClipped polygon ({len(clipped)} vertices):&quot;</span>)
+<span class="kw">for</span> i, (px, py) <span class="kw">in</span> <span class="fn">enumerate</span>(clipped):
+    <span class="fn">print</span>(<span class="str">f&quot;  V{i}: ({px}, {py})&quot;</span>)
+
+fig, ax = plt.subplots(figsize=(<span class="num">8</span>, <span class="num">6</span>))
+ax.set_title(<span class="str">&quot;Sutherland-Hodgman Polygon Clipping&quot;</span>, color=<span class="str">&quot;white&quot;</span>, fontsize=<span class="num">13</span>)
+ax.axhline(<span class="num">0</span>, color=<span class="str">&quot;gray&quot;</span>, linewidth=<span class="num">0.8</span>, alpha=<span class="num">0.3</span>)
+ax.axvline(<span class="num">0</span>, color=<span class="str">&quot;gray&quot;</span>, linewidth=<span class="num">0.8</span>, alpha=<span class="num">0.3</span>)
+
+all_x = [p[<span class="num">0</span>] <span class="kw">for</span> p <span class="kw">in</span> polygon] + ([p[<span class="num">0</span>] <span class="kw">for</span> p <span class="kw">in</span> clipped] <span class="kw">if</span> clipped <span class="kw">else</span> [])
+all_y = [p[<span class="num">1</span>] <span class="kw">for</span> p <span class="kw">in</span> polygon] + ([p[<span class="num">1</span>] <span class="kw">for</span> p <span class="kw">in</span> clipped] <span class="kw">if</span> clipped <span class="kw">else</span> [])
+margin = <span class="num">30</span>
+ax.set_xlim(<span class="fn">min</span>(all_x + [XMIN]) - margin, <span class="fn">max</span>(all_x + [XMAX]) + margin)
+ax.set_ylim(<span class="fn">min</span>(all_y + [YMIN]) - margin, <span class="fn">max</span>(all_y + [YMAX]) + margin)
+ax.set_aspect(<span class="str">&quot;equal&quot;</span>)
+ax.grid(<span class="kw">True</span>, alpha=<span class="num">0.3</span>)
+
+win = mpatches.Rectangle(
+    (XMIN, YMIN), XMAX - XMIN, YMAX - YMIN,
+    fill=<span class="kw">True</span>, facecolor=<span class="str">&quot;white&quot;</span>, alpha=<span class="num">0.08</span>,
+    edgecolor=<span class="str">&quot;white&quot;</span>, linewidth=<span class="num">2</span>, label=<span class="str">&quot;Clipping Window&quot;</span>
+)
+ax.add_patch(win)
+
+draw_polygon(ax, polygon, <span class="str">&quot;white&quot;</span>, <span class="num">1.5</span>, <span class="str">&quot;Original polygon&quot;</span>)
+
+<span class="kw">if</span> clipped:
+    draw_polygon(ax, clipped, <span class="str">&quot;yellow&quot;</span>, <span class="num">2.5</span>, <span class="str">&quot;Clipped polygon&quot;</span>)
+    cx = <span class="fn">sum</span>(p[<span class="num">0</span>] <span class="kw">for</span> p <span class="kw">in</span> clipped) // <span class="fn">len</span>(clipped)
+    cy = <span class="fn">sum</span>(p[<span class="num">1</span>] <span class="kw">for</span> p <span class="kw">in</span> clipped) // <span class="fn">len</span>(clipped)
+    ax.text(cx - <span class="num">15</span>, cy, <span class="str">&quot;CLIPPED&quot;</span>, color=<span class="str">&quot;yellow&quot;</span>, fontsize=<span class="num">9</span>, fontweight=<span class="str">&quot;bold&quot;</span>,
+            bbox=dict(boxstyle=<span class="str">&quot;round&quot;</span>, facecolor=<span class="str">&quot;#2b2b2b&quot;</span>, alpha=<span class="num">0.7</span>, edgecolor=<span class="str">&quot;yellow&quot;</span>))
+
+<span class="kw">for</span> i, (px, py) <span class="kw">in</span> <span class="fn">enumerate</span>(polygon):
+    ax.annotate(<span class="str">f&quot;V{i}({px},{py})&quot;</span>, (px, py), xytext=(<span class="num">5</span>, <span class="num">5</span>),
+                textcoords=<span class="str">&quot;offset points&quot;</span>, color=<span class="str">&quot;white&quot;</span>, fontsize=<span class="num">8</span>)
+<span class="kw">if</span> clipped:
+    <span class="kw">for</span> i, (px, py) <span class="kw">in</span> <span class="fn">enumerate</span>(clipped):
+        ax.scatter(px, py, c=<span class="str">&quot;yellow&quot;</span>, s=<span class="num">40</span>, zorder=<span class="num">4</span>)
+
+info = (
+    <span class="str">f&quot;Window: ({XMIN},{YMIN})-({XMAX},{YMAX})\n&quot;</span>
+    <span class="str">f&quot;Original: {len(polygon)} vertices\n&quot;</span>
+    <span class="str">f&quot;Clipped: {len(clipped)} vertices&quot;</span>
+)
+ax.text(<span class="num">0.02</span>, <span class="num">0.98</span>, info, transform=ax.transAxes,
+        fontsize=<span class="num">9</span>, verticalalignment=<span class="str">&quot;top&quot;</span>, color=<span class="str">&quot;black&quot;</span>,
+        bbox=dict(boxstyle=<span class="str">&quot;round&quot;</span>, facecolor=<span class="str">&quot;wheat&quot;</span>, alpha=<span class="num">0.9</span>))
+
+ax.set_xlabel(<span class="str">&quot;X&quot;</span>, color=<span class="str">&quot;white&quot;</span>)
+ax.set_ylabel(<span class="str">&quot;Y&quot;</span>, color=<span class="str">&quot;white&quot;</span>)
+ax.legend(fontsize=<span class="num">9</span>, loc=<span class="str">&quot;lower right&quot;</span>)
+ax.set_facecolor(<span class="str">&quot;#2b2b2b&quot;</span>)
+ax.tick_params(colors=<span class="str">&quot;white&quot;</span>)
+ax.xaxis.label.set_color(<span class="str">&quot;white&quot;</span>)
+ax.yaxis.label.set_color(<span class="str">&quot;white&quot;</span>)
+fig.patch.set_facecolor(<span class="str">&quot;#2b2b2b&quot;</span>)
+
+plt.tight_layout()
+plt.show()
+</pre></div>
     <div class="section-label">10.4 Interactive Simulation</div>
     <div class="canvas-wrapper">
       <div class="canvas-controls">
@@ -816,30 +1528,98 @@ XMIN, YMIN, XMAX, YMAX = <span class="num">150</span>, <span class="num">100</sp
     <div class="code-block"><pre><span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt
 <span class="kw">import</span> numpy <span class="kw">as</span> np
 
-<span class="kw">def</span> <span class="fn">bezier_curve</span>(control_x, control_y, steps=<span class="num">100</span>):
-    ts = np.<span class="fn">linspace</span>(<span class="num">0</span>, <span class="num">1</span>, steps + <span class="num">1</span>)
+<span class="kw">def</span> bernstein(t, i, n):
+    <span class="kw">from</span> math <span class="kw">import</span> comb
+    <span class="kw">return</span> comb(n, i) * (t ** i) * ((<span class="num">1</span> - t) ** (n - i))
+
+<span class="kw">def</span> bezier_curve(control_x, control_y, steps=<span class="num">100</span>):
+    ts = np.linspace(<span class="num">0</span>, <span class="num">1</span>, steps + <span class="num">1</span>)
     u = <span class="num">1</span> - ts
     b0 = u ** <span class="num">3</span>
     b1 = <span class="num">3</span> * ts * u ** <span class="num">2</span>
     b2 = <span class="num">3</span> * ts ** <span class="num">2</span> * u
     b3 = ts ** <span class="num">3</span>
-    px = (b0*control_x[<span class="num">0</span>] + b1*control_x[<span class="num">1</span>]
-          + b2*control_x[<span class="num">2</span>] + b3*control_x[<span class="num">3</span>])
-    py = (b0*control_y[<span class="num">0</span>] + b1*control_y[<span class="num">1</span>]
-          + b2*control_y[<span class="num">2</span>] + b3*control_y[<span class="num">3</span>])
+
+    px = (b0 * control_x[<span class="num">0</span>] + b1 * control_x[<span class="num">1</span>] + b2 * control_x[<span class="num">2</span>] + b3 * control_x[<span class="num">3</span>])
+    py = (b0 * control_y[<span class="num">0</span>] + b1 * control_y[<span class="num">1</span>] + b2 * control_y[<span class="num">2</span>] + b3 * control_y[<span class="num">3</span>])
     <span class="kw">return</span> px, py
 
-<span class="fn">print</span>(<span class="str">"Enter 4 control points:"</span>)
-pts = [(<span class="kw">int</span>(<span class="fn">input</span>(<span class="str">f"P{i} x = "</span>)),
-        <span class="kw">int</span>(<span class="fn">input</span>(<span class="str">f"P{i} y = "</span>))) <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">4</span>)]
+<span class="fn">print</span>(<span class="str">&quot;=== Cubic Bezier Curve ===&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;Enter 4 control points:&quot;</span>)
+pts = []
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">4</span>):
+    x = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">f&quot;P{i} x = &quot;</span>))
+    y = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">f&quot;P{i} y = &quot;</span>))
+    pts.append((x, y))
+
 cx, cy = [p[<span class="num">0</span>] <span class="kw">for</span> p <span class="kw">in</span> pts], [p[<span class="num">1</span>] <span class="kw">for</span> p <span class="kw">in</span> pts]
 
-px, py = <span class="fn">bezier_curve</span>(cx, cy)
-fig, ax = plt.<span class="fn">subplots</span>()
-ax.<span class="fn">plot</span>(cx, cy, <span class="str">"w--"</span>, label=<span class="str">"Control polygon"</span>)
-ax.<span class="fn">scatter</span>(cx, cy, c=<span class="str">"red"</span>, s=<span class="num">80</span>)
-ax.<span class="fn">plot</span>(px, py, <span class="str">"yellow"</span>, linewidth=<span class="num">2.5</span>, label=<span class="str">"Bezier curve"</span>)
-plt.<span class="fn">show</span>()</pre></div>
+<span class="fn">print</span>(<span class="str">f&quot;\nControl points:&quot;</span>)
+<span class="kw">for</span> i, (x, y) <span class="kw">in</span> <span class="fn">enumerate</span>(pts):
+    <span class="fn">print</span>(<span class="str">f&quot;  P{i}: ({x}, {y})&quot;</span>)
+
+<span class="fn">print</span>(<span class="str">f&quot;\n{&#x27;</span>t<span class="str">&#x27;:&lt;8} {&#x27;</span>B0(t)<span class="str">&#x27;:&lt;10} {&#x27;</span>B1(t)<span class="str">&#x27;:&lt;10} {&#x27;</span>B2(t)<span class="str">&#x27;:&lt;10} {&#x27;</span>B3(t)<span class="str">&#x27;:&lt;10} {&#x27;</span>X(t)<span class="str">&#x27;:&lt;10} {&#x27;</span>Y(t)<span class="str">&#x27;:&lt;10}&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">68</span>)
+<span class="kw">for</span> t_val <span class="kw">in</span> [i / <span class="num">10</span> <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">0</span>, <span class="num">11</span>)]:
+    b = [bernstein(t_val, i, <span class="num">3</span>) <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">4</span>)]
+    x_t = <span class="fn">sum</span>(b[i] * cx[i] <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">4</span>))
+    y_t = <span class="fn">sum</span>(b[i] * cy[i] <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">4</span>))
+    <span class="fn">print</span>(<span class="str">f&quot;{t_val:&lt;8.2f} {b[0]:&lt;10.4f} {b[1]:&lt;10.4f} {b[2]:&lt;10.4f} {b[3]:&lt;10.4f} {x_t:&lt;10.2f} {y_t:&lt;10.2f}&quot;</span>)
+
+px, py = bezier_curve(cx, cy)
+
+fig, ax = plt.subplots(figsize=(<span class="num">8</span>, <span class="num">6</span>))
+ax.set_title(<span class="str">&quot;Cubic Bezier Curve&quot;</span>, color=<span class="str">&quot;white&quot;</span>, fontsize=<span class="num">13</span>)
+ax.axhline(<span class="num">0</span>, color=<span class="str">&quot;gray&quot;</span>, linewidth=<span class="num">0.8</span>, alpha=<span class="num">0.3</span>)
+ax.axvline(<span class="num">0</span>, color=<span class="str">&quot;gray&quot;</span>, linewidth=<span class="num">0.8</span>, alpha=<span class="num">0.3</span>)
+
+all_x = cx + px.tolist()
+all_y = cy + py.tolist()
+margin = <span class="num">30</span>
+ax.set_xlim(<span class="fn">min</span>(all_x) - margin, <span class="fn">max</span>(all_x) + margin)
+ax.set_ylim(<span class="fn">min</span>(all_y) - margin, <span class="fn">max</span>(all_y) + margin)
+ax.set_aspect(<span class="str">&quot;equal&quot;</span>)
+ax.grid(<span class="kw">True</span>, alpha=<span class="num">0.3</span>)
+
+ax.plot(cx, cy, color=<span class="str">&quot;white&quot;</span>, linewidth=<span class="num">1.5</span>, linestyle=<span class="str">&quot;--&quot;</span>, label=<span class="str">&quot;Control polygon&quot;</span>)
+ax.scatter(cx, cy, c=<span class="str">&quot;red&quot;</span>, s=<span class="num">80</span>, zorder=<span class="num">5</span>, edgecolors=<span class="str">&quot;white&quot;</span>)
+<span class="kw">for</span> i, (x, y) <span class="kw">in</span> <span class="fn">enumerate</span>(pts):
+    ax.annotate(<span class="str">f&quot;P{i}({x},{y})&quot;</span>, (x, y), xytext=(<span class="num">8</span>, <span class="num">8</span>),
+                textcoords=<span class="str">&quot;offset points&quot;</span>, color=<span class="str">&quot;red&quot;</span>, fontsize=<span class="num">10</span>, fontweight=<span class="str">&quot;bold&quot;</span>)
+
+ax.plot(px, py, color=<span class="str">&quot;yellow&quot;</span>, linewidth=<span class="num">2.5</span>, label=<span class="str">&quot;Bezier curve&quot;</span>)
+
+colors = plt.cm.plasma(np.linspace(<span class="num">0</span>, <span class="num">1</span>, <span class="num">11</span>))
+<span class="kw">for</span> i, t_val <span class="kw">in</span> <span class="fn">enumerate</span>([i / <span class="num">10</span> <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">0</span>, <span class="num">11</span>)]):
+    b = [bernstein(t_val, i, <span class="num">3</span>) <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">4</span>)]
+    x_t = <span class="fn">sum</span>(b[i] * cx[i] <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">4</span>))
+    y_t = <span class="fn">sum</span>(b[i] * cy[i] <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">4</span>))
+    ax.scatter(x_t, y_t, c=[colors[i]], s=<span class="num">40</span>, zorder=<span class="num">4</span>, edgecolors=<span class="str">&quot;white&quot;</span>, linewidth=<span class="num">0.5</span>)
+    <span class="kw">if</span> i % <span class="num">2</span> == <span class="num">0</span>:
+        ax.annotate(<span class="str">f&quot;t={t_val:.1f}&quot;</span>, (x_t, y_t), xytext=(<span class="num">5</span>, -<span class="num">12</span>),
+                    textcoords=<span class="str">&quot;offset points&quot;</span>, fontsize=<span class="num">7</span>, color=<span class="str">&quot;white&quot;</span>, alpha=<span class="num">0.7</span>)
+
+info = (
+    <span class="str">f&quot;4 control points\n&quot;</span>
+    <span class="str">f&quot;Cubic Bernstein basis\n&quot;</span>
+    <span class="str">f&quot;Dots = t at 0.0, 0.1, ..., 1.0&quot;</span>
+)
+ax.text(<span class="num">0.02</span>, <span class="num">0.98</span>, info, transform=ax.transAxes,
+        fontsize=<span class="num">10</span>, verticalalignment=<span class="str">&quot;top&quot;</span>, color=<span class="str">&quot;black&quot;</span>,
+        bbox=dict(boxstyle=<span class="str">&quot;round&quot;</span>, facecolor=<span class="str">&quot;wheat&quot;</span>, alpha=<span class="num">0.9</span>))
+
+ax.set_xlabel(<span class="str">&quot;X&quot;</span>, color=<span class="str">&quot;white&quot;</span>)
+ax.set_ylabel(<span class="str">&quot;Y&quot;</span>, color=<span class="str">&quot;white&quot;</span>)
+ax.legend(fontsize=<span class="num">9</span>, loc=<span class="str">&quot;upper left&quot;</span>)
+ax.set_facecolor(<span class="str">&quot;#2b2b2b&quot;</span>)
+ax.tick_params(colors=<span class="str">&quot;white&quot;</span>)
+ax.xaxis.label.set_color(<span class="str">&quot;white&quot;</span>)
+ax.yaxis.label.set_color(<span class="str">&quot;white&quot;</span>)
+fig.patch.set_facecolor(<span class="str">&quot;#2b2b2b&quot;</span>)
+
+plt.tight_layout()
+plt.show()
+</pre></div>
     <div class="section-label">11.4 Interactive Simulation</div>
     <div class="canvas-wrapper">
       <div class="canvas-controls">
@@ -878,36 +1658,113 @@ plt.<span class="fn">show</span>()</pre></div>
     <div class="code-block"><pre><span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt
 <span class="kw">import</span> numpy <span class="kw">as</span> np
 
-<span class="kw">def</span> <span class="fn">b_spline_curve</span>(control_x, control_y, steps=<span class="num">50</span>):
+<span class="kw">def</span> b_spline_curve(control_x, control_y, steps=<span class="num">50</span>):
     n = <span class="fn">len</span>(control_x)
     all_px, all_py = [], []
+
+    <span class="fn">print</span>(<span class="str">f&quot;\n{&#x27;</span>Segment<span class="str">&#x27;:&lt;10} {&#x27;</span>t<span class="str">&#x27;:&lt;8} {&#x27;</span>B0(t)<span class="str">&#x27;:&lt;10} {&#x27;</span>B1(t)<span class="str">&#x27;:&lt;10} {&#x27;</span>B2(t)<span class="str">&#x27;:&lt;10} {&#x27;</span>B3(t)<span class="str">&#x27;:&lt;10} {&#x27;</span>X(t)<span class="str">&#x27;:&lt;10} {&#x27;</span>Y(t)<span class="str">&#x27;:&lt;10}&quot;</span>)
+    <span class="fn">print</span>(<span class="str">&quot;-&quot;</span> * <span class="num">78</span>)
+
     <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n - <span class="num">3</span>):
-        ts = np.<span class="fn">linspace</span>(<span class="num">0</span>, <span class="num">1</span>, steps + <span class="num">1</span>)
-        t2 = ts ** <span class="num">2</span>; t3 = ts ** <span class="num">3</span>
+        ts = np.linspace(<span class="num">0</span>, <span class="num">1</span>, steps + <span class="num">1</span>)
+        t2 = ts ** <span class="num">2</span>
+        t3 = ts ** <span class="num">3</span>
+
         b0 = (-t3 + <span class="num">3</span>*t2 - <span class="num">3</span>*ts + <span class="num">1</span>) / <span class="num">6.0</span>
         b1 = (<span class="num">3</span>*t3 - <span class="num">6</span>*t2 + <span class="num">4</span>) / <span class="num">6.0</span>
         b2 = (-<span class="num">3</span>*t3 + <span class="num">3</span>*t2 + <span class="num">3</span>*ts + <span class="num">1</span>) / <span class="num">6.0</span>
         b3 = t3 / <span class="num">6.0</span>
-        px = (b0*control_x[i] + b1*control_x[i+<span class="num">1</span>]
-              + b2*control_x[i+<span class="num">2</span>] + b3*control_x[i+<span class="num">3</span>])
-        py = (b0*control_y[i] + b1*control_y[i+<span class="num">1</span>]
-              + b2*control_y[i+<span class="num">2</span>] + b3*control_y[i+<span class="num">3</span>])
-        all_px.<span class="fn">extend</span>(px); all_py.<span class="fn">extend</span>(py)
+
+        px = (b0 * control_x[i] + b1 * control_x[i+<span class="num">1</span>]
+              + b2 * control_x[i+<span class="num">2</span>] + b3 * control_x[i+<span class="num">3</span>])
+        py = (b0 * control_y[i] + b1 * control_y[i+<span class="num">1</span>]
+              + b2 * control_y[i+<span class="num">2</span>] + b3 * control_y[i+<span class="num">3</span>])
+
+        all_px.extend(px)
+        all_py.extend(py)
+
+        <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(<span class="num">0</span>, steps + <span class="num">1</span>, <span class="num">10</span>):
+            t_val = j / steps
+            <span class="fn">print</span>(<span class="str">f&quot;Seg{i}:    {t_val:&lt;8.2f} {b0[j]:&lt;10.4f} {b1[j]:&lt;10.4f} {b2[j]:&lt;10.4f} {b3[j]:&lt;10.4f} {px[j]:&lt;10.2f} {py[j]:&lt;10.2f}&quot;</span>)
+
     <span class="kw">return</span> all_px, all_py
 
-<span class="fn">print</span>(<span class="str">"Enter control points (enter 'done' when finished):"</span>)
+<span class="fn">print</span>(<span class="str">&quot;=== Uniform Cubic B-Spline ===&quot;</span>)
+<span class="fn">print</span>(<span class="str">&quot;Enter control points (enter &#x27;</span>done<span class="str">&#x27; when finished):&quot;</span>)
 ctrl_x, ctrl_y = [], []
 <span class="kw">while</span> <span class="kw">True</span>:
-    inp = <span class="fn">input</span>(<span class="str">"  x y (or 'done'): "</span>).<span class="fn">strip</span>()
-    <span class="kw">if</span> inp.<span class="fn">lower</span>() == <span class="str">"done"</span>: <span class="kw">break</span>
-    px, py = <span class="fn">map</span>(<span class="kw">int</span>, inp.<span class="fn">split</span>())
-    ctrl_x.append(px); ctrl_y.append(py)
+    inp = <span class="fn">input</span>(<span class="str">&quot;  x y (or &#x27;</span>done<span class="str">&#x27;): &quot;</span>).strip()
+    <span class="kw">if</span> inp.lower() == <span class="str">&quot;done&quot;</span>:
+        <span class="kw">break</span>
+    <span class="kw">try</span>:
+        px, py = <span class="fn">map</span>(<span class="fn">int</span>, inp.split())
+        ctrl_x.append(px)
+        ctrl_y.append(py)
+    <span class="kw">except</span>:
+        <span class="fn">print</span>(<span class="str">&quot;  Invalid. Enter: x y&quot;</span>)
 
-px, py = <span class="fn">b_spline_curve</span>(ctrl_x, ctrl_y)
-fig, ax = plt.<span class="fn">subplots</span>()
-ax.<span class="fn">plot</span>(ctrl_x, ctrl_y, <span class="str">"w--"</span>, label=<span class="str">"Control polygon"</span>)
-ax.<span class="fn">plot</span>(px, py, <span class="str">"yellow"</span>, linewidth=<span class="num">2.5</span>, label=<span class="str">"B-Spline curve"</span>)
-plt.<span class="fn">show</span>()</pre></div>
+<span class="kw">if</span> <span class="fn">len</span>(ctrl_x) &lt; <span class="num">4</span>:
+    <span class="fn">print</span>(<span class="str">&quot;Need at least 4 control points!&quot;</span>)
+    <span class="kw">exit</span>()
+
+<span class="fn">print</span>(<span class="str">f&quot;\nControl points ({len(ctrl_x)}):&quot;</span>)
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(ctrl_x)):
+    <span class="fn">print</span>(<span class="str">f&quot;  P{i}: ({ctrl_x[i]}, {ctrl_y[i]})&quot;</span>)
+
+px, py = b_spline_curve(ctrl_x, ctrl_y)
+
+fig, ax = plt.subplots(figsize=(<span class="num">8</span>, <span class="num">6</span>))
+ax.set_title(<span class="str">&quot;Uniform Cubic B-Spline Curve&quot;</span>, color=<span class="str">&quot;white&quot;</span>, fontsize=<span class="num">13</span>)
+ax.axhline(<span class="num">0</span>, color=<span class="str">&quot;gray&quot;</span>, linewidth=<span class="num">0.8</span>, alpha=<span class="num">0.3</span>)
+ax.axvline(<span class="num">0</span>, color=<span class="str">&quot;gray&quot;</span>, linewidth=<span class="num">0.8</span>, alpha=<span class="num">0.3</span>)
+
+all_x = ctrl_x + [<span class="fn">round</span>(p) <span class="kw">for</span> p <span class="kw">in</span> px]
+all_y = ctrl_y + [<span class="fn">round</span>(p) <span class="kw">for</span> p <span class="kw">in</span> py]
+margin = <span class="num">30</span>
+ax.set_xlim(<span class="fn">min</span>(all_x) - margin, <span class="fn">max</span>(all_x) + margin)
+ax.set_ylim(<span class="fn">min</span>(all_y) - margin, <span class="fn">max</span>(all_y) + margin)
+ax.set_aspect(<span class="str">&quot;equal&quot;</span>)
+ax.grid(<span class="kw">True</span>, alpha=<span class="num">0.3</span>)
+
+seg_colors = [<span class="str">&quot;yellow&quot;</span>, <span class="str">&quot;lime&quot;</span>, <span class="str">&quot;cyan&quot;</span>, <span class="str">&quot;magenta&quot;</span>, <span class="str">&quot;orange&quot;</span>, <span class="str">&quot;pink&quot;</span>]
+n_segments = <span class="fn">len</span>(ctrl_x) - <span class="num">3</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n_segments):
+    start = i * <span class="num">51</span>
+    end = (i + <span class="num">1</span>) * <span class="num">51</span>
+    <span class="kw">if</span> end &lt;= <span class="fn">len</span>(px):
+        ax.plot(px[start:end], py[start:end],
+                color=seg_colors[i % <span class="fn">len</span>(seg_colors)], linewidth=<span class="num">2.5</span>,
+                label=<span class="str">f&quot;Segment {i}&quot;</span> <span class="kw">if</span> i &lt; <span class="num">6</span> <span class="kw">else</span> <span class="kw">None</span>)
+
+ax.plot(ctrl_x, ctrl_y, <span class="str">&quot;w--&quot;</span>, linewidth=<span class="num">1.5</span>, label=<span class="str">&quot;Control polygon&quot;</span>)
+ax.scatter(ctrl_x, ctrl_y, c=<span class="str">&quot;red&quot;</span>, s=<span class="num">80</span>, zorder=<span class="num">5</span>, edgecolors=<span class="str">&quot;white&quot;</span>)
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(ctrl_x)):
+    ax.annotate(<span class="str">f&quot;P{i}({ctrl_x[i]},{ctrl_y[i]})&quot;</span>, (ctrl_x[i], ctrl_y[i]),
+                xytext=(<span class="num">8</span>, <span class="num">8</span>), textcoords=<span class="str">&quot;offset points&quot;</span>,
+                color=<span class="str">&quot;red&quot;</span>, fontsize=<span class="num">9</span>, fontweight=<span class="str">&quot;bold&quot;</span>)
+
+info = (
+    <span class="str">f&quot;Control points: {len(ctrl_x)}\n&quot;</span>
+    <span class="str">f&quot;Segments: {n_segments}\n&quot;</span>
+    <span class="str">f&quot;Uniform cubic B-spline\n&quot;</span>
+    <span class="str">f&quot;C² continuous (smooth)&quot;</span>
+)
+ax.text(<span class="num">0.02</span>, <span class="num">0.98</span>, info, transform=ax.transAxes,
+        fontsize=<span class="num">10</span>, verticalalignment=<span class="str">&quot;top&quot;</span>, color=<span class="str">&quot;black&quot;</span>,
+        bbox=dict(boxstyle=<span class="str">&quot;round&quot;</span>, facecolor=<span class="str">&quot;wheat&quot;</span>, alpha=<span class="num">0.9</span>))
+
+ax.set_xlabel(<span class="str">&quot;X&quot;</span>, color=<span class="str">&quot;white&quot;</span>)
+ax.set_ylabel(<span class="str">&quot;Y&quot;</span>, color=<span class="str">&quot;white&quot;</span>)
+ax.legend(fontsize=<span class="num">9</span>, loc=<span class="str">&quot;upper left&quot;</span>)
+ax.set_facecolor(<span class="str">&quot;#2b2b2b&quot;</span>)
+ax.tick_params(colors=<span class="str">&quot;white&quot;</span>)
+ax.xaxis.label.set_color(<span class="str">&quot;white&quot;</span>)
+ax.yaxis.label.set_color(<span class="str">&quot;white&quot;</span>)
+fig.patch.set_facecolor(<span class="str">&quot;#2b2b2b&quot;</span>)
+
+plt.tight_layout()
+plt.show()
+</pre></div>
     <div class="section-label">12.4 Interactive Simulation</div>
     <div class="canvas-wrapper">
       <div class="canvas-controls">
