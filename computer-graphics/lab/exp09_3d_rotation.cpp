@@ -125,6 +125,13 @@ void rotateAboutAxis(Point3D &p, Point3D a1, Point3D a2, float angle) {
 // MAIN FUNCTION
 // ===================================================================
 int main() {
+    float angle1, angle2;
+    printf("=== 3D Rotation About Arbitrary Axis ===\n");
+    printf("Enter rotation angle 1 (degrees): ");
+    scanf("%f", &angle1);
+    printf("Enter rotation angle 2 (degrees): ");
+    scanf("%f", &angle2);
+
     initwindow(640, 480, "3D Rotation About Arbitrary Axis");
 
     // Define a cube centered at (300, 200, 0)
@@ -143,7 +150,9 @@ int main() {
     // Draw original cube (WHITE)
     drawCube(cube, WHITE);
     outtextxy(10, 10, "Experiment 09: 3D Rotation About Arbitrary Axis");
-    outtextxy(10, 30, "White = Original | Yellow = 45deg | Cyan = 90deg");
+    char infoBuf[128];
+    sprintf(infoBuf, "White = Original | Yellow = %.0fdeg | Cyan = %.0fdeg", angle1, angle2);
+    outtextxy(10, 30, infoBuf);
 
     // Define arbitrary axis: diagonal from front-top-left to back-bottom-right
     Point3D a1 = {260, 160, -40};   // Start of axis

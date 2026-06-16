@@ -77,6 +77,17 @@ void rotatePoint(int x, int y, int cx, int cy, float angle, int &xOut, int &yOut
 // MAIN FUNCTION
 // ===================================================================
 int main() {
+    float lineAngle1, lineAngle2, triAngle1, triAngle2;
+    printf("=== 2D Rotation Transformation ===\n");
+    printf("Line rotation angle 1 (degrees): ");
+    scanf("%f", &lineAngle1);
+    printf("Line rotation angle 2 (degrees): ");
+    scanf("%f", &lineAngle2);
+    printf("Triangle rotation angle 1 (degrees): ");
+    scanf("%f", &triAngle1);
+    printf("Triangle rotation angle 2 (degrees): ");
+    scanf("%f", &triAngle2);
+
     initwindow(640, 480, "2D Rotation Transformation");
 
     // ================================================================
@@ -89,16 +100,18 @@ int main() {
     drawLine(lx1, ly1, lx2, ly2, WHITE);
     outtextxy(lx1, ly1 + 10, "Original");
 
-    // Rotate by 45 degrees
+    // Rotate by user-specified angle 1
     int rx, ry;
-    rotatePoint(lx2, ly2, lx1, ly1, 45, rx, ry);
+    rotatePoint(lx2, ly2, lx1, ly1, lineAngle1, rx, ry);
     drawLine(lx1, ly1, rx, ry, YELLOW);
-    outtextxy(rx + 5, ry, "Rotated 45 deg");
+    char buf1[32]; sprintf(buf1, "Rotated %.0f deg", lineAngle1);
+    outtextxy(rx + 5, ry, buf1);
 
-    // Rotate by 90 degrees
-    rotatePoint(lx2, ly2, lx1, ly1, 90, rx, ry);
+    // Rotate by user-specified angle 2
+    rotatePoint(lx2, ly2, lx1, ly1, lineAngle2, rx, ry);
     drawLine(lx1, ly1, rx, ry, GREEN);
-    outtextxy(rx + 5, ry, "Rotated 90 deg");
+    char buf2[32]; sprintf(buf2, "Rotated %.0f deg", lineAngle2);
+    outtextxy(rx + 5, ry, buf2);
 
     // ================================================================
     // PART 2: Rotate a TRIANGLE about its centroid
@@ -117,20 +130,22 @@ int main() {
     drawTriangle(x1, y1, x2, y2, x3, y3, WHITE);
     outtextxy(cx - 30, cy, "Original");
 
-    // Rotated by 60 degrees
+    // Rotated by user-specified angle 1
     int rx1, ry1, rx2, ry2, rx3, ry3;
-    rotatePoint(x1, y1, cx, cy, 60, rx1, ry1);
-    rotatePoint(x2, y2, cx, cy, 60, rx2, ry2);
-    rotatePoint(x3, y3, cx, cy, 60, rx3, ry3);
+    rotatePoint(x1, y1, cx, cy, triAngle1, rx1, ry1);
+    rotatePoint(x2, y2, cx, cy, triAngle1, rx2, ry2);
+    rotatePoint(x3, y3, cx, cy, triAngle1, rx3, ry3);
     drawTriangle(rx1, ry1, rx2, ry2, rx3, ry3, MAGENTA);
-    outtextxy(cx - 30, cy + 80, "Rotated 60 deg");
+    char buf3[32]; sprintf(buf3, "Rotated %.0f deg", triAngle1);
+    outtextxy(cx - 30, cy + 80, buf3);
 
-    // Rotated by 120 degrees
-    rotatePoint(x1, y1, cx, cy, 120, rx1, ry1);
-    rotatePoint(x2, y2, cx, cy, 120, rx2, ry2);
-    rotatePoint(x3, y3, cx, cy, 120, rx3, ry3);
+    // Rotated by user-specified angle 2
+    rotatePoint(x1, y1, cx, cy, triAngle2, rx1, ry1);
+    rotatePoint(x2, y2, cx, cy, triAngle2, rx2, ry2);
+    rotatePoint(x3, y3, cx, cy, triAngle2, rx3, ry3);
     drawTriangle(rx1, ry1, rx2, ry2, rx3, ry3, CYAN);
-    outtextxy(cx - 30, cy + 160, "Rotated 120 deg");
+    char buf4[32]; sprintf(buf4, "Rotated %.0f deg", triAngle2);
+    outtextxy(cx - 30, cy + 160, buf4);
 
     outtextxy(10, 10, "Experiment 07: 2D Rotation");
     outtextxy(10, 30, "Rotation about line-start / triangle-centroid");

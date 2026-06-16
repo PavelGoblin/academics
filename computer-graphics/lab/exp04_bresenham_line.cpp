@@ -96,21 +96,31 @@ void bresenhamLine(int x1, int y1, int x2, int y2) {
 // MAIN FUNCTION
 // ===================================================================
 int main() {
+    int cx, cy, len;
+    printf("=== Bresenham Line Algorithm ===\n");
+    printf("Enter center point (cx cy): ");
+    scanf("%d %d", &cx, &cy);
+    printf("Enter line length: ");
+    scanf("%d", &len);
+
     initwindow(640, 480, "Bresenham Line Algorithm");
 
-    int cx = 300, cy = 200;
+    int half = len / 2;
+    int qtr = (int)(len * 0.4);
 
-    bresenhamLine(cx, cy, cx + 150, cy);
-    bresenhamLine(cx, cy, cx + 100, cy - 80);
-    bresenhamLine(cx, cy, cx, cy - 150);
-    bresenhamLine(cx, cy, cx - 100, cy - 80);
-    bresenhamLine(cx, cy, cx - 150, cy);
-    bresenhamLine(cx, cy, cx - 100, cy + 80);
-    bresenhamLine(cx, cy, cx, cy + 150);
-    bresenhamLine(cx, cy, cx + 100, cy + 80);
+    bresenhamLine(cx, cy, cx + half, cy);
+    bresenhamLine(cx, cy, cx + qtr, cy - qtr);
+    bresenhamLine(cx, cy, cx, cy - half);
+    bresenhamLine(cx, cy, cx - qtr, cy - qtr);
+    bresenhamLine(cx, cy, cx - half, cy);
+    bresenhamLine(cx, cy, cx - qtr, cy + qtr);
+    bresenhamLine(cx, cy, cx, cy + half);
+    bresenhamLine(cx, cy, cx + qtr, cy + qtr);
 
     outtextxy(10, 10, "Bresenham's Line Algorithm (Integer Arithmetic)");
-    outtextxy(10, 30, "Lines in all 8 octants from center (300, 200)");
+    char buf[64];
+    sprintf(buf, "Lines in all 8 octants from center (%d, %d)", cx, cy);
+    outtextxy(10, 30, buf);
 
     getch();
     closegraph();

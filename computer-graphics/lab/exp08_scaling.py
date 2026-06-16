@@ -1,10 +1,8 @@
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 
-
 def scale_point(x, y, fx, fy, sx, sy):
     return round(fx + (x - fx) * sx), round(fy + (y - fy) * sy)
-
 
 def draw_triangle(ax, x1, y1, x2, y2, x3, y3, color, label=None):
     tri = mpatches.Polygon(
@@ -13,88 +11,90 @@ def draw_triangle(ax, x1, y1, x2, y2, x3, y3, color, label=None):
     )
     ax.add_patch(tri)
 
+print("=== Triangle Vertices ===")
+x1 = int(input("x1 = "))
+y1 = int(input("y1 = "))
+x2 = int(input("x2 = "))
+y2 = int(input("y2 = "))
+x3 = int(input("x3 = "))
+y3 = int(input("y3 = "))
 
-def run():
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5.5))
-    fig.suptitle("2D Scaling Transformation", fontsize=13)
+print("\n=== Scaling ===")
+fx = int(input("fixed point x = "))
+fy = int(input("fixed point y = "))
+sx = float(input("scale x (sx) = "))
+sy = float(input("scale y (sy) = "))
 
-    # ---- Part 1: Scale a RECTANGLE ----
-    ax1.set_title("Scaling: Rectangle")
-    ax1.axhline(0, color='white', linewidth=0.8, alpha=0.3)
-    ax1.axvline(0, color='white', linewidth=0.8, alpha=0.3)
-    ax1.set_xlim(-50, 350)
-    ax1.set_ylim(-50, 280)
-    ax1.set_aspect("equal")
-    ax1.grid(True, alpha=0.3)
+s1 = scale_point(x1, y1, fx, fy, sx, sy)
+s2 = scale_point(x2, y2, fx, fy, sx, sy)
+s3 = scale_point(x3, y3, fx, fy, sx, sy)
 
-    rx1, ry1 = 50, 50
-    rx2, ry2 = 150, 150
-    fx = (rx1 + rx2) // 2
-    fy = (ry1 + ry2) // 2
+print(f"\n--- 2D Scaling ---")
+print(f"Fixed point: ({fx}, {fy})")
+print(f"Scale factors: sx={sx}, sy={sy}")
+print(f"\nFormula: x' = fx + (x - fx) * sx")
+print(f"         y' = fy + (y - fy) * sy")
 
-    rect_orig = mpatches.Rectangle(
-        (rx1, ry1), rx2 - rx1, ry2 - ry1,
-        fill=False, edgecolor="white", linewidth=2, label="Original"
-    )
-    ax1.add_patch(rect_orig)
+print(f"\n{'Vertex':<8} {'Original':<16} {'Scaled':<16} {'Calculation':<30}")
+print("-" * 72)
+for (ox, oy), (sx_p, sy_p), label in [
+    ((x1, y1), s1, "A"), ((x2, y2), s2, "B"), ((x3, y3), s3, "C")
+]:
+    print(f"{label:<8} ({ox:<3},{oy:<3})        ({sx_p:<3},{sy_p:<3})        "
+          f"({ox}-{fx})*{sx}, ({oy}-{fy})*{sy})")
 
-    for sx, sy, color, label in [
-        (1.5, 1.5, "yellow", "Scaled 1.5x (uniform)"),
-        (2.0, 0.5, "cyan", "Scaled (2x, 0.5x) (differential)")
-    ]:
-        p1 = scale_point(rx1, ry1, fx, fy, sx, sy)
-        p2 = scale_point(rx2, ry2, fx, fy, sx, sy)
-        rect = mpatches.Rectangle(
-            p1, p2[0] - p1[0], p2[1] - p1[1],
-            fill=False, edgecolor=color, linewidth=2, label=label
-        )
-        ax1.add_patch(rect)
+fig, ax = plt.subplots(figsize=(8, 7))
+ax.set_title(f"2D Scaling: sx={sx}, sy={sy} about ({fx},{fy})", color="white", fontsize=13)
 
-    ax1.scatter([fx], [fy], c="red", s=50, zorder=4)
-    ax1.annotate("Center", (fx, fy), xytext=(5, 8),
-                 textcoords="offset points", color="red", fontsize=8)
+all_x = [x1, x2, x3, s1[0], s2[0], s3[0], fx]
+all_y = [y1, y2, y3, s1[1], s2[1], s3[1], fy]
+margin = 30 + max(
+    max(all_x) - min(all_x), max(all_y) - min(all_y)
+) // 2
 
-    # ---- Part 2: Scale a TRIANGLE ----
-    ax2.set_title("Scaling: Triangle")
-    ax2.axhline(0, color='white', linewidth=0.8, alpha=0.3)
-    ax2.axvline(0, color='white', linewidth=0.8, alpha=0.3)
-    ax2.set_xlim(-50, 600)
-    ax2.set_ylim(-50, 450)
-    ax2.set_aspect("equal")
-    ax2.grid(True, alpha=0.3)
+ax.set_xlim(min(all_x) - margin, max(all_x) + margin)
+ax.set_ylim(min(all_y) - margin, max(all_y) + margin)
+ax.set_aspect("equal")
+ax.grid(True, alpha=0.3)
 
-    x1, y1 = 350, 80
-    x2, y2 = 450, 200
-    x3, y3 = 250, 200
-    tfx = (x1 + x2 + x3) // 3
-    tfy = (y1 + y2 + y3) // 3
+ax.axhline(0, color="gray", linewidth=0.8, alpha=0.3)
+ax.axvline(0, color="gray", linewidth=0.8, alpha=0.3)
 
-    draw_triangle(ax2, x1, y1, x2, y2, x3, y3, "white", "Original")
+draw_triangle(ax, x1, y1, x2, y2, x3, y3, "white", "Original")
+draw_triangle(ax, s1[0], s1[1], s2[0], s2[1], s3[0], s3[1], "lime", f"Scaled (sx={sx}, sy={sy})")
 
-    p = [scale_point(x1, y1, tfx, tfy, 1.8, 1.8),
-         scale_point(x2, y2, tfx, tfy, 1.8, 1.8),
-         scale_point(x3, y3, tfx, tfy, 1.8, 1.8)]
-    draw_triangle(ax2, p[0][0], p[0][1], p[1][0], p[1][1],
-                  p[2][0], p[2][1], "magenta", "Scaled 1.8x")
+ax.scatter([x1, x2, x3], [y1, y2, y3], c="white", s=60, zorder=4, edgecolors="gray")
+ax.scatter([s1[0], s2[0], s3[0]], [s1[1], s2[1], s3[1]], c="lime", s=60, zorder=4, edgecolors="darkgreen")
+ax.scatter([fx], [fy], c="red", s=120, zorder=5, marker="*", edgecolors="darkred")
+ax.annotate(f"Fixed({fx},{fy})", (fx, fy), xytext=(8, -12),
+            textcoords="offset points", color="red", fontsize=10, fontweight="bold")
 
-    ax2.scatter([tfx], [tfy], c="red", s=50, zorder=4)
-    ax2.annotate("Centroid", (tfx, tfy), xytext=(5, 8),
-                 textcoords="offset points", color="red", fontsize=8)
+for (ox, oy), (rx, ry), label in [
+    ((x1, y1), s1, "A"), ((x2, y2), s2, "B"), ((x3, y3), s3, "C")
+]:
+    ax.annotate(f"{label}({ox},{oy})", (ox, oy), xytext=(5, 8),
+                textcoords="offset points", color="white", fontsize=9, fontweight="bold")
+    ax.annotate(f"{label}'({rx},{ry})", (rx, ry), xytext=(5, 8),
+                textcoords="offset points", color="lime", fontsize=9, fontweight="bold")
 
-    for ax in [ax1, ax2]:
-        ax.set_xlabel("X")
-        ax.set_ylabel("Y")
-        ax.legend(fontsize=7, loc="lower right")
-        ax.set_facecolor("#2b2b2b")
-        ax.tick_params(colors="white")
-        ax.xaxis.label.set_color("white")
-        ax.yaxis.label.set_color("white")
-        ax.title.set_color("white")
+info = (
+    f"Fixed point: ({fx},{fy})\n"
+    f"sx = {sx}, sy = {sy}\n"
+    f"x' = fx + (x-fx)*sx\n"
+    f"y' = fy + (y-fy)*sy"
+)
+ax.text(0.02, 0.98, info, transform=ax.transAxes,
+        fontsize=10, verticalalignment="top", color="black",
+        bbox=dict(boxstyle="round", facecolor="wheat", alpha=0.9))
 
-    fig.patch.set_facecolor("#2b2b2b")
-    plt.tight_layout()
-    plt.show()
+ax.set_xlabel("X", color="white")
+ax.set_ylabel("Y", color="white")
+ax.legend(fontsize=9, loc="lower right")
+ax.set_facecolor("#2b2b2b")
+ax.tick_params(colors="white")
+ax.xaxis.label.set_color("white")
+ax.yaxis.label.set_color("white")
+fig.patch.set_facecolor("#2b2b2b")
 
-
-if __name__ == "__main__":
-    run()
+plt.tight_layout()
+plt.show()

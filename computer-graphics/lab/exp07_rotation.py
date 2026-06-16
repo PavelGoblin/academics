@@ -2,7 +2,6 @@ import math
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 
-
 def rotate_point(x, y, cx, cy, angle):
     rad = math.radians(angle)
     cos_a, sin_a = math.cos(rad), math.sin(rad)
@@ -11,7 +10,6 @@ def rotate_point(x, y, cx, cy, angle):
     y_rot = x_rel * sin_a + y_rel * cos_a
     return round(cx + x_rot), round(cy + y_rot)
 
-
 def draw_triangle(ax, x1, y1, x2, y2, x3, y3, color, label=None):
     tri = mpatches.Polygon(
         [(x1, y1), (x2, y2), (x3, y3)],
@@ -19,78 +17,92 @@ def draw_triangle(ax, x1, y1, x2, y2, x3, y3, color, label=None):
     )
     ax.add_patch(tri)
 
+print("=== Triangle Vertices ===")
+x1 = int(input("x1 = "))
+y1 = int(input("y1 = "))
+x2 = int(input("x2 = "))
+y2 = int(input("y2 = "))
+x3 = int(input("x3 = "))
+y3 = int(input("y3 = "))
 
-def run():
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5.5))
-    fig.suptitle("2D Rotation Transformation", fontsize=13)
+print("\n=== Rotation ===")
+cx = int(input("pivot x = "))
+cy = int(input("pivot y = "))
+angle = float(input("angle (degrees) = "))
 
-    # ---- Part 1: Rotate a LINE ----
-    ax1.set_title("Rotation: Line")
-    ax1.axhline(0, color='white', linewidth=0.8, alpha=0.3)
-    ax1.axvline(0, color='white', linewidth=0.8, alpha=0.3)
-    ax1.set_xlim(-50, 300)
-    ax1.set_ylim(-50, 500)
-    ax1.set_aspect("equal")
-    ax1.grid(True, alpha=0.3)
+r1 = rotate_point(x1, y1, cx, cy, angle)
+r2 = rotate_point(x2, y2, cx, cy, angle)
+r3 = rotate_point(x3, y3, cx, cy, angle)
 
-    lx1, ly1 = 100, 300
-    lx2, ly2 = 250, 300
+rad = math.radians(angle)
+cos_a = round(math.cos(rad), 4)
+sin_a = round(math.sin(rad), 4)
 
-    ax1.plot([lx1, lx2], [ly1, ly2], "w-", linewidth=2, label="Original")
-    ax1.scatter([lx1], [ly1], c="red", s=50, zorder=4)
+print(f"\n--- 2D Rotation ---")
+print(f"Pivot: ({cx}, {cy})")
+print(f"Angle: {angle} deg ({rad:.4f} rad)")
+print(f"cos = {cos_a}, sin = {sin_a}")
+print(f"\nRotation formula: x' = cx + (x-cx)*cos - (y-cy)*sin")
+print(f"                 y' = cy + (x-cx)*sin + (y-cy)*cos")
 
-    for deg, color, label in [(45, "yellow", "Rotated 45"), (90, "lime", "Rotated 90")]:
-        rx, ry = rotate_point(lx2, ly2, lx1, ly1, deg)
-        ax1.plot([lx1, rx], [ly1, ry], color=color, linewidth=2, label=label)
-        ax1.scatter([rx], [ry], c=color, s=40, zorder=4)
-        ax1.annotate(label, (rx, ry), xytext=(5, 5),
-                     textcoords="offset points", color=color, fontsize=8)
+print(f"\n{'Vertex':<8} {'Original':<16} {'Rotated':<16} {'Calculation':<30}")
+print("-" * 72)
+for (ox, oy), (rx, ry), label in [
+    ((x1, y1), r1, "A"), ((x2, y2), r2, "B"), ((x3, y3), r3, "C")
+]:
+    x_rel, y_rel = ox - cx, oy - cy
+    print(f"{label:<8} ({ox:<3},{oy:<3})        ({rx:<3},{ry:<3})        "
+          f"({x_rel}*{cos_a} - {y_rel}*{sin_a}, {x_rel}*{sin_a} + {y_rel}*{cos_a})")
 
-    ax1.annotate("Pivot", (lx1, ly1), xytext=(5, 8),
-                 textcoords="offset points", color="red", fontsize=8)
+fig, ax = plt.subplots(figsize=(8, 7))
+ax.set_title(f"2D Rotation: {angle} deg about ({cx},{cy})", color="white", fontsize=13)
 
-    # ---- Part 2: Rotate a TRIANGLE ----
-    ax2.set_title("Rotation: Triangle")
-    ax2.axhline(0, color='white', linewidth=0.8, alpha=0.3)
-    ax2.axvline(0, color='white', linewidth=0.8, alpha=0.3)
-    ax2.set_xlim(-50, 600)
-    ax2.set_ylim(-50, 400)
-    ax2.set_aspect("equal")
-    ax2.grid(True, alpha=0.3)
+all_x = [x1, x2, x3, r1[0], r2[0], r3[0], cx]
+all_y = [y1, y2, y3, r1[1], r2[1], r3[1], cy]
+margin = 30
+max_r = max(max(all_x), max(all_y), -min(all_x), -min(all_y))
+ax.set_xlim(-max_r - margin, max_r + margin)
+ax.set_ylim(-max_r - margin, max_r + margin)
+ax.set_aspect("equal")
+ax.grid(True, alpha=0.3)
 
-    x1, y1 = 400, 80
-    x2, y2 = 500, 200
-    x3, y3 = 300, 200
-    cx = (x1 + x2 + x3) // 3
-    cy = (y1 + y2 + y3) // 3
+ax.axhline(0, color="gray", linewidth=0.8, alpha=0.3)
+ax.axvline(0, color="gray", linewidth=0.8, alpha=0.3)
 
-    draw_triangle(ax2, x1, y1, x2, y2, x3, y3, "white", "Original")
-    ax2.scatter([cx], [cy], c="red", s=50, zorder=4)
-    ax2.annotate("Centroid", (cx, cy), xytext=(5, 8),
-                 textcoords="offset points", color="red", fontsize=8)
+draw_triangle(ax, x1, y1, x2, y2, x3, y3, "white", "Original")
+draw_triangle(ax, r1[0], r1[1], r2[0], r2[1], r3[0], r3[1], "magenta", f"Rotated {angle} deg")
 
-    for deg, color, label in [(60, "magenta", "Rotated 60"), (120, "cyan", "Rotated 120")]:
-        r = [rotate_point(x1, y1, cx, cy, deg),
-             rotate_point(x2, y2, cx, cy, deg),
-             rotate_point(x3, y3, cx, cy, deg)]
-        draw_triangle(ax2, r[0][0], r[0][1], r[1][0], r[1][1],
-                      r[2][0], r[2][1], color, label)
-        ax2.scatter([r[0][0]], [r[0][1]], c=color, s=30, zorder=4)
+ax.scatter([x1, x2, x3], [y1, y2, y3], c="white", s=60, zorder=4, edgecolors="gray")
+ax.scatter([r1[0], r2[0], r3[0]], [r1[1], r2[1], r3[1]], c="magenta", s=60, zorder=4, edgecolors="darkmagenta")
+ax.scatter([cx], [cy], c="red", s=120, zorder=5, marker="*", edgecolors="darkred")
+ax.annotate(f"Pivot({cx},{cy})", (cx, cy), xytext=(8, -12),
+            textcoords="offset points", color="red", fontsize=10, fontweight="bold")
 
-    for ax in [ax1, ax2]:
-        ax.set_xlabel("X")
-        ax.set_ylabel("Y")
-        ax.legend(fontsize=7, loc="lower right")
-        ax.set_facecolor("#2b2b2b")
-        ax.tick_params(colors="white")
-        ax.xaxis.label.set_color("white")
-        ax.yaxis.label.set_color("white")
-        ax.title.set_color("white")
+for (ox, oy), (rx, ry), label in [
+    ((x1, y1), r1, "A"), ((x2, y2), r2, "B"), ((x3, y3), r3, "C")
+]:
+    ax.annotate(f"{label}({ox},{oy})", (ox, oy), xytext=(5, 8),
+                textcoords="offset points", color="white", fontsize=9, fontweight="bold")
+    ax.annotate(f"{label}'({rx},{ry})", (rx, ry), xytext=(5, 8),
+                textcoords="offset points", color="magenta", fontsize=9, fontweight="bold")
 
-    fig.patch.set_facecolor("#2b2b2b")
-    plt.tight_layout()
-    plt.show()
+info = (
+    f"Pivot: ({cx},{cy})\n"
+    f"Angle: {angle} deg\n"
+    f"cos = {cos_a}, sin = {sin_a}"
+)
+ax.text(0.02, 0.98, info, transform=ax.transAxes,
+        fontsize=10, verticalalignment="top", color="black",
+        bbox=dict(boxstyle="round", facecolor="wheat", alpha=0.9))
 
+ax.set_xlabel("X", color="white")
+ax.set_ylabel("Y", color="white")
+ax.legend(fontsize=9, loc="lower right")
+ax.set_facecolor("#2b2b2b")
+ax.tick_params(colors="white")
+ax.xaxis.label.set_color("white")
+ax.yaxis.label.set_color("white")
+fig.patch.set_facecolor("#2b2b2b")
 
-if __name__ == "__main__":
-    run()
+plt.tight_layout()
+plt.show()

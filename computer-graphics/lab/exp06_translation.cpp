@@ -48,6 +48,13 @@ void drawLine(int x1, int y1, int x2, int y2, int color) {
 // MAIN FUNCTION
 // ===================================================================
 int main() {
+    int tx, ty, triTx, triTy;
+    printf("=== 2D Translation Transformation ===\n");
+    printf("Line translation (tx ty): ");
+    scanf("%d %d", &tx, &ty);
+    printf("Triangle translation (tx ty): ");
+    scanf("%d %d", &triTx, &triTy);
+
     initwindow(640, 480, "2D Translation Transformation");
 
     // ================================================================
@@ -60,12 +67,9 @@ int main() {
     outtextxy(lx1, ly1 - 20, "Original Line");
 
     // Translated line (in YELLOW)
-    // We shift every point by (tx, ty)
-    int tx = 100, ty = 80;      // Translation distances
-    drawLine(lx1 + tx, ly1 + ty,   // New start = old start + (tx,ty)
-             lx2 + tx, ly2 + ty,   // New end   = old end   + (tx,ty)
+    drawLine(lx1 + tx, ly1 + ty,
+             lx2 + tx, ly2 + ty,
              YELLOW);
-    // Show the translation amount in a label
     char label[50];
     sprintf(label, "Translated (tx=%d, ty=%d)", tx, ty);
     outtextxy(lx1 + tx, ly1 + ty - 20, label);
@@ -81,15 +85,14 @@ int main() {
     outtextxy(x1 - 30, y1 - 20, "Original Triangle");
 
     // Translated triangle (in CYAN)
-    int ttx = 150, tty = 100;   // Translation for triangle
     drawTriangle(
-        x1 + ttx, y1 + tty,     // Translate vertex 1
-        x2 + ttx, y2 + tty,     // Translate vertex 2
-        x3 + ttx, y3 + tty,     // Translate vertex 3
+        x1 + triTx, y1 + triTy,
+        x2 + triTx, y2 + triTy,
+        x3 + triTx, y3 + triTy,
         CYAN
     );
-    sprintf(label, "Translated (tx=%d, ty=%d)", ttx, tty);
-    outtextxy(x1 + ttx - 30, y1 + tty - 20, label);
+    sprintf(label, "Translated (tx=%d, ty=%d)", triTx, triTy);
+    outtextxy(x1 + triTx - 30, y1 + triTy - 20, label);
 
     // Labels
     outtextxy(10, 10, "Experiment 06: 2D Translation");

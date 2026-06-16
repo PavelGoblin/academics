@@ -83,15 +83,31 @@ void midpointCircle(int xc, int yc, int r) {
 // MAIN FUNCTION
 // ===================================================================
 int main() {
+    int xc, yc, r, count;
+    printf("=== Midpoint Circle Algorithm ===\n");
+    printf("Enter center (xc yc): ");
+    scanf("%d %d", &xc, &yc);
+    printf("Enter number of circles: ");
+    scanf("%d", &count);
+
+    int *radii = (int*)malloc(count * sizeof(int));
+    printf("Enter %d radius values: ", count);
+    for (int i = 0; i < count; i++) scanf("%d", &radii[i]);
+
     initwindow(640, 480, "Midpoint Circle Algorithm");
 
-    midpointCircle(300, 200, 50);
-    midpointCircle(300, 200, 100);
-    midpointCircle(300, 200, 150);
+    int colors[] = {WHITE, YELLOW, CYAN, GREEN, LIGHTRED};
+    for (int i = 0; i < count; i++) {
+        setcolor(colors[i % 5]);
+        midpointCircle(xc, yc, radii[i]);
+    }
 
     outtextxy(10, 10, "Midpoint Circle Algorithm (Bresenham's Circle)");
-    outtextxy(10, 30, "Concentric circles: r = 50, 100, 150");
+    char buf[64];
+    sprintf(buf, "Center: (%d, %d) | Radii entered: %d circles", xc, yc, count);
+    outtextxy(10, 30, buf);
 
+    free(radii);
     getch();
     closegraph();
     return 0;

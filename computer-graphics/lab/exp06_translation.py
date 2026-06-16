@@ -1,86 +1,86 @@
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 
-
 def draw_triangle(ax, x1, y1, x2, y2, x3, y3, color, label=None):
-    triangle = mpatches.Polygon(
+    tri = mpatches.Polygon(
         [(x1, y1), (x2, y2), (x3, y3)],
         fill=False, edgecolor=color, linewidth=2, label=label
     )
-    ax.add_patch(triangle)
+    ax.add_patch(tri)
 
+print("=== Original Triangle ===")
+x1 = int(input("x1 = "))
+y1 = int(input("y1 = "))
+x2 = int(input("x2 = "))
+y2 = int(input("y2 = "))
+x3 = int(input("x3 = "))
+y3 = int(input("y3 = "))
 
-def run():
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
+print("\n=== Translation Vector ===")
+tx = int(input("tx = "))
+ty = int(input("ty = "))
 
-    # ---- Part 1: Translate a LINE ----
-    ax1.set_title("2D Translation: Line")
-    ax1.axhline(0, color='white', linewidth=0.8, alpha=0.3)
-    ax1.axvline(0, color='white', linewidth=0.8, alpha=0.3)
-    ax1.set_xlim(-50, 350)
-    ax1.set_ylim(-50, 280)
-    ax1.set_aspect("equal")
-    ax1.grid(True, alpha=0.3)
+nx1, ny1 = x1 + tx, y1 + ty
+nx2, ny2 = x2 + tx, y2 + ty
+nx3, ny3 = x3 + tx, y3 + ty
 
-    lx1, ly1 = 50, 50
-    lx2, ly2 = 200, 150
-    tx, ty = 100, 80
+print(f"\n--- 2D Translation ---")
+print(f"Original Triangle: ({x1},{y1}), ({x2},{y2}), ({x3},{y3})")
+print(f"Translation vector: tx={tx}, ty={ty}")
 
-    ax1.plot([lx1, lx2], [ly1, ly2], "w-", linewidth=2, label="Original Line")
-    ax1.plot([lx1 + tx, lx2 + tx], [ly1 + ty, ly2 + ty],
-             "y-", linewidth=2, label=f"Translated (tx={tx}, ty={ty})")
+print(f"\n{'Vertex':<8} {'Original':<16} {'Translated':<16}")
+print("-" * 42)
+print(f"{'A':<8} ({x1:<3},{y1:<3})        ({nx1:<3},{ny1:<3})")
+print(f"{'B':<8} ({x2:<3},{y2:<3})        ({nx2:<3},{ny2:<3})")
+print(f"{'C':<8} ({x3:<3},{y3:<3})        ({nx3:<3},{ny3:<3})")
 
-    ax1.scatter([lx1, lx2], [ly1, ly2], c="white", s=40, zorder=4)
-    ax1.scatter([lx1 + tx, lx2 + tx], [ly1 + ty, ly2 + ty],
-                c="yellow", s=40, zorder=4)
+fig, ax = plt.subplots(figsize=(8, 7))
+ax.set_title(f"2D Translation: tx={tx}, ty={ty}", color="white", fontsize=13)
 
-    ax1.annotate("Original", (lx1, ly1), xytext=(5, 8),
-                 textcoords="offset points", color="white", fontsize=8)
-    ax1.annotate("Translated", (lx1 + tx, ly1 + ty), xytext=(5, 8),
-                 textcoords="offset points", color="yellow", fontsize=8)
+all_x = [x1, x2, x3, nx1, nx2, nx3]
+all_y = [y1, y2, y3, ny1, ny2, ny3]
+margin = 30
+ax.set_xlim(min(all_x) - margin, max(all_x) + margin)
+ax.set_ylim(min(all_y) - margin, max(all_y) + margin)
+ax.set_aspect("equal")
+ax.grid(True, alpha=0.3)
 
-    # ---- Part 2: Translate a TRIANGLE ----
-    ax2.set_title("2D Translation: Triangle")
-    ax2.axhline(0, color='white', linewidth=0.8, alpha=0.3)
-    ax2.axvline(0, color='white', linewidth=0.8, alpha=0.3)
-    ax2.set_xlim(-50, 600)
-    ax2.set_ylim(-50, 350)
-    ax2.set_aspect("equal")
-    ax2.grid(True, alpha=0.3)
+ax.axhline(0, color="gray", linewidth=0.8, alpha=0.3)
+ax.axvline(0, color="gray", linewidth=0.8, alpha=0.3)
 
-    x1, y1 = 300, 200
-    x2, y2 = 400, 50
-    x3, y3 = 200, 50
-    ttx, tty = 150, 100
+draw_triangle(ax, x1, y1, x2, y2, x3, y3, "white", "Original")
+draw_triangle(ax, nx1, ny1, nx2, ny2, nx3, ny3, "cyan", f"Translated (tx={tx}, ty={ty})")
 
-    draw_triangle(ax2, x1, y1, x2, y2, x3, y3, "white", "Original Triangle")
-    draw_triangle(ax2, x1 + ttx, y1 + tty, x2 + ttx, y2 + tty,
-                  x3 + ttx, y3 + tty, "cyan",
-                  f"Translated (tx={ttx}, ty={tty})")
+ax.scatter([x1, x2, x3], [y1, y2, y3], c="white", s=60, zorder=4, edgecolors="gray")
+ax.scatter([nx1, nx2, nx3], [ny1, ny2, ny3], c="cyan", s=60, zorder=4, edgecolors="darkcyan")
 
-    ax2.scatter([x1, x2, x3], [y1, y2, y3], c="white", s=40, zorder=4)
-    ax2.scatter([x1 + ttx, x2 + ttx, x3 + ttx],
-                [y1 + tty, y2 + tty, y3 + tty], c="cyan", s=40, zorder=4)
+for (ox, oy), (nx, ny), label in [
+    ((x1, y1), (nx1, ny1), "A"), ((x2, y2), (nx2, ny2), "B"), ((x3, y3), (nx3, ny3), "C")
+]:
+    ax.annotate(f"{label}({ox},{oy})", (ox, oy), xytext=(5, 8),
+                textcoords="offset points", color="white", fontsize=9, fontweight="bold")
+    ax.annotate(f"{label}'({nx},{ny})", (nx, ny), xytext=(5, 8),
+                textcoords="offset points", color="cyan", fontsize=9, fontweight="bold")
+    ax.annotate("", xy=(nx, ny), xytext=(ox, oy),
+                arrowprops=dict(arrowstyle="->", color="yellow", lw=1.5, alpha=0.6))
 
-    ax2.annotate("Original", (x1, y1), xytext=(5, 8),
-                 textcoords="offset points", color="white", fontsize=8)
-    ax2.annotate("Translated", (x1 + ttx, y1 + tty), xytext=(5, 8),
-                 textcoords="offset points", color="cyan", fontsize=8)
+info = (
+    f"Translation: (x', y') = (x + tx, y + ty)\n"
+    f"x' = x + {tx}\n"
+    f"y' = y + {ty}"
+)
+ax.text(0.02, 0.98, info, transform=ax.transAxes,
+        fontsize=10, verticalalignment="top", color="black",
+        bbox=dict(boxstyle="round", facecolor="wheat", alpha=0.9))
 
-    for ax in [ax1, ax2]:
-        ax.set_xlabel("X")
-        ax.set_ylabel("Y")
-        ax.legend(fontsize=8, loc="lower right")
-        ax.set_facecolor("#2b2b2b")
-        ax.tick_params(colors="white")
-        ax.xaxis.label.set_color("white")
-        ax.yaxis.label.set_color("white")
-        ax.title.set_color("white")
+ax.set_xlabel("X", color="white")
+ax.set_ylabel("Y", color="white")
+ax.legend(fontsize=9, loc="lower right")
+ax.set_facecolor("#2b2b2b")
+ax.tick_params(colors="white")
+ax.xaxis.label.set_color("white")
+ax.yaxis.label.set_color("white")
+fig.patch.set_facecolor("#2b2b2b")
 
-    fig.patch.set_facecolor("#2b2b2b")
-    plt.tight_layout()
-    plt.show()
-
-
-if __name__ == "__main__":
-    run()
+plt.tight_layout()
+plt.show()

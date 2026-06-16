@@ -101,13 +101,18 @@ void drawAxes() {
 }
 
 int main() {
+    int x1, y1, x2, y2;
+    printf("=== Slope-Intercept Line Drawing ===\n");
+    printf("Enter start point (x1 y1): ");
+    scanf("%d %d", &x1, &y1);
+    printf("Enter end point   (x2 y2): ");
+    scanf("%d %d", &x2, &y2);
+
     initwindow(640, 480, "Slope-Intercept: y = mx + c");
 
     drawAxes();
 
     int ox = 50, oy = getmaxy() - 50;
-    int x1 = 100, y1 = 100;
-    int x2 = 400, y2 = 300;
 
     int px1 = ox + x1, py1 = oy - y1;
     int px2 = ox + x2, py2 = oy - y2;

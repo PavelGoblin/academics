@@ -66,6 +66,15 @@ void scalePoint(int x, int y, int fx, int fy, float sx, float sy, int &xOut, int
 // MAIN FUNCTION
 // ===================================================================
 int main() {
+    float sx1, sy1, sx2, sy2, triSx, triSy;
+    printf("=== 2D Scaling Transformation ===\n");
+    printf("Rectangle uniform scale factor (sx sy): ");
+    scanf("%f %f", &sx1, &sy1);
+    printf("Rectangle differential scale (sx sy): ");
+    scanf("%f %f", &sx2, &sy2);
+    printf("Triangle scale factor (sx sy): ");
+    scanf("%f %f", &triSx, &triSy);
+
     initwindow(640, 480, "2D Scaling Transformation");
 
     // ================================================================
@@ -83,20 +92,20 @@ int main() {
     drawRect(rx1, ry1, rx2, ry2, WHITE);
     outtextxy(rx1, ry1 - 15, "Original");
 
-    // UNIFORM SCALING: sx = sy = 1.5
-    // Object gets 50% bigger but keeps its shape
+    // UNIFORM SCALING with user factor
     int nrx1, nry1, nrx2, nry2;
-    scalePoint(rx1, ry1, fx, fy, 1.5f, 1.5f, nrx1, nry1);
-    scalePoint(rx2, ry2, fx, fy, 1.5f, 1.5f, nrx2, nry2);
+    scalePoint(rx1, ry1, fx, fy, sx1, sy1, nrx1, nry1);
+    scalePoint(rx2, ry2, fx, fy, sx1, sy1, nrx2, nry2);
     drawRect(nrx1, nry1, nrx2, nry2, YELLOW);
-    outtextxy(nrx1, nry1 - 15, "Scaled 1.5x (uniform)");
+    char lbl1[64]; sprintf(lbl1, "Scaled %.1fx,%.1fy (uniform)", sx1, sy1);
+    outtextxy(nrx1, nry1 - 15, lbl1);
 
-    // DIFFERENTIAL SCALING: sx = 2.0, sy = 0.5
-    // Object stretches horizontally, squashes vertically
-    scalePoint(rx1, ry1, fx, fy, 2.0f, 0.5f, nrx1, nry1);
-    scalePoint(rx2, ry2, fx, fy, 2.0f, 0.5f, nrx2, nry2);
+    // DIFFERENTIAL SCALING with user factors
+    scalePoint(rx1, ry1, fx, fy, sx2, sy2, nrx1, nry1);
+    scalePoint(rx2, ry2, fx, fy, sx2, sy2, nrx2, nry2);
     drawRect(nrx1, nry1, nrx2, nry2, CYAN);
-    outtextxy(nrx1, nry1 - 15, "Scaled (2x, 0.5x) (differential)");
+    char lbl2[64]; sprintf(lbl2, "Scaled (%.1fx, %.1fy) (diff)", sx2, sy2);
+    outtextxy(nrx1, nry1 - 15, lbl2);
 
     // ================================================================
     // PART 2: Scale a TRIANGLE
@@ -114,13 +123,14 @@ int main() {
     drawTriangle(x1, y1, x2, y2, x3, y3, WHITE);
     outtextxy(tfx - 20, tfy, "Original");
 
-    // Scale triangle 1.8x about its centroid
+    // Scale triangle with user factor
     int nx1, ny1, nx2, ny2, nx3, ny3;
-    scalePoint(x1, y1, tfx, tfy, 1.8f, 1.8f, nx1, ny1);
-    scalePoint(x2, y2, tfx, tfy, 1.8f, 1.8f, nx2, ny2);
-    scalePoint(x3, y3, tfx, tfy, 1.8f, 1.8f, nx3, ny3);
+    scalePoint(x1, y1, tfx, tfy, triSx, triSy, nx1, ny1);
+    scalePoint(x2, y2, tfx, tfy, triSx, triSy, nx2, ny2);
+    scalePoint(x3, y3, tfx, tfy, triSx, triSy, nx3, ny3);
     drawTriangle(nx1, ny1, nx2, ny2, nx3, ny3, MAGENTA);
-    outtextxy(tfx - 20, tfy + 100, "Scaled 1.8x");
+    char lbl3[64]; sprintf(lbl3, "Scaled %.1fx", triSx);
+    outtextxy(tfx - 20, tfy + 100, lbl3);
 
     outtextxy(10, 10, "Experiment 08: 2D Scaling Transformation");
     outtextxy(10, 30, "Uniform & Differential Scaling about Center");
