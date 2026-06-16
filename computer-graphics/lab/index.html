@@ -83,14 +83,14 @@
     <hr class="cover-divider">
     <div class="course-tag">CSE41P8 &middot; Computer Graphics</div>
     <div class="report-title">Lab Reports:<br>Lines, Transformations &amp; Curves</div>
-    <div class="report-subtitle">Labs 01 through 12 &mdash; Line Drawing, 2D/3D Transformations, Clipping &amp; Curves</div>
+    <div class="report-subtitle">Labs 01 through 12 &mdash; Line Drawing, 2D/3D Transformations, Clipping &amp; Curves &mdash; Python + C</div>
     <table class="meta-table">
       <tr><td>Student Name</td><td>Pavel</td></tr>
       <tr><td>Student ID</td><td>20-0-52-801-04</td></tr>
       <tr><td>Program</td><td>B.Sc. in CSE (4th Year, 1st Semester)</td></tr>
       <tr><td>Session</td><td>231 Term</td></tr>
       <tr><td>Labs Covered</td><td>01 through 12</td></tr>
-      <tr><td>Language</td><td>C (OpenGL / BGI)</td></tr>
+      <tr><td>Language</td><td>Python (matplotlib) + C (OpenGL / BGI)</td></tr>
     </table>
     <div class="cover-footer">Computer Graphics Laboratory &middot; BOU CSE</div>
   </div>
@@ -125,7 +125,7 @@
       <strong>y(t) = y1 + t &middot; (y2 - y1)</strong><br>
       where t &in; [0, 1], sampled at intervals of 1 / max(|dx|, |dy|)
     </div>
-    <div class="section-label">1.3 Source Code</div>
+    <div class="section-label">1.3 Source Code (C)</div>
     <div class="code-block"><pre><span class="pp">#include &lt;stdio.h&gt;
 #include &lt;graphics.h&gt;
 #include &lt;math.h&gt;</span>
@@ -165,6 +165,8 @@
     </div>
     <div class="section-label">1.5 Result</div>
     <p>The program successfully draws a straight line between any two given points. The parametric approach works for all slopes including vertical and horizontal lines.</p>
+    <div class="section-label">1.6 Python Implementation</div>
+    <p>See <strong>exp02_slope_intercept.py</strong> for the slope-intercept form implementation with interactive input and step-by-step calculation table. Also see <strong>exp03_dda_line.py</strong> for the parametric (DDA) approach in Python with full iteration trace.</p>
   </div>
 
   <!-- LAB 02 -->
@@ -181,30 +183,38 @@
       <strong>Case |dy| > |dx| (steep):</strong> y increments by 1, x += 1/m<br><br>
       Generalized: steps = max(|dx|,|dy|), xInc = dx/steps, yInc = dy/steps
     </div>
-    <div class="section-label">2.3 Source Code</div>
-    <div class="code-block"><pre><span class="pp">#include &lt;stdio.h&gt;
-#include &lt;graphics.h&gt;
-#include &lt;math.h&gt;</span>
+    <div class="section-label">2.3 Source Code (Python)</div>
+    <div class="code-block"><pre><span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt
 
-<span class="kw">void</span> <span class="fn">DDA</span>(<span class="kw">int</span> x1, <span class="kw">int</span> y1, <span class="kw">int</span> x2, <span class="kw">int</span> y2) {
-    <span class="kw">int</span> dx = x2 - x1, dy = y2 - y1;
-    <span class="kw">int</span> steps = (abs(dx) &gt; abs(dy)) ? abs(dx) : abs(dy);
-    <span class="kw">float</span> xInc = (<span class="kw">float</span>)dx / steps;
-    <span class="kw">float</span> yInc = (<span class="kw">float</span>)dy / steps;
-    <span class="kw">float</span> x = x1, y = y1;
-    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt;= steps; i++) {
-        putpixel((<span class="kw">int</span>)round(x), (<span class="kw">int</span>)round(y), CYAN);
-        x += xInc; y += yInc;
-    }
-}
+x1 = <span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"x1 = "</span>))
+y1 = <span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"y1 = "</span>))
+x2 = <span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"x2 = "</span>))
+y2 = <span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"y2 = "</span>))
 
-<span class="kw">int</span> <span class="fn">main</span>() {
-    <span class="kw">int</span> gd = DETECT, gm;
-    initgraph(&amp;gd, &amp;gm, <span class="str">""</span>);
-    <span class="fn">DDA</span>(<span class="num">40</span>, <span class="num">200</span>, <span class="num">360</span>, <span class="num">60</span>);
-    getch(); closegraph();
-    <span class="kw">return</span> <span class="num">0</span>;
-}</pre></div>
+dx = x2 - x1
+dy = y2 - y1
+steps = <span class="fn">max</span>(<span class="fn">abs</span>(dx), <span class="fn">abs</span>(dy))
+x_inc = dx / steps
+y_inc = dy / steps
+
+<span class="fn">print</span>(<span class="str">f"dx = {dx}, dy = {dy}"</span>)
+<span class="fn">print</span>(<span class="str">f"steps = {steps}"</span>)
+<span class="fn">print</span>(<span class="str">f"x_inc = {x_inc:.4f}, y_inc = {y_inc:.4f}"</span>)
+
+x, y = <span class="kw">float</span>(x1), <span class="kw">float</span>(y1)
+pixels = []
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(steps + <span class="num">1</span>):
+    rx, ry = <span class="fn">round</span>(x), <span class="fn">round</span>(y)
+    pixels.append((rx, ry))
+    <span class="fn">print</span>(<span class="str">f"{i}  {x:.4f} {y:.4f} {rx} {ry}"</span>)
+    x += x_inc
+    y += y_inc
+
+fig, ax = plt.<span class="fn">subplots</span>(figsize=(<span class="num">8</span>, <span class="num">6</span>))
+xs, ys = <span class="fn">zip</span>(*pixels)
+ax.<span class="fn">scatter</span>(xs, ys, c=<span class="str">"yellow"</span>, s=<span class="num">30</span>)
+ax.<span class="fn">plot</span>([x1, x2], [y1, y2], <span class="str">"r--"</span>)
+plt.<span class="fn">show</span>()</pre></div>
     <div class="section-label">2.4 Interactive Simulation</div>
     <div class="canvas-wrapper">
       <div class="canvas-controls">
@@ -238,32 +248,44 @@
       <strong>If p >= 0:</strong> plot (x+1, y+1), update p = p + 2*dy - 2*dx<br><br>
       For general octants: use sign(dx) and sign(dy) to handle all directions.
     </div>
-    <div class="section-label">3.3 Source Code</div>
-    <div class="code-block"><pre><span class="pp">#include &lt;stdio.h&gt;
-#include &lt;graphics.h&gt;
-#include &lt;stdlib.h&gt;</span>
+    <div class="section-label">3.3 Source Code (Python)</div>
+    <div class="code-block"><pre><span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt
 
-<span class="kw">void</span> <span class="fn">Bresenham</span>(<span class="kw">int</span> x1, <span class="kw">int</span> y1, <span class="kw">int</span> x2, <span class="kw">int</span> y2) {
-    <span class="kw">int</span> dx = abs(x2 - x1), dy = abs(y2 - y1);
-    <span class="kw">int</span> sx = (x1 &lt; x2) ? <span class="num">1</span> : -<span class="num">1</span>;
-    <span class="kw">int</span> sy = (y1 &lt; y2) ? <span class="num">1</span> : -<span class="num">1</span>;
-    <span class="kw">int</span> err = dx - dy;
-    <span class="kw">while</span> (<span class="num">1</span>) {
-        putpixel(x1, y1, YELLOW);
-        <span class="kw">if</span> (x1 == x2 &amp;&amp; y1 == y2) <span class="kw">break</span>;
-        <span class="kw">int</span> e2 = <span class="num">2</span> * err;
-        <span class="kw">if</span> (e2 &gt; -dy) { err -= dy; x1 += sx; }
-        <span class="kw">if</span> (e2 &lt;  dx) { err += dx; y1 += sy; }
-    }
-}
+<span class="kw">def</span> <span class="fn">bresenham_line</span>(x1, y1, x2, y2):
+    dx = <span class="fn">abs</span>(x2 - x1)
+    dy = <span class="fn">abs</span>(y2 - y1)
+    sx = <span class="num">1</span> <span class="kw">if</span> x1 &lt; x2 <span class="kw">else</span> -<span class="num">1</span>
+    sy = <span class="num">1</span> <span class="kw">if</span> y1 &lt; y2 <span class="kw">else</span> -<span class="num">1</span>
+    swapped = <span class="num">0</span>
+    <span class="kw">if</span> dy &gt; dx:
+        dx, dy = dy, dx
+        swapped = <span class="num">1</span>
+    p = <span class="num">2</span> * dy - dx
+    x, y = x1, y1
+    pixels = []
+    <span class="kw">for</span> _ <span class="kw">in</span> <span class="fn">range</span>(dx + <span class="num">1</span>):
+        pixels.append((x, y))
+        <span class="kw">while</span> p &gt;= <span class="num">0</span>:
+            <span class="kw">if</span> swapped: x += sx
+            <span class="kw">else</span>: y += sy
+            p -= <span class="num">2</span> * dx
+        <span class="kw">if</span> swapped: y += sy
+        <span class="kw">else</span>: x += sx
+        p += <span class="num">2</span> * dy
+    <span class="kw">return</span> pixels
 
-<span class="kw">int</span> <span class="fn">main</span>() {
-    <span class="kw">int</span> gd = DETECT, gm;
-    initgraph(&amp;gd, &amp;gm, <span class="str">""</span>);
-    <span class="fn">Bresenham</span>(<span class="num">30</span>, <span class="num">220</span>, <span class="num">380</span>, <span class="num">50</span>);
-    getch(); closegraph();
-    <span class="kw">return</span> <span class="num">0</span>;
-}</pre></div>
+x1 = <span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"x1 = "</span>))
+y1 = <span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"y1 = "</span>))
+x2 = <span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"x2 = "</span>))
+y2 = <span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"y2 = "</span>))
+pixels = <span class="fn">bresenham_line</span>(x1, y1, x2, y2)
+
+fig, ax = plt.<span class="fn">subplots</span>()
+colors = plt.cm.plasma_r([i/<span class="fn">len</span>(pixels) <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(pixels))])
+<span class="kw">for</span> i, (px, py) <span class="kw">in</span> <span class="fn">enumerate</span>(pixels):
+    ax.<span class="fn">scatter</span>(px, py, c=[colors[i]], s=<span class="num">40</span>)
+ax.<span class="fn">plot</span>([x1, x2], [y1, y2], <span class="str">"r--"</span>)
+plt.<span class="fn">show</span>()</pre></div>
     <div class="section-label">3.4 Interactive Simulation</div>
     <div class="canvas-wrapper">
       <div class="canvas-controls">
@@ -306,32 +328,31 @@
       [ y' ] = [ 0  1  Ty ] [ y ]<br>
       [ 1  ]   [ 0  0  1  ] [ 1 ]
     </div>
-    <div class="section-label">4.3 Source Code</div>
-    <div class="code-block"><pre><span class="pp">#include &lt;stdio.h&gt;
-#include &lt;graphics.h&gt;</span>
+    <div class="section-label">4.3 Source Code (Python)</div>
+    <div class="code-block"><pre><span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt
+<span class="kw">import</span> matplotlib.patches <span class="kw">as</span> mpatches
 
-<span class="kw">void</span> <span class="fn">drawPolygon</span>(<span class="kw">int</span> x[], <span class="kw">int</span> y[], <span class="kw">int</span> n, <span class="kw">int</span> color) {
-    setcolor(color);
-    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; n - <span class="num">1</span>; i++)
-        line(x[i], y[i], x[i+<span class="num">1</span>], y[i+<span class="num">1</span>]);
-    line(x[n-<span class="num">1</span>], y[n-<span class="num">1</span>], x[<span class="num">0</span>], y[<span class="num">0</span>]);
-}
+<span class="kw">def</span> <span class="fn">draw_triangle</span>(ax, x1, y1, x2, y2, x3, y3, color, label):
+    tri = mpatches.<span class="fn">Polygon</span>(
+        [(x1, y1), (x2, y2), (x3, y3)],
+        fill=<span class="kw">False</span>, edgecolor=color, linewidth=<span class="num">2</span>, label=label
+    )
+    ax.<span class="fn">add_patch</span>(tri)
 
-<span class="kw">void</span> <span class="fn">translate</span>(<span class="kw">int</span> x[], <span class="kw">int</span> y[], <span class="kw">int</span> n, <span class="kw">int</span> tx, <span class="kw">int</span> ty) {
-    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; n; i++) { x[i] += tx; y[i] += ty; }
-}
+<span class="cm"># Interactive input</span>
+x1 = <span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"x1 = "</span>)); y1 = <span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"y1 = "</span>))
+x2 = <span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"x2 = "</span>)); y2 = <span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"y2 = "</span>))
+x3 = <span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"x3 = "</span>)); y3 = <span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"y3 = "</span>))
+tx = <span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"tx = "</span>)); ty = <span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"ty = "</span>))
 
-<span class="kw">int</span> <span class="fn">main</span>() {
-    <span class="kw">int</span> gd = DETECT, gm;
-    initgraph(&amp;gd, &amp;gm, <span class="str">""</span>);
-    <span class="kw">int</span> x[] = {<span class="num">100</span>,<span class="num">200</span>,<span class="num">200</span>,<span class="num">100</span>};
-    <span class="kw">int</span> y[] = {<span class="num">100</span>,<span class="num">100</span>,<span class="num">200</span>,<span class="num">200</span>};
-    <span class="fn">drawPolygon</span>(x, y, <span class="num">4</span>, WHITE);
-    <span class="fn">translate</span>(x, y, <span class="num">4</span>, <span class="num">150</span>, <span class="num">80</span>);
-    <span class="fn">drawPolygon</span>(x, y, <span class="num">4</span>, CYAN);
-    getch(); closegraph();
-    <span class="kw">return</span> <span class="num">0</span>;
-}</pre></div>
+nx1, ny1 = x1 + tx, y1 + ty
+nx2, ny2 = x2 + tx, y2 + ty
+nx3, ny3 = x3 + tx, y3 + ty
+
+fig, ax = plt.<span class="fn">subplots</span>()
+<span class="fn">draw_triangle</span>(ax, x1, y1, x2, y2, x3, y3, <span class="str">"white"</span>, <span class="str">"Original"</span>)
+<span class="fn">draw_triangle</span>(ax, nx1, ny1, nx2, ny2, nx3, ny3, <span class="str">"cyan"</span>, <span class="str">f"Translated"</span>)
+plt.<span class="fn">show</span>()</pre></div>
     <div class="section-label">4.4 Interactive Simulation</div>
     <div class="canvas-wrapper">
       <div class="canvas-controls">
@@ -365,42 +386,33 @@
       (+/-x, +/-y), (+/-y, +/-x)
     </div>
     <p>The algorithm stops when x > y (we've covered 45 degrees).</p>
-    <div class="section-label">5.3 Source Code</div>
-    <div class="code-block"><pre><span class="pp">#include &lt;graphics.h&gt;
-#include &lt;conio.h&gt;</span>
+    <div class="section-label">5.3 Source Code (Python)</div>
+    <div class="code-block"><pre><span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt
+<span class="kw">import</span> numpy <span class="kw">as</span> np
 
-<span class="kw">void</span> <span class="fn">plotCirclePoints</span>(<span class="kw">int</span> xc, <span class="kw">int</span> yc, <span class="kw">int</span> x, <span class="kw">int</span> y) {
-    putpixel(xc+x, yc+y, WHITE);
-    putpixel(xc-x, yc+y, WHITE);
-    putpixel(xc+x, yc-y, WHITE);
-    putpixel(xc-x, yc-y, WHITE);
-    putpixel(xc+y, yc+x, WHITE);
-    putpixel(xc-y, yc+x, WHITE);
-    putpixel(xc+y, yc-x, WHITE);
-    putpixel(xc-y, yc-x, WHITE);
-}
+<span class="kw">def</span> <span class="fn">get_8way_points</span>(cx, cy, x, y):
+    <span class="kw">return</span> [
+        (cx + x, cy + y), (cx - x, cy + y),
+        (cx + x, cy - y), (cx - x, cy - y),
+        (cx + y, cy + x), (cx - y, cy + x),
+        (cx + y, cy - x), (cx - y, cy - x),
+    ]
 
-<span class="kw">void</span> <span class="fn">midpointCircle</span>(<span class="kw">int</span> xc, <span class="kw">int</span> yc, <span class="kw">int</span> r) {
-    <span class="kw">int</span> x = <span class="num">0</span>, y = r;
-    <span class="kw">int</span> p = <span class="num">1</span> - r;
-    plotCirclePoints(xc, yc, x, y);
-    <span class="kw">while</span> (x &lt; y) {
-        x++;
-        <span class="kw">if</span> (p &lt; <span class="num">0</span>) { p += <span class="num">2</span>*x + <span class="num">3</span>; }
-        <span class="kw">else</span> { y--; p += <span class="num">2</span>*(x-y) + <span class="num">5</span>; }
-        plotCirclePoints(xc, yc, x, y);
-    }
-}
+cx = <span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"cx = "</span>)); cy = <span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"cy = "</span>))
+x  = <span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"x = "</span>));  y  = <span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"y = "</span>))
+r  = <span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"r = "</span>))
 
-<span class="kw">int</span> <span class="fn">main</span>() {
-    <span class="kw">int</span> gd = DETECT, gm;
-    initgraph(&amp;gd, &amp;gm, <span class="str">""</span>);
-    midpointCircle(<span class="num">300</span>, <span class="num">200</span>, <span class="num">50</span>);
-    midpointCircle(<span class="num">300</span>, <span class="num">200</span>, <span class="num">100</span>);
-    midpointCircle(<span class="num">300</span>, <span class="num">200</span>, <span class="num">150</span>);
-    getch(); closegraph();
-    <span class="kw">return</span> <span class="num">0</span>;
-}</pre></div>
+pts_global = <span class="fn">get_8way_points</span>(cx, cy, x, y)
+
+fig, ax = plt.<span class="fn">subplots</span>(figsize=(<span class="num">9</span>, <span class="num">9</span>))
+colors = [<span class="str">"#e74c3c"</span>, <span class="str">"#3498db"</span>, <span class="str">"#2ecc71"</span>, <span class="str">"#f39c12"</span>,
+          <span class="str">"#9b59b6"</span>, <span class="str">"#1abc9c"</span>, <span class="str">"#e67e22"</span>, <span class="str">"#34495e"</span>]
+<span class="kw">for</span> i, (gx, gy) <span class="kw">in</span> <span class="fn">enumerate</span>(pts_global):
+    ax.<span class="fn">scatter</span>(gx, gy, c=colors[i], s=<span class="num">120</span>, edgecolors=<span class="str">"black"</span>)
+
+theta = np.<span class="fn">linspace</span>(<span class="num">0</span>, <span class="num">2</span>*np.pi, <span class="num">500</span>)
+ax.<span class="fn">plot</span>(cx + r*np.<span class="fn">cos</span>(theta), cy + r*np.<span class="fn">sin</span>(theta), <span class="str">"r-"</span>)
+plt.<span class="fn">show</span>()</pre></div>
     <div class="section-label">5.4 Interactive Simulation</div>
     <div class="canvas-wrapper">
       <div class="canvas-controls">
@@ -440,27 +452,37 @@
       2. Rotate about origin: R(theta)<br>
       3. Translate back: T(cx, cy)
     </div>
-    <div class="section-label">6.3 Source Code</div>
-    <div class="code-block"><pre><span class="pp">#include &lt;graphics.h&gt;
-#include &lt;cmath&gt;
-#include &lt;conio.h&gt;</span>
-<span class="pp">#define PI 3.14159265</span>
+    <div class="section-label">6.3 Source Code (Python)</div>
+    <div class="code-block"><pre><span class="kw">import</span> math, matplotlib.pyplot <span class="kw">as</span> plt
+<span class="kw">import</span> matplotlib.patches <span class="kw">as</span> mpatches
 
-<span class="kw">void</span> <span class="fn">rotatePoint</span>(<span class="kw">int</span> x, <span class="kw">int</span> y, <span class="kw">int</span> cx, <span class="kw">int</span> cy, <span class="kw">float</span> angle, <span class="kw">int</span> &amp;xOut, <span class="kw">int</span> &amp;yOut) {
-    <span class="kw">float</span> rad = angle * PI / <span class="num">180.0</span>;
-    <span class="kw">float</span> cosA = cos(rad), sinA = sin(rad);
-    <span class="kw">int</span> xRel = x - cx, yRel = y - cy;
-    xOut = cx + (<span class="kw">int</span>)(xRel * cosA - yRel * sinA + <span class="num">0.5f</span>);
-    yOut = cy + (<span class="kw">int</span>)(xRel * sinA + yRel * cosA + <span class="num">0.5f</span>);
-}
+<span class="kw">def</span> <span class="fn">rotate_point</span>(x, y, cx, cy, angle):
+    rad = math.<span class="fn">radians</span>(angle)
+    cos_a, sin_a = math.<span class="fn">cos</span>(rad), math.<span class="fn">sin</span>(rad)
+    x_rel, y_rel = x - cx, y - cy
+    x_rot = x_rel * cos_a - y_rel * sin_a
+    y_rot = x_rel * sin_a + y_rel * cos_a
+    <span class="kw">return</span> <span class="fn">round</span>(cx + x_rot), <span class="fn">round</span>(cy + y_rot)
 
-<span class="kw">int</span> <span class="fn">main</span>() {
-    <span class="kw">int</span> gd = DETECT, gm;
-    initwindow(<span class="num">640</span>, <span class="num">480</span>, <span class="str">"2D Rotation"</span>);
-    <span class="cm">// Draw triangle, rotate about centroid by 60 degrees</span>
-    getch(); closegraph();
-    <span class="kw">return</span> <span class="num">0</span>;
-}</pre></div>
+<span class="kw">def</span> <span class="fn">draw_triangle</span>(ax, x1, y1, x2, y2, x3, y3, color, label):
+    tri = mpatches.<span class="fn">Polygon</span>([(x1,y1),(x2,y2),(x3,y3)],
+        fill=<span class="kw">False</span>, edgecolor=color, linewidth=<span class="num">2</span>, label=label)
+    ax.<span class="fn">add_patch</span>(tri)
+
+x1=<span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"x1 = "</span>)); y1=<span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"y1 = "</span>))
+x2=<span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"x2 = "</span>)); y2=<span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"y2 = "</span>))
+x3=<span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"x3 = "</span>)); y3=<span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"y3 = "</span>))
+cx=<span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"pivot x = "</span>)); cy=<span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"pivot y = "</span>))
+angle=<span class="kw">float</span>(<span class="fn">input</span>(<span class="str">"angle = "</span>))
+
+r1 = <span class="fn">rotate_point</span>(x1, y1, cx, cy, angle)
+r2 = <span class="fn">rotate_point</span>(x2, y2, cx, cy, angle)
+r3 = <span class="fn">rotate_point</span>(x3, y3, cx, cy, angle)
+
+fig, ax = plt.<span class="fn">subplots</span>()
+<span class="fn">draw_triangle</span>(ax, x1, y1, x2, y2, x3, y3, <span class="str">"white"</span>, <span class="str">"Original"</span>)
+<span class="fn">draw_triangle</span>(ax, r1[0], r1[1], r2[0], r2[1], r3[0], r3[1], <span class="str">"magenta"</span>, <span class="str">f"Rotated"</span>)
+plt.<span class="fn">show</span>()</pre></div>
     <div class="section-label">6.4 Interactive Simulation</div>
     <div class="canvas-wrapper">
       <div class="canvas-controls">
@@ -503,15 +525,33 @@
       <strong>Uniform scaling:</strong> sx = sy - shape preserved<br>
       <strong>Differential scaling:</strong> sx != sy - object stretches/distorts
     </div>
-    <div class="section-label">7.3 Source Code</div>
-    <div class="code-block"><pre><span class="pp">#include &lt;graphics.h&gt;
-#include &lt;cmath&gt;
-#include &lt;conio.h&gt;</span>
+    <div class="section-label">7.3 Source Code (Python)</div>
+    <div class="code-block"><pre><span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt
+<span class="kw">import</span> matplotlib.patches <span class="kw">as</span> mpatches
 
-<span class="kw">void</span> <span class="fn">scalePoint</span>(<span class="kw">int</span> x, <span class="kw">int</span> y, <span class="kw">int</span> fx, <span class="kw">int</span> fy, <span class="kw">float</span> sx, <span class="kw">float</span> sy, <span class="kw">int</span> &amp;xOut, <span class="kw">int</span> &amp;yOut) {
-    xOut = fx + (<span class="kw">int</span>)((x - fx) * sx + <span class="num">0.5f</span>);
-    yOut = fy + (<span class="kw">int</span>)((y - fy) * sy + <span class="num">0.5f</span>);
-}</pre></div>
+<span class="kw">def</span> <span class="fn">scale_point</span>(x, y, fx, fy, sx, sy):
+    <span class="kw">return</span> (<span class="fn">round</span>(fx + (x - fx) * sx),
+            <span class="fn">round</span>(fy + (y - fy) * sy))
+
+<span class="kw">def</span> <span class="fn">draw_triangle</span>(ax, x1, y1, x2, y2, x3, y3, color, label):
+    tri = mpatches.<span class="fn">Polygon</span>([(x1,y1),(x2,y2),(x3,y3)],
+        fill=<span class="kw">False</span>, edgecolor=color, linewidth=<span class="num">2</span>, label=label)
+    ax.<span class="fn">add_patch</span>(tri)
+
+x1=<span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"x1 = "</span>)); y1=<span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"y1 = "</span>))
+x2=<span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"x2 = "</span>)); y2=<span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"y2 = "</span>))
+x3=<span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"x3 = "</span>)); y3=<span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"y3 = "</span>))
+fx=<span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"fixed x = "</span>)); fy=<span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"fixed y = "</span>))
+sx=<span class="kw">float</span>(<span class="fn">input</span>(<span class="str">"sx = "</span>)); sy=<span class="kw">float</span>(<span class="fn">input</span>(<span class="str">"sy = "</span>))
+
+s1 = <span class="fn">scale_point</span>(x1, y1, fx, fy, sx, sy)
+s2 = <span class="fn">scale_point</span>(x2, y2, fx, fy, sx, sy)
+s3 = <span class="fn">scale_point</span>(x3, y3, fx, fy, sx, sy)
+
+fig, ax = plt.<span class="fn">subplots</span>()
+<span class="fn">draw_triangle</span>(ax, x1, y1, x2, y2, x3, y3, <span class="str">"white"</span>, <span class="str">"Original"</span>)
+<span class="fn">draw_triangle</span>(ax, s1[0], s1[1], s2[0], s2[1], s3[0], s3[1], <span class="str">"lime"</span>, <span class="str">f"Scaled"</span>)
+plt.<span class="fn">show</span>()</pre></div>
     <div class="section-label">7.4 Interactive Simulation</div>
     <div class="canvas-wrapper">
       <div class="canvas-controls">
@@ -553,26 +593,49 @@
       screen_x = world_x + world_z * 0.5 * cos(30 deg)<br>
       screen_y = world_y + world_z * 0.5 * sin(30 deg)
     </div>
-    <div class="section-label">8.3 Source Code (excerpt)</div>
-    <div class="code-block"><pre><span class="pp">#include &lt;graphics.h&gt;
-#include &lt;cmath&gt;
-#include &lt;conio.h&gt;</span>
-<span class="pp">#define PI 3.14159265</span>
+    <div class="section-label">8.3 Source Code (Python)</div>
+    <div class="code-block"><pre><span class="kw">import</span> math, matplotlib.pyplot <span class="kw">as</span> plt
+<span class="kw">from</span> mpl_toolkits.mplot3d <span class="kw">import</span> Axes3D
 
-<span class="kw">struct</span> Point3D { <span class="kw">int</span> x, y, z; };
+<span class="kw">def</span> <span class="fn">rotate_about_axis</span>(point, a1, a2, angle):
+    px = point[<span class="num">0</span>] - a1[<span class="num">0</span>]
+    py = point[<span class="num">1</span>] - a1[<span class="num">1</span>]
+    pz = point[<span class="num">2</span>] - a1[<span class="num">2</span>]
+    ax = a2[<span class="num">0</span>] - a1[<span class="num">0</span>]
+    ay = a2[<span class="num">1</span>] - a1[<span class="num">1</span>]
+    az = a2[<span class="num">2</span>] - a1[<span class="num">2</span>]
+    length = math.<span class="fn">sqrt</span>(ax*ax + ay*ay + az*az)
+    ux, uy, uz = ax/length, ay/length, az/length
+    rad = math.<span class="fn">radians</span>(angle)
+    cos_a, sin_a = math.<span class="fn">cos</span>(rad), math.<span class="fn">sin</span>(rad)
+    dot = px*ux + py*uy + pz*uz
+    cross_x = uy*pz - uz*py
+    cross_y = uz*px - ux*pz
+    cross_z = ux*py - uy*px
+    new_x = px*cos_a + cross_x*sin_a + ux*dot*(<span class="num">1</span> - cos_a)
+    new_y = py*cos_a + cross_y*sin_a + uy*dot*(<span class="num">1</span> - cos_a)
+    new_z = pz*cos_a + cross_z*sin_a + uz*dot*(<span class="num">1</span> - cos_a)
+    <span class="kw">return</span> (<span class="fn">round</span>(new_x + a1[<span class="num">0</span>], <span class="num">2</span>),
+            <span class="fn">round</span>(new_y + a1[<span class="num">1</span>], <span class="num">2</span>),
+            <span class="fn">round</span>(new_z + a1[<span class="num">2</span>], <span class="num">2</span>))
 
-<span class="kw">void</span> <span class="fn">rotateAboutAxis</span>(Point3D &amp;p, Point3D a1, Point3D a2, <span class="kw">float</span> angle) {
-    <span class="kw">float</span> px=p.x-a1.x, py=p.y-a1.y, pz=p.z-a1.z;
-    <span class="kw">float</span> ax=a2.x-a1.x, ay=a2.y-a1.y, az=a2.z-a1.z;
-    <span class="kw">float</span> len=sqrt(ax*ax+ay*ay+az*az);
-    <span class="kw">float</span> ux=ax/len, uy=ay/len, uz=az/len;
-    <span class="kw">float</span> rad=angle*PI/<span class="num">180.0</span>, c=cos(rad), s=sin(rad);
-    <span class="kw">float</span> dot=px*ux+py*uy+pz*uz;
-    <span class="kw">float</span> cx=uy*pz-uz*py, cy=uz*px-ux*pz, cz=ux*py-uy*px;
-    p.x=(<span class="kw">int</span>)(px*c+cx*s+ux*dot*(<span class="num">1</span>-c)+a1.x+<span class="num">0.5f</span>);
-    p.y=(<span class="kw">int</span>)(py*c+cy*s+uy*dot*(<span class="num">1</span>-c)+a1.y+<span class="num">0.5f</span>);
-    p.z=(<span class="kw">int</span>)(pz*c+cz*s+uz*dot*(<span class="num">1</span>-c)+a1.z+<span class="num">0.5f</span>);
-}</pre></div>
+<span class="kw">def</span> <span class="fn">draw_cube_3d</span>(ax, vertices, color):
+    edges = [(<span class="num">0</span>,<span class="num">1</span>),(<span class="num">1</span>,<span class="num">2</span>),(<span class="num">2</span>,<span class="num">3</span>),(<span class="num">3</span>,<span class="num">0</span>),
+             (<span class="num">4</span>,<span class="num">5</span>),(<span class="num">5</span>,<span class="num">6</span>),(<span class="num">6</span>,<span class="num">7</span>),(<span class="num">7</span>,<span class="num">4</span>),
+             (<span class="num">0</span>,<span class="num">4</span>),(<span class="num">1</span>,<span class="num">5</span>),(<span class="num">2</span>,<span class="num">6</span>),(<span class="num">3</span>,<span class="num">7</span>)]
+    xs, ys, zs = <span class="fn">zip</span>(*vertices)
+    <span class="kw">for</span> i, j <span class="kw">in</span> edges:
+        ax.<span class="fn">plot3D</span>(*<span class="fn">zip</span>(vertices[i], vertices[j]), color=color)
+
+ccx=<span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"center x = "</span>)); ccy=<span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"center y = "</span>))
+ccz=<span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"center z = "</span>)); half=<span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"half-size = "</span>))
+<span class="cm"># ... input axis points, angle ...</span>
+cube = [(ccx-half,ccy-half,ccz-half), (ccx+half,ccy-half,ccz-half), ...]
+rotated = [<span class="fn">rotate_about_axis</span>(v, a1, a2, angle) <span class="kw">for</span> v <span class="kw">in</span> cube]
+fig = plt.<span class="fn">figure</span>(); ax = fig.<span class="fn">add_subplot</span>(<span class="num">111</span>, projection=<span class="str">"3d"</span>)
+<span class="fn">draw_cube_3d</span>(ax, cube, <span class="str">"white"</span>)
+<span class="fn">draw_cube_3d</span>(ax, rotated, <span class="str">"yellow"</span>)
+plt.<span class="fn">show</span>()</pre></div>
     <div class="section-label">8.4 Interactive Simulation</div>
     <div class="canvas-wrapper">
       <div class="canvas-controls">
@@ -608,39 +671,45 @@
       <strong>Trivial Reject:</strong> code1 AND code2 != 0<br>
       <strong>Otherwise:</strong> clip against one edge, replace endpoint, repeat
     </div>
-    <div class="section-label">9.3 Source Code</div>
-    <div class="code-block"><pre><span class="pp">#include &lt;graphics.h&gt;
-#include &lt;conio.h&gt;</span>
+    <div class="section-label">9.3 Source Code (Python)</div>
+    <div class="code-block"><pre><span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt
+<span class="kw">import</span> matplotlib.patches <span class="kw">as</span> mpatches
 
-<span class="kw">const int</span> INSIDE=<span class="num">0</span>, LEFT=<span class="num">1</span>, RIGHT=<span class="num">2</span>, BOTTOM=<span class="num">4</span>, TOP=<span class="num">8</span>;
-<span class="kw">int</span> xMin=<span class="num">150</span>, yMin=<span class="num">100</span>, xMax=<span class="num">450</span>, yMax=<span class="num">300</span>;
+INSIDE, LEFT, RIGHT, BOTTOM, TOP = <span class="num">0</span>, <span class="num">1</span>, <span class="num">2</span>, <span class="num">4</span>, <span class="num">8</span>
+XMIN, YMIN, XMAX, YMAX = <span class="num">150</span>, <span class="num">100</span>, <span class="num">450</span>, <span class="num">300</span>
 
-<span class="kw">int</span> <span class="fn">computeCode</span>(<span class="kw">int</span> x, <span class="kw">int</span> y) {
-    <span class="kw">int</span> code = INSIDE;
-    <span class="kw">if</span> (x < xMin) code |= LEFT;
-    <span class="kw">if</span> (x > xMax) code |= RIGHT;
-    <span class="kw">if</span> (y < yMin) code |= TOP;
-    <span class="kw">if</span> (y > yMax) code |= BOTTOM;
-    <span class="kw">return</span> code;
-}
+<span class="kw">def</span> <span class="fn">compute_code</span>(x, y):
+    code = INSIDE
+    <span class="kw">if</span> x &lt; XMIN: code |= LEFT
+    <span class="kw">elif</span> x &gt; XMAX: code |= RIGHT
+    <span class="kw">if</span> y &lt; YMIN: code |= TOP
+    <span class="kw">elif</span> y &gt; YMAX: code |= BOTTOM
+    <span class="kw">return</span> code
 
-<span class="kw">void</span> <span class="fn">cohenSutherland</span>(<span class="kw">int</span> x1, <span class="kw">int</span> y1, <span class="kw">int</span> x2, <span class="kw">int</span> y2) {
-    <span class="kw">int</span> c1=computeCode(x1,y1), c2=computeCode(x2,y2), accept=<span class="num">0</span>;
-    <span class="kw">while</span>(<span class="num">1</span>) {
-        <span class="kw">if</span>(!c1 && !c2) { accept=<span class="num">1</span>; <span class="kw">break</span>; }
-        <span class="kw">else if</span>(c1 & c2) <span class="kw">break</span>;
-        <span class="kw">else</span> {
-            <span class="kw">int</span> cOut = (c1!=<span class="num">0</span>)?c1:c2, x, y;
-            <span class="kw">if</span>(cOut&TOP) { x=x1+(x2-x1)*(yMin-y1)/(y2-y1); y=yMin; }
-            <span class="kw">else if</span>(cOut&BOTTOM) { x=x1+(x2-x1)*(yMax-y1)/(y2-y1); y=yMax; }
-            <span class="kw">else if</span>(cOut&RIGHT) { y=y1+(y2-y1)*(xMax-x1)/(x2-x1); x=xMax; }
-            <span class="kw">else</span> { y=y1+(y2-y1)*(xMin-x1)/(x2-x1); x=xMin; }
-            <span class="kw">if</span>(cOut==c1) { x1=x; y1=y; c1=computeCode(x1,y1); }
-            <span class="kw">else</span> { x2=x; y2=y; c2=computeCode(x2,y2); }
-        }
-    }
-    <span class="kw">if</span>(accept) { setcolor(YELLOW); line(x1,y1,x2,y2); }
-}</pre></div>
+<span class="kw">def</span> <span class="fn">cohen_sutherland_clip</span>(x1, y1, x2, y2):
+    code1 = <span class="fn">compute_code</span>(x1, y1)
+    code2 = <span class="fn">compute_code</span>(x2, y2)
+    accept = <span class="kw">False</span>
+    <span class="kw">while</span> <span class="kw">True</span>:
+        <span class="kw">if</span> code1 == <span class="num">0</span> <span class="kw">and</span> code2 == <span class="num">0</span>:
+            accept = <span class="kw">True</span>; <span class="kw">break</span>
+        <span class="kw">elif</span> code1 &amp; code2: <span class="kw">break</span>
+        <span class="kw">else</span>:
+            code_out = code1 <span class="kw">if</span> code1 != <span class="num">0</span> <span class="kw">else</span> code2
+            <span class="kw">if</span> code_out &amp; TOP:
+                x = x1 + (x2-x1)*(YMIN-y1)/(y2-y1); y = YMIN
+            <span class="kw">elif</span> code_out &amp; BOTTOM:
+                x = x1 + (x2-x1)*(YMAX-y1)/(y2-y1); y = YMAX
+            <span class="kw">elif</span> code_out &amp; RIGHT:
+                y = y1 + (y2-y1)*(XMAX-x1)/(x2-x1); x = XMAX
+            <span class="kw">elif</span> code_out &amp; LEFT:
+                y = y1 + (y2-y1)*(XMIN-x1)/(x2-x1); x = XMIN
+            <span class="kw">if</span> code_out == code1:
+                x1, y1 = x, y; code1 = <span class="fn">compute_code</span>(x1, y1)
+            <span class="kw">else</span>:
+                x2, y2 = x, y; code2 = <span class="fn">compute_code</span>(x2, y2)
+    <span class="kw">if</span> accept: <span class="kw">return</span> (<span class="fn">round</span>(x1), <span class="fn">round</span>(y1), <span class="fn">round</span>(x2), <span class="fn">round</span>(y2))
+    <span class="kw">return</span> <span class="kw">None</span></pre></div>
     <div class="section-label">9.4 Interactive Simulation</div>
     <div class="canvas-wrapper">
       <div class="canvas-controls">
@@ -673,39 +742,39 @@
       <strong>Processing order:</strong> Left - Right - Bottom - Top<br>
       Each stage's output becomes the next stage's input.
     </div>
-    <div class="section-label">10.3 Source Code (excerpt)</div>
-    <div class="code-block"><pre><span class="pp">#include &lt;graphics.h&gt;
-#include &lt;vector&gt;
-using namespace std;</span>
+    <div class="section-label">10.3 Source Code (Python)</div>
+    <div class="code-block"><pre><span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt
+<span class="kw">import</span> matplotlib.patches <span class="kw">as</span> mpatches
 
-<span class="kw">struct</span> Point { <span class="kw">int</span> x, y; };
-<span class="kw">int</span> xMin=<span class="num">150</span>, yMin=<span class="num">100</span>, xMax=<span class="num">450</span>, yMax=<span class="num">300</span>;
+XMIN, YMIN, XMAX, YMAX = <span class="num">150</span>, <span class="num">100</span>, <span class="num">450</span>, <span class="num">300</span>
 
-<span class="kw">bool</span> <span class="fn">inside</span>(Point p, <span class="kw">int</span> edge) {
-    <span class="kw">switch</span>(edge) {
-        <span class="kw">case</span> <span class="num">0</span>: <span class="kw">return</span> p.x >= xMin;
-        <span class="kw">case</span> <span class="num">1</span>: <span class="kw">return</span> p.x <= xMax;
-        <span class="kw">case</span> <span class="num">2</span>: <span class="kw">return</span> p.y >= yMin;
-        <span class="kw">case</span> <span class="num">3</span>: <span class="kw">return</span> p.y <= yMax;
-    }
-    <span class="kw">return false</span>;
-}
+<span class="kw">def</span> <span class="fn">inside</span>(p, edge):
+    x, y = p
+    <span class="kw">if</span> edge == <span class="num">0</span>: <span class="kw">return</span> x &gt;= XMIN
+    <span class="kw">if</span> edge == <span class="num">1</span>: <span class="kw">return</span> x &lt;= XMAX
+    <span class="kw">if</span> edge == <span class="num">2</span>: <span class="kw">return</span> y &gt;= YMIN
+    <span class="kw">if</span> edge == <span class="num">3</span>: <span class="kw">return</span> y &lt;= YMAX
 
-vector&lt;Point&gt; <span class="fn">clipAgainstEdge</span>(vector&lt;Point&gt; poly, <span class="kw">int</span> edge) {
-    vector&lt;Point&gt; result;
-    <span class="kw">int</span> n = poly.size();
-    <span class="kw">for</span>(<span class="kw">int</span> i=<span class="num">0</span>; i&lt;n; i++) {
-        Point cur=poly[i], nxt=poly[(i+<span class="num">1</span>)%n];
-        <span class="kw">bool</span> ci=inside(cur,edge), ni=inside(nxt,edge);
-        <span class="kw">if</span>(ci && ni) result.push_back(nxt);
-        <span class="kw">else if</span>(ci && !ni) result.push_back(intersect(cur,nxt,edge));
-        <span class="kw">else if</span>(!ci && ni) {
-            result.push_back(intersect(cur,nxt,edge));
-            result.push_back(nxt);
-        }
-    }
-    <span class="kw">return</span> result;
-}</pre></div>
+<span class="kw">def</span> <span class="fn">intersect</span>(p1, p2, edge):
+    x1, y1 = p1; x2, y2 = p2
+    m = (y2 - y1) / (x2 - x1) <span class="kw">if</span> x2 != x1 <span class="kw">else</span> <span class="num">1e10</span>
+    <span class="kw">if</span> edge == <span class="num">0</span>: <span class="kw">return</span> (XMIN, <span class="fn">round</span>(y1 + m*(XMIN - x1)))
+    <span class="kw">if</span> edge == <span class="num">1</span>: <span class="kw">return</span> (XMAX, <span class="fn">round</span>(y1 + m*(XMAX - x1)))
+    <span class="kw">if</span> edge == <span class="num">2</span>: <span class="kw">return</span> (<span class="fn">round</span>(x1 + (YMIN-y1)/m), YMIN)
+    <span class="kw">if</span> edge == <span class="num">3</span>: <span class="kw">return</span> (<span class="fn">round</span>(x1 + (YMAX-y1)/m), YMAX)
+
+<span class="kw">def</span> <span class="fn">clip_against_edge</span>(poly, edge):
+    <span class="kw">if</span> <span class="kw">not</span> poly: <span class="kw">return</span> []
+    result = []; n = <span class="fn">len</span>(poly)
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+        curr = poly[i]; nxt = poly[(i+<span class="num">1</span>) % n]
+        ci = <span class="fn">inside</span>(curr, edge); ni = <span class="fn">inside</span>(nxt, edge)
+        <span class="kw">if</span> ci <span class="kw">and</span> ni: result.append(nxt)
+        <span class="kw">elif</span> ci <span class="kw">and</span> <span class="kw">not</span> ni: result.<span class="fn">append</span>(<span class="fn">intersect</span>(curr, nxt, edge))
+        <span class="kw">elif</span> <span class="kw">not</span> ci <span class="kw">and</span> ni:
+            result.<span class="fn">append</span>(<span class="fn">intersect</span>(curr, nxt, edge))
+            result.append(nxt)
+    <span class="kw">return</span> result</pre></div>
     <div class="section-label">10.4 Interactive Simulation</div>
     <div class="canvas-wrapper">
       <div class="canvas-controls">
@@ -743,21 +812,34 @@ vector&lt;Point&gt; <span class="fn">clipAgainstEdge</span>(vector&lt;Point&gt; 
       - Curve lies inside the convex hull of control points<br>
       - Moving any control point affects the ENTIRE curve (global control)
     </div>
-    <div class="section-label">11.3 Source Code</div>
-    <div class="code-block"><pre><span class="pp">#include &lt;graphics.h&gt;
-#include &lt;cmath&gt;
-#include &lt;conio.h&gt;</span>
+    <div class="section-label">11.3 Source Code (Python)</div>
+    <div class="code-block"><pre><span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt
+<span class="kw">import</span> numpy <span class="kw">as</span> np
 
-<span class="kw">void</span> <span class="fn">bezierCurve</span>(<span class="kw">int</span> x[<span class="num">4</span>], <span class="kw">int</span> y[<span class="num">4</span>], <span class="kw">int</span> steps=<span class="num">100</span>) {
-    <span class="kw">for</span>(<span class="kw">int</span> i=<span class="num">0</span>; i<=steps; i++) {
-        <span class="kw">float</span> t=(<span class="kw">float</span>)i/steps, u=<span class="num">1</span>-t;
-        <span class="kw">float</span> b0=u*u*u, b1=<span class="num">3</span>*t*u*u;
-        <span class="kw">float</span> b2=<span class="num">3</span>*t*t*u, b3=t*t*t;
-        <span class="kw">int</span> px=(<span class="kw">int</span>)(b0*x[<span class="num">0</span>]+b1*x[<span class="num">1</span>]+b2*x[<span class="num">2</span>]+b3*x[<span class="num">3</span>]+<span class="num">0.5f</span>);
-        <span class="kw">int</span> py=(<span class="kw">int</span>)(b0*y[<span class="num">0</span>]+b1*y[<span class="num">1</span>]+b2*y[<span class="num">2</span>]+b3*y[<span class="num">3</span>]+<span class="num">0.5f</span>);
-        putpixel(px, py, YELLOW);
-    }
-}</pre></div>
+<span class="kw">def</span> <span class="fn">bezier_curve</span>(control_x, control_y, steps=<span class="num">100</span>):
+    ts = np.<span class="fn">linspace</span>(<span class="num">0</span>, <span class="num">1</span>, steps + <span class="num">1</span>)
+    u = <span class="num">1</span> - ts
+    b0 = u ** <span class="num">3</span>
+    b1 = <span class="num">3</span> * ts * u ** <span class="num">2</span>
+    b2 = <span class="num">3</span> * ts ** <span class="num">2</span> * u
+    b3 = ts ** <span class="num">3</span>
+    px = (b0*control_x[<span class="num">0</span>] + b1*control_x[<span class="num">1</span>]
+          + b2*control_x[<span class="num">2</span>] + b3*control_x[<span class="num">3</span>])
+    py = (b0*control_y[<span class="num">0</span>] + b1*control_y[<span class="num">1</span>]
+          + b2*control_y[<span class="num">2</span>] + b3*control_y[<span class="num">3</span>])
+    <span class="kw">return</span> px, py
+
+<span class="fn">print</span>(<span class="str">"Enter 4 control points:"</span>)
+pts = [(<span class="kw">int</span>(<span class="fn">input</span>(<span class="str">f"P{i} x = "</span>)),
+        <span class="kw">int</span>(<span class="fn">input</span>(<span class="str">f"P{i} y = "</span>))) <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">4</span>)]
+cx, cy = [p[<span class="num">0</span>] <span class="kw">for</span> p <span class="kw">in</span> pts], [p[<span class="num">1</span>] <span class="kw">for</span> p <span class="kw">in</span> pts]
+
+px, py = <span class="fn">bezier_curve</span>(cx, cy)
+fig, ax = plt.<span class="fn">subplots</span>()
+ax.<span class="fn">plot</span>(cx, cy, <span class="str">"w--"</span>, label=<span class="str">"Control polygon"</span>)
+ax.<span class="fn">scatter</span>(cx, cy, c=<span class="str">"red"</span>, s=<span class="num">80</span>)
+ax.<span class="fn">plot</span>(px, py, <span class="str">"yellow"</span>, linewidth=<span class="num">2.5</span>, label=<span class="str">"Bezier curve"</span>)
+plt.<span class="fn">show</span>()</pre></div>
     <div class="section-label">11.4 Interactive Simulation</div>
     <div class="canvas-wrapper">
       <div class="canvas-controls">
@@ -792,29 +874,40 @@ vector&lt;Point&gt; <span class="fn">clipAgainstEdge</span>(vector&lt;Point&gt; 
       - Does NOT pass through control points<br>
       - n control points produce (n-3) segments
     </div>
-    <div class="section-label">12.3 Source Code</div>
-    <div class="code-block"><pre><span class="pp">#include &lt;graphics.h&gt;
-#include &lt;cmath&gt;
-#include &lt;conio.h&gt;</span>
-<span class="pp">#define NUM_POINTS 6</span>
+    <div class="section-label">12.3 Source Code (Python)</div>
+    <div class="code-block"><pre><span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt
+<span class="kw">import</span> numpy <span class="kw">as</span> np
 
-<span class="kw">void</span> <span class="fn">bSpline</span>(<span class="kw">int</span> cx[], <span class="kw">int</span> cy[], <span class="kw">int</span> n, <span class="kw">int</span> steps=<span class="num">50</span>) {
-    setcolor(WHITE);
-    <span class="kw">for</span>(<span class="kw">int</span> i=<span class="num">0</span>; i&lt;n-<span class="num">1</span>; i++) line(cx[i],cy[i],cx[i+<span class="num">1</span>],cy[i+<span class="num">1</span>]);
-    setcolor(YELLOW);
-    <span class="kw">for</span>(<span class="kw">int</span> i=<span class="num">0</span>; i&lt;n-<span class="num">3</span>; i++) {
-        <span class="kw">for</span>(<span class="kw">int</span> j=<span class="num">0</span>; j<=steps; j++) {
-            <span class="kw">float</span> t=(<span class="kw">float</span>)j/steps, t2=t*t, t3=t2*t;
-            <span class="kw">float</span> b0=(<span class="num">1.0f</span>/<span class="num">6.0f</span>)*(-t3+<span class="num">3</span>*t2-<span class="num">3</span>*t+<span class="num">1</span>);
-            <span class="kw">float</span> b1=(<span class="num">1.0f</span>/<span class="num">6.0f</span>)*(<span class="num">3</span>*t3-<span class="num">6</span>*t2+<span class="num">4</span>);
-            <span class="kw">float</span> b2=(<span class="num">1.0f</span>/<span class="num">6.0f</span>)*(-<span class="num">3</span>*t3+<span class="num">3</span>*t2+<span class="num">3</span>*t+<span class="num">1</span>);
-            <span class="kw">float</span> b3=(<span class="num">1.0f</span>/<span class="num">6.0f</span>)*t3;
-            <span class="kw">int</span> px=(<span class="kw">int</span>)(b0*cx[i]+b1*cx[i+<span class="num">1</span>]+b2*cx[i+<span class="num">2</span>]+b3*cx[i+<span class="num">3</span>]+<span class="num">0.5f</span>);
-            <span class="kw">int</span> py=(<span class="kw">int</span>)(b0*cy[i]+b1*cy[i+<span class="num">1</span>]+b2*cy[i+<span class="num">2</span>]+b3*cy[i+<span class="num">3</span>]+<span class="num">0.5f</span>);
-            putpixel(px, py, YELLOW);
-        }
-    }
-}</pre></div>
+<span class="kw">def</span> <span class="fn">b_spline_curve</span>(control_x, control_y, steps=<span class="num">50</span>):
+    n = <span class="fn">len</span>(control_x)
+    all_px, all_py = [], []
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n - <span class="num">3</span>):
+        ts = np.<span class="fn">linspace</span>(<span class="num">0</span>, <span class="num">1</span>, steps + <span class="num">1</span>)
+        t2 = ts ** <span class="num">2</span>; t3 = ts ** <span class="num">3</span>
+        b0 = (-t3 + <span class="num">3</span>*t2 - <span class="num">3</span>*ts + <span class="num">1</span>) / <span class="num">6.0</span>
+        b1 = (<span class="num">3</span>*t3 - <span class="num">6</span>*t2 + <span class="num">4</span>) / <span class="num">6.0</span>
+        b2 = (-<span class="num">3</span>*t3 + <span class="num">3</span>*t2 + <span class="num">3</span>*ts + <span class="num">1</span>) / <span class="num">6.0</span>
+        b3 = t3 / <span class="num">6.0</span>
+        px = (b0*control_x[i] + b1*control_x[i+<span class="num">1</span>]
+              + b2*control_x[i+<span class="num">2</span>] + b3*control_x[i+<span class="num">3</span>])
+        py = (b0*control_y[i] + b1*control_y[i+<span class="num">1</span>]
+              + b2*control_y[i+<span class="num">2</span>] + b3*control_y[i+<span class="num">3</span>])
+        all_px.<span class="fn">extend</span>(px); all_py.<span class="fn">extend</span>(py)
+    <span class="kw">return</span> all_px, all_py
+
+<span class="fn">print</span>(<span class="str">"Enter control points (enter 'done' when finished):"</span>)
+ctrl_x, ctrl_y = [], []
+<span class="kw">while</span> <span class="kw">True</span>:
+    inp = <span class="fn">input</span>(<span class="str">"  x y (or 'done'): "</span>).<span class="fn">strip</span>()
+    <span class="kw">if</span> inp.<span class="fn">lower</span>() == <span class="str">"done"</span>: <span class="kw">break</span>
+    px, py = <span class="fn">map</span>(<span class="kw">int</span>, inp.<span class="fn">split</span>())
+    ctrl_x.append(px); ctrl_y.append(py)
+
+px, py = <span class="fn">b_spline_curve</span>(ctrl_x, ctrl_y)
+fig, ax = plt.<span class="fn">subplots</span>()
+ax.<span class="fn">plot</span>(ctrl_x, ctrl_y, <span class="str">"w--"</span>, label=<span class="str">"Control polygon"</span>)
+ax.<span class="fn">plot</span>(px, py, <span class="str">"yellow"</span>, linewidth=<span class="num">2.5</span>, label=<span class="str">"B-Spline curve"</span>)
+plt.<span class="fn">show</span>()</pre></div>
     <div class="section-label">12.4 Interactive Simulation</div>
     <div class="canvas-wrapper">
       <div class="canvas-controls">
