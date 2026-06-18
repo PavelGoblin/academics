@@ -22,16 +22,21 @@ Each notebook follows a clear **step-by-step pipeline**: Load → Explore → Pr
 
 ## Quick Start
 
+### 🖥️ Local Jupyter
 ```bash
-# 1. Install dependencies
 pip install -r requirements.txt
-
-# 2. Launch Jupyter
 jupyter notebook
 ```
 
-> **Note:** You'll need a [Kaggle account](https://www.kaggle.com) with API key set up
-> (`~/.kaggle/kaggle.json`) for `kagglehub` to download datasets.
+### ☁️ Google Colab (Recommended)
+1. Open any notebook on GitHub
+2. Click **"Open in Colab"** button
+3. Run the first cell → upload your `kaggle.json` when prompted
+4. Run All (Runtime → Run all)
+
+> **Get your Kaggle API key:**
+> 1. Go to [kaggle.com](https://kaggle.com) → Account → API → Create New Token
+> 2. Download `kaggle.json` and upload it when the notebook asks
 
 ## Universal ML Pipeline (Memory Aid)
 

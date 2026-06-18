@@ -51,7 +51,7 @@ All academic work organized by subject. Labs, assignments, presentations, and pr
 
 | Folder | Description | Live |
 |--------|-------------|------|
-| [AI-ML-Problems](./ai-machine-learning/) | 8 Kaggle ML notebooks — NLP, clustering, regression, image classification | 📁 Code |
+| [AI-ML-Problems](./ai-machine-learning/) | 8 Kaggle ML notebooks — real datasets, Colab-ready, step-by-step pipeline | 📁 Code |
 
 ## 🛠️ Projects
 
