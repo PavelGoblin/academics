@@ -47,6 +47,12 @@ All academic work organized by subject. Labs, assignments, presentations, and pr
 |--------|-------------|------|
 | [english-grammar](./english-grammar/) | Complete English Grammar in Bengali — 32 chapters, 450+ MCQ, IELTS/BCS prep | 📁 Code |
 
+## 🤖 AI & Machine Learning
+
+| Folder | Description | Live |
+|--------|-------------|------|
+| [AI-ML-Problems](./ai-machine-learning/) | 8 classic Kaggle ML problems solved — NLP, clustering, regression, CNN | 📁 Code |
+
 ## 🛠️ Projects
 
 | Folder | Description | Live |
