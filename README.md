@@ -51,7 +51,7 @@ All academic work organized by subject. Labs, assignments, presentations, and pr
 
 | Folder | Description | Live |
 |--------|-------------|------|
-| [AI-ML-Problems](./ai-machine-learning/) | 8 classic Kaggle ML problems solved — NLP, clustering, regression, CNN | 📁 Code |
+| [AI-ML-Problems](./ai-machine-learning/) | 8 Kaggle ML notebooks — NLP, clustering, regression, image classification | 📁 Code |
 
 ## 🛠️ Projects
 
