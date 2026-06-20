@@ -659,6 +659,7 @@
                 <a href="#theme">Theme</a>
                 <a href="#takeaways">  Summary</a>
                 <a href="#quiz">Quiz</a>
+                <a href="#deepdive-en">  Deep Dive</a>
                 <a href="#bangla">  বাংলা</a>
             </ul>
         </div>
@@ -1073,58 +1074,189 @@
         </div>
     </section>
 
+    <!-- ===== ENGLISH DEEP DIVE ===== -->
+    <section class="section" id="deepdive-en">
+        <h2 class="section-title">  Deep Dive: <span class="hl">Cookies & Sessions</span></h2>
+        <p class="section-subtitle">Advanced knowledge guide — everything you need for technical interviews!</p>
+
+        <div class="card">
+            <div class="tag">  Core Difference</div>
+            <h4>১. Cookie vs Session — The Fundamental Difference</h4>
+            <p><strong>Analogy:</strong> You check into a hotel. <strong>Cookie</strong> is the room key in your pocket (you carry it). <strong>Session</strong> is your info at the front desk (stored on the server).</p>
+            <div style="overflow-x:auto;margin-top:12px">
+                <table style="width:100%;border-collapse:collapse;font-size:13px">
+                    <tr style="background:rgba(243,156,18,0.12)">
+                        <th style="padding:8px 12px;text-align:left;color:#f39c12;font-weight:700">Property</th>
+                        <th style="padding:8px 12px;text-align:center;color:#f39c12;font-weight:700"> Cookie</th>
+                        <th style="padding:8px 12px;text-align:center;color:#f39c12;font-weight:700"> Session</th>
+                    </tr>
+                    <tr><td style="padding:8px 12px;border-bottom:1px solid rgba(255,255,255,0.05)">Where stored</td><td style="padding:8px 12px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.05)">Browser (Client-side)</td><td style="padding:8px 12px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.05)">Server (Server-side)</td></tr>
+                    <tr><td style="padding:8px 12px;border-bottom:1px solid rgba(255,255,255,0.05)">Lifespan</td><td style="padding:8px 12px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.05)">Specific time (days/years)</td><td style="padding:8px 12px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.05)">Ends on browser close</td></tr>
+                    <tr><td style="padding:8px 12px;border-bottom:1px solid rgba(255,255,255,0.05)">Data size</td><td style="padding:8px 12px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.05)">Max 4 KB</td><td style="padding:8px 12px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.05)">Server memory dependent</td></tr>
+                    <tr><td style="padding:8px 12px">Security</td><td style="padding:8px 12px;text-align:center">Relatively low</td><td style="padding:8px 12px;text-align:center">More secure</td></tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="card" style="margin-top:20px">
+            <div class="tag">  Session Flow</div>
+            <h4>২. How a Session Works — Step by Step</h4>
+            <p><strong>Step 1 — Login:</strong> You enter username + password. Server verifies and creates a unique <strong>Session ID</strong> (e.g. <code style="color:#f39c12">sess_a7f3k9x2...</code>).</p>
+            <p><strong>Step 2 — Cookie sent:</strong> Server puts this ID into a cookie and sends it to your browser.</p>
+            <p><strong>Step 3 — Every subsequent request:</strong> Your browser automatically sends the Session ID back to the server.</p>
+            <p><strong>Step 4 — Server recognizes you:</strong> Server looks up the ID in its database to identify you — no need to re-enter password.</p>
+        </div>
+
+        <div class="card" style="margin-top:20px">
+            <div class="tag">  Remember Me</div>
+            <h4>৩. How "Remember Me" Works</h4>
+            <p>Normal sessions end when browser closes. But checking "Remember Me" keeps you logged in for up to 30 days.</p>
+            <p><strong>Process:</strong></p>
+            <p> 1. Server generates a strong random <strong>token</strong> (e.g., UUID)</p>
+            <p> 2. Token is NOT stored directly — it's <strong>hashed with bcrypt</strong></p>
+            <p> 3. The original token lives in your browser's cookie</p>
+            <p><strong>Two critical security flags on the cookie:</strong></p>
+            <p> <code style="color:#2ecc71;font-size:13px">HttpOnly</code> — JavaScript can't read this cookie, protecting against XSS attacks</p>
+            <p> <code style="color:#2ecc71;font-size:13px">Secure</code> — Only works over HTTPS, not HTTP</p>
+            <p><strong>Token Rotation:</strong> Every auto-login replaces the old token with a new one. If someone steals an old token, it's useless.</p>
+        </div>
+
+        <div class="card" style="margin-top:20px">
+            <div class="tag">  Device Logout</div>
+            <h4>৪. Logout from Multiple Devices</h4>
+            <p><strong>How does Facebook/Google "Logout from all devices" work?</strong></p>
+            <p>The database has a Session Table like this:</p>
+            <div style="overflow-x:auto;margin:10px 0">
+                <table style="width:100%;border-collapse:collapse;font-size:12px">
+                    <tr style="background:rgba(243,156,18,0.12)">
+                        <th style="padding:6px 10px;color:#f39c12;font-weight:700">Session ID</th>
+                        <th style="padding:6px 10px;color:#f39c12;font-weight:700">User ID</th>
+                        <th style="padding:6px 10px;color:#f39c12;font-weight:700">Device</th>
+                        <th style="padding:6px 10px;color:#f39c12;font-weight:700">Last Active</th>
+                    </tr>
+                    <tr><td style="padding:6px 10px;border-bottom:1px solid rgba(255,255,255,0.05)"><code style="color:#f39c12">sess_abc...</code></td><td style="padding:6px 10px;border-bottom:1px solid rgba(255,255,255,0.05)">user_42</td><td style="padding:6px 10px;border-bottom:1px solid rgba(255,255,255,0.05)">Chrome/Windows</td><td style="padding:6px 10px;border-bottom:1px solid rgba(255,255,255,0.05)">Today</td></tr>
+                    <tr><td style="padding:6px 10px;border-bottom:1px solid rgba(255,255,255,0.05)"><code style="color:#f39c12">sess_def...</code></td><td style="padding:6px 10px;border-bottom:1px solid rgba(255,255,255,0.05)">user_42</td><td style="padding:6px 10px;border-bottom:1px solid rgba(255,255,255,0.05)">Safari/iPhone</td><td style="padding:6px 10px;border-bottom:1px solid rgba(255,255,255,0.05)">Yesterday</td></tr>
+                    <tr><td style="padding:6px 10px"><code style="color:#f39c12">sess_ghi...</code></td><td style="padding:6px 10px">user_42</td><td style="padding:6px 10px">Firefox/Mac</td><td style="padding:6px 10px">3 days ago</td></tr>
+                </table>
+            </div>
+            <p>When you click "Logout from all devices", the server runs <code style="color:#e74c3c;font-size:13px">DELETE FROM sessions WHERE user_id = 42</code>. All session records are gone. Any subsequent request from those devices fails — instant logout everywhere.</p>
+        </div>
+
+        <div class="card" style="margin-top:20px">
+            <div class="tag">  Case Study</div>
+            <h4>৫. How Big Companies Do It</h4>
+            <p><strong>Facebook Cookies:</strong></p>
+            <p> <code style="color:#f39c12;font-size:13px">c_user</code> — stores your User ID</p>
+            <p> <code style="color:#f39c12;font-size:13px">xs</code> — encrypted session token</p>
+            <p> <code style="color:#f39c12;font-size:13px">datr</code> — browser fingerprint for security</p>
+            <p><strong>Google's Approach:</strong> Google uses <strong>Trust Score</strong> in addition to tokens. If your IP suddenly changes or you log in from another country, your Trust Score drops — Google then asks for re-verification. This is built on <strong>OAuth 2.0</strong> protocol.</p>
+        </div>
+
+        <div class="card" style="margin-top:20px">
+            <div class="tag">  Theme Storage</div>
+            <h4>৬. Where to Save Dark/Light Theme?</h4>
+            <p><strong>For non-logged-in users → Use Cookie</strong><br>Simple data, no need for server storage. Browser remembers the theme next time.</p>
+            <p><strong>For logged-in users → Use Database</strong><br>Syncs theme across phone, laptop, and tablet — all devices get the same preference.</p>
+        </div>
+
+        <div class="bangla-tip">
+            <strong>  Critical Rules to Remember:</strong><br>
+              <strong>1. Never store Plain Text:</strong> Always hash passwords and Remember-Me tokens with <strong>bcrypt</strong> or <strong>Argon2</strong>.<br>
+              <strong>2. Don't trust Client data:</strong> Any data from the browser must be validated server-side. Client-side validation is for UX, not security.<br>
+              <strong>3. Beware of Session Fixation:</strong> After successful login, invalidate the old Session ID and create a new one.
+        </div>
+    </section>
+
     <!-- ===== BANGLA DEEP DIVE ===== -->
     <section class="section bangla-section" id="bangla">
-        <h2 class="section-title"><span class="hl">গভীর জ্ঞান</span>  ডীপ ডাইভ</h2>
-        <p class="section-subtitle">প্রশ্নোত্তর পর্বের জন্য প্রস্তুতি — নিজের ভাষায় শিখুন!</p>
+        <h2 class="section-title"><span class="hl">গভীর জ্ঞান</span>  কুকি ও সেশন গাইড</h2>
+        <p class="section-subtitle">প্রশ্নোত্তর পর্বের জন্যই — নিজের ভাষায় গভীরভাবে বুঝুন!</p>
 
         <div class="bangla-card">
-            <div class="q-badge">  কোর কনসেপ্ট</div>
-            <h4>১. কুকি এবং সেশনের মৌলিক পার্থক্য</h4>
-            <p><span class="strong">প্রশ্ন:</span> "কুকি আর সেশনের মধ্যে প্রধান পার্থক্য কী?"</p>
-            <p><span class="strong">উত্তর:</span> <strong>অবস্থান:</strong> কুকি থাকে আপনার ব্রাউজারে (Client-side), সেশন থাকে সার্ভারে (Server-side)। <strong>স্থায়িত্ব:</strong> কুকি নির্দিষ্ট সময় পর্যন্ত (দিন/বছর) থাকে, সেশন ব্রাউজার বন্ধ করলেই শেষ। <strong>সাইজ:</strong> কুকি মাত্র ৪KB ডেটা রাখতে পারে, সেশনে অনেক বেশি ডেটা রাখা যায়!</p>
+            <div class="q-badge">  মূল পার্থক্য</div>
+            <h4>১. কুকি আর সেশনের মূল পার্থক্য</h4>
+            <p><span class="strong">সহজ উদাহরণ:</span> মনে করো তুমি একটা হোটেলে গেছো। <strong>কুকি</strong> হলো তোমার পকেটে রাখা রুমের চাবি — তুমি নিজে বহন করছো। <strong>সেশন</strong> হলো হোটেলের রিসেপশনে রাখা তোমার তথ্য — সার্ভারে থাকছে।</p>
+            <div style="overflow-x:auto;margin-top:12px">
+                <table style="width:100%;border-collapse:collapse;font-size:13px">
+                    <tr style="background:rgba(243,156,18,0.12)">
+                        <th style="padding:8px 12px;text-align:right;color:#f39c12;font-weight:700">বিষয়</th>
+                        <th style="padding:8px 12px;text-align:center;color:#f39c12;font-weight:700"> কুকি</th>
+                        <th style="padding:8px 12px;text-align:center;color:#f39c12;font-weight:700"> সেশন</th>
+                    </tr>
+                    <tr><td style="padding:8px 12px;text-align:right;border-bottom:1px solid rgba(255,255,255,0.05)">কোথায় থাকে</td><td style="padding:8px 12px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.05)">ব্রাউজারে (Client-side)</td><td style="padding:8px 12px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.05)">সার্ভারে (Server-side)</td></tr>
+                    <tr><td style="padding:8px 12px;text-align:right;border-bottom:1px solid rgba(255,255,255,0.05)">কতদিন থাকে</td><td style="padding:8px 12px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.05)">নির্দিষ্ট সময় (দিন/বছর)</td><td style="padding:8px 12px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.05)">ব্রাউজার বন্ধ হলেই শেষ</td></tr>
+                    <tr><td style="padding:8px 12px;text-align:right;border-bottom:1px solid rgba(255,255,255,0.05)">ডেটার সাইজ</td><td style="padding:8px 12px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.05)">সর্বোচ্চ ৪ কিলোবাইট</td><td style="padding:8px 12px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.05)">সার্ভারের মেমোরি অনুযায়ী</td></tr>
+                    <tr><td style="padding:8px 12px;text-align:right">নিরাপত্তা</td><td style="padding:8px 12px;text-align:center">তুলনামূলক কম</td><td style="padding:8px 12px;text-align:center">বেশি নিরাপদ</td></tr>
+                </table>
+            </div>
         </div>
 
         <div class="bangla-card">
-            <div class="q-badge">  সেশন লাইফসাইকেল</div>
-            <h4>২. সেশন কীভাবে তৈরি হয়?</h4>
-            <p><span class="strong">প্রশ্ন:</span> "সার্ভার কীভাবে বোঝে যে আমি সেই একই ব্যক্তি?"</p>
-            <p><span class="strong">উত্তর:</span> আপনি লগইন করলে সার্ভার একটি ইউনিক <strong>সেশন আইডি</strong> তৈরি করে। এটি একটি কুকির মাধ্যমে আপনার ব্রাউজারে পাঠায়। পরবর্তী প্রতিটি রিকোয়েস্টে ব্রাউজার সেই আইডি সার্ভারকে দেয়, আর সার্ভার ডেটাবেসে মিলিয়ে নেয়। সহজ ভাষায় — সার্ভারকে বলে "এই তো আমি, আমার আইডি হলো ১২৩!"</p>
+            <div class="q-badge">  সেশন ফ্লো</div>
+            <h4>২. সেশন কীভাবে কাজ করে?</h4>
+            <p><span class="strong">ধাপ ১ — লগইন করলে:</span> তুমি username আর password দিলে। সার্ভার যাচাই করে একটা ইউনিক <strong>Session ID</strong> তৈরি করে। উদাহরণ: <code style="color:#f39c12;font-size:13px">sess_a7f3k9x2...</code></p>
+            <p><span class="strong">ধাপ ২ — কুকিতে পাঠানো হয়:</span> সার্ভার এই ID-টা একটা কুকির মধ্যে ভরে তোমার ব্রাউজারে পাঠিয়ে দেয়।</p>
+            <p><span class="strong">ধাপ ৩ — পরের প্রতিটি রিকোয়েস্টে:</span> তুমি যখনই নতুন পেজ লোড করো, ব্রাউজার স্বয়ংক্রিয়ভাবে ওই Session ID সার্ভারে পাঠায়।</p>
+            <p><span class="strong">ধাপ ৪ — সার্ভার চেনে:</span> সার্ভার তার ডেটাবেস থেকে ওই ID খুঁজে বের করে বোঝে তুমি কে — তাই বারবার পাসওয়ার্ড দিতে হয় না।</p>
         </div>
 
         <div class="bangla-card">
             <div class="q-badge">  রিমেম্বার মি</div>
-            <h4>৩. "রিমেম্বার মি" এবং নিরাপত্তা</h4>
-            <p><span class="strong">প্রশ্ন:</span> "রিমেম্বার মি চেক করলে ৩০ দিন লগইন থাকে কীভাবে? নিরাপদ তো?"</p>
-            <p><span class="strong">উত্তর:</span> এটি একটি স্থায়ী কুকি ব্যবহার করে। সার্ভার একটি শক্তিশালী র‍্যান্ডম <strong>টোকেন</strong> তৈরি করে (UUID)। কিন্তু টোকেন সরাসরি রাখা হয় না — <strong>bcrypt</strong> দিয়ে হ্যাশ করে রাখা হয়! আরো নিরাপত্তার জন্য <strong>HttpOnly</strong> (জাভাস্ক্রিপ্ট পড়তে পারে না) এবং <strong>Secure</strong> (শুধু HTTPS) ফ্ল্যাগ থাকে। প্রতিবার ব্যবহারের পর পুরনো টোকেন মুছে নতুন টোকেন তৈরি করা হয় — একে বলে <strong>টোকেন রোটেশন</strong>!</p>
+            <h4>৩. "Remember Me" কীভাবে কাজ করে?</h4>
+            <p>সাধারণ সেশন ব্রাউজার বন্ধ হলেই শেষ। কিন্তু "Remember Me" চেক করলে ৩০ দিন পর্যন্ত লগইন থাকে।</p>
+            <p><span class="strong">প্রক্রিয়া:</span></p>
+            <p> ১. সার্ভার একটা শক্তিশালী র‍্যান্ডম <strong>টোকেন</strong> তৈরি করে (যেমন UUID)</p>
+            <p> ২. টোকেনটা সরাসরি ডেটাবেসে রাখা হয় না — <strong>bcrypt দিয়ে হ্যাশ</strong> করে রাখা হয়</p>
+            <p> ৩. আসল টোকেনটা তোমার ব্রাউজারের কুকিতে থাকে</p>
+            <p><span class="strong">কুকিতে দুটো বিশেষ সুরক্ষা থাকে:</span></p>
+            <p> <code style="color:#2ecc71;font-size:13px">HttpOnly</code> — JavaScript এই কুকি পড়তে পারবে না, তাই XSS অ্যাটাক থেকে সুরক্ষিত</p>
+            <p> <code style="color:#2ecc71;font-size:13px">Secure</code> — শুধুমাত্র HTTPS-এ কাজ করবে, HTTP-তে নয়</p>
+            <p><span class="strong">টোকেন রোটেশন:</span> প্রতিবার অটো-লগইন হওয়ার পর পুরনো টোকেন মুছে ফেলে নতুন টোকেন তৈরি হয়। এতে কেউ পুরনো টোকেন চুরি করলেও কাজে আসবে না।</p>
         </div>
 
         <div class="bangla-card">
             <div class="q-badge">  ডিভাইস লগআউট</div>
-            <h4>৪. ডিভাইস ম্যানেজমেন্ট ও লগআউট</h4>
-            <p><span class="strong">প্রশ্ন:</span> "ফেসবুক কীভাবে এক ডিভাইস থেকে অন্য ডিভাইস লগআউট করে?"</p>
-            <p><span class="strong">উত্তর:</span> সার্ভারের ডেটাবেসে প্রতিটি ডিভাইসের জন্য আলাদা <strong>সেশন টোকেন</strong> এবং ডিভাইসের তথ্য (IP, ব্রাউজার) জমা থাকে। "Logout from all devices" ক্লিক করলে সার্ভার ডেটাবেস থেকে আপনার ইউজার আইডির সব সেশন আইডি <strong>ডিলিট (DELETE)</strong> করে দেয়। এরপর ওই ডিভাইস থেকে রিকোয়েস্ট আসলে সার্ভার আর আইডি খুঁজে পায় না — লগআউট!</p>
+            <h4>৪. একাধিক ডিভাইস থেকে লগআউট</h4>
+            <p><span class="strong">ফেসবুক বা গুগল কীভাবে "Logout from all devices" করে?</span></p>
+            <p>ডেটাবেসে একটা Session Table থাকে এরকম:</p>
+            <div style="overflow-x:auto;margin:10px 0">
+                <table style="width:100%;border-collapse:collapse;font-size:12px">
+                    <tr style="background:rgba(243,156,18,0.12)">
+                        <th style="padding:6px 10px;color:#f39c12;font-weight:700">Session ID</th>
+                        <th style="padding:6px 10px;color:#f39c12;font-weight:700">User ID</th>
+                        <th style="padding:6px 10px;color:#f39c12;font-weight:700">Device</th>
+                        <th style="padding:6px 10px;color:#f39c12;font-weight:700">Last Active</th>
+                    </tr>
+                    <tr><td style="padding:6px 10px;border-bottom:1px solid rgba(255,255,255,0.05)"><code style="color:#f39c12">sess_abc...</code></td><td style="padding:6px 10px;border-bottom:1px solid rgba(255,255,255,0.05)">user_42</td><td style="padding:6px 10px;border-bottom:1px solid rgba(255,255,255,0.05)">Chrome/Windows</td><td style="padding:6px 10px;border-bottom:1px solid rgba(255,255,255,0.05)">আজ</td></tr>
+                    <tr><td style="padding:6px 10px;border-bottom:1px solid rgba(255,255,255,0.05)"><code style="color:#f39c12">sess_def...</code></td><td style="padding:6px 10px;border-bottom:1px solid rgba(255,255,255,0.05)">user_42</td><td style="padding:6px 10px;border-bottom:1px solid rgba(255,255,255,0.05)">Safari/iPhone</td><td style="padding:6px 10px;border-bottom:1px solid rgba(255,255,255,0.05)">গতকাল</td></tr>
+                    <tr><td style="padding:6px 10px"><code style="color:#f39c12">sess_ghi...</code></td><td style="padding:6px 10px">user_42</td><td style="padding:6px 10px">Firefox/Mac</td><td style="padding:6px 10px">৩ দিন আগে</td></tr>
+                </table>
+            </div>
+            <p>তুমি "Logout from all devices" ক্লিক করলে সার্ভার <code style="color:#e74c3c;font-size:13px">DELETE FROM sessions WHERE user_id = 42</code> চালিয়ে সব রেকর্ড মুছে দেয়। এরপর ওই ডিভাইসগুলো থেকে কোনো রিকোয়েস্ট আসলে সার্ভার Session ID খুঁজে পায় না — ফলে সব জায়গা থেকে লগআউট হয়ে যায়।</p>
         </div>
 
         <div class="bangla-card">
             <div class="q-badge">  কেস স্টাডি</div>
-            <h4>৫. বড় কোম্পানিগুলোর উদাহরণ</h4>
-            <p><span class="strong">প্রশ্ন:</span> "ফেসবুক বা গুগল কেন এতগুলো কুকি ব্যবহার করে?"</p>
-            <p><span class="strong">উত্তর:</span> <strong>ফেসবুক</strong>: <span class="strong">c_user</span> — অ্যাকাউন্ট চিনতে, <span class="strong">xs</span> — এনক্রিপ্টেড সেশন টোকেন, <span class="strong">datr</span> — ব্রাউজার ফিঙ্গারপ্রিন্ট। <strong>গুগল</strong>: <span class="strong">OAuth 2.0</span> এবং <strong>Trust Score</strong> ব্যবহার করে। আপনার IP বা ব্রাউজার হঠাৎ বদলে গেলে ট্রাস্ট স্কোর কমে যায়, তাই গুগল পুনরায় ভেরিফাই করতে বলে!</p>
+            <h4>৫. বড় কোম্পানিরা কীভাবে করে?</h4>
+            <p><span class="strong">Facebook-এর কুকি:</span></p>
+            <p> <code style="color:#f39c12;font-size:13px">c_user</code> — তোমার User ID রাখে, তোমাকে চিনতে</p>
+            <p> <code style="color:#f39c12;font-size:13px">xs</code> — এনক্রিপ্টেড সেশন টোকেন</p>
+            <p> <code style="color:#f39c12;font-size:13px">datr</code> — ব্রাউজারের পরিচয় যাচাই করে নিরাপত্তার জন্য</p>
+            <p><span class="strong">Google-এর পদ্ধতি:</span> Google শুধু টোকেন নয়, <strong>Trust Score</strong> ব্যবহার করে। তোমার IP হঠাৎ বদলে গেলে বা অন্য দেশ থেকে লগইন হলে Trust Score কমে যায় — তখন Google পুনরায় ভেরিফিকেশন চায়। এটি <strong>OAuth 2.0</strong> প্রোটোকলের উপর ভিত্তি করে কাজ করে।</p>
         </div>
 
         <div class="bangla-card">
-            <div class="q-badge">  থিম সেটিংস</div>
-            <h4>৬. থিম সেটিংস — ডার্ক/লাইট মোড</h4>
-            <p><span class="strong">প্রশ্ন:</span> "ডার্ক মোড বা লাইট মোড সেভ করার সেরা উপায় কোনটি?"</p>
-            <p><span class="strong">উত্তর:</span> <strong>কুকিই সেরা!</strong> থিম একটি সাধারণ তথ্য, সার্ভারে জমা রাখার দরকার নেই। কুকিতে রাখলে লগইন না থাকলেও ব্রাউজার আপনার পছন্দ মনে রাখবে। <strong>প্রো টিপ:</strong> লগইন করা ইউজারদের জন্য ডেটাবেসে থিম সেভ করুন — তাহলে ফোন বা ল্যাপটপ যেখান থেকে ঢুকবেন, একই থিম পাবেন!</p>
+            <div class="q-badge">  থিম স্টোরেজ</div>
+            <h4>৬. Dark/Light থিম কোথায় সেভ করবে?</h4>
+            <p><span class="strong">লগইন ছাড়া ইউজারের জন্য → কুকিতে রাখো</span><br>কারণ: সহজ তথ্য, সার্ভারে রাখার দরকার নেই। ব্রাউজার পরের বার খুললেও থিম মনে থাকবে।</p>
+            <p><span class="strong">লগইন করা ইউজারের জন্য → ডেটাবেসে রাখো</span><br>কারণ: তাহলে ফোন, ল্যাপটপ, ট্যাব — সব ডিভাইসে একই থিম পাবে।</p>
         </div>
 
         <div class="bangla-tip">
-            <strong>  প্রস্তুতি টিপস:</strong><br>
-              ডেটাবেসে কখনও পাসওয়ার্ড বা টোকেন সরাসরি (Plain text) রাখা যাবে না — সবসময় <strong>হ্যাশ</strong> করে রাখতে হবে।<br>
-              ক্লায়েন্ট থেকে আসা ডেটাকে কখনও অন্ধভাবে বিশ্বাস করা যাবে না — সার্ভারে <strong>যাচাই</strong> করতে হবে।<br>
-              এই তথ্যগুলো মনে থাকলে আপনি যেকোনো টেকনিক্যাল প্রশ্নের উত্তর আত্মবিশ্বাসের সাথে দিতে পারবেন!  
+            <strong>  মনে রাখার মতো গুরুত্বপূর্ণ নিয়ম:</strong><br>
+              <strong>১. কখনো Plain Text রাখবে না:</strong> ডেটাবেসে পাসওয়ার্ড বা Remember-Me টোকেন সরাসরি রাখা মানে বিপদ ডেকে আনা। সবসময় <strong>bcrypt</strong> বা <strong>Argon2</strong> দিয়ে হ্যাশ করো।<br>
+              <strong>২. Client-এর ডেটা বিশ্বাস করো না:</strong> ব্রাউজার থেকে আসা যেকোনো তথ্য সার্ভারে যাচাই করতেই হবে। Client-side validation শুধু UX-এর জন্য, security-র জন্য নয়।<br>
+              <strong>৩. Session Fixation থেকে সাবধান:</strong> লগইন সফল হওয়ার পর পুরনো Session ID বাতিল করে নতুন ID তৈরি করো।
         </div>
     </section>
 
