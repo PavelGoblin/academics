@@ -1,6 +1,6 @@
 # Mohammad Ibrahim Pavel — Portfolio
 
-> **Live**: https://pavelgoblin.github.io/academics/pavel-portfolio/
+> **Live**: https://pavelgoblin.github.io/academics/presentations/pavel-portfolio/
 
 Built with React + Vite. Features a Kali Linux-style terminal boot animation.
 
