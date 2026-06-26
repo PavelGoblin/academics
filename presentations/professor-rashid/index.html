@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prof. Dr. Mohammad Mamunur Rashid — Academic Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,500&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    :root {
+      --navy: #0a1628;
+      --navy-light: #132240;
+      --accent: #c9a84c;
+      --accent-light: #e8d6a0;
+      --cream: #f8f6f1;
+      --white: #ffffff;
+      --border: #e5e0d6;
+      --text: #1a1a1a;
+      --text-light: #6b6b6b;
+      --text-muted: #999;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    .container { max-width: 1060px; margin: 0 auto; padding: 0 2rem; }
+
+    ::selection { background: var(--accent); color: var(--navy); }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    nav .container {
+      display: flex; justify-content: space-between;
+      align-items: center; padding: 0.8rem 2rem;
+    }
+    .brand {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700; font-size: 1rem;
+      color: var(--navy);
+    }
+    .brand span { color: var(--accent); }
+    nav ul { list-style: none; display: flex; gap: 1.6rem; }
+    nav a {
+      text-decoration: none; color: var(--text-light);
+      font-size: 0.78rem; font-weight: 500;
+      letter-spacing: 0.04em; text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    nav a:hover { color: var(--accent); }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex; align-items: center;
+      background: linear-gradient(160deg, var(--navy) 0%, #0d1f3c 40%, #1a2d4e 100%);
+      position: relative; overflow: hidden;
+      padding: 8rem 0 4rem;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse at 20% 50%, rgba(201,168,76,0.06) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 50%, rgba(255,255,255,0.03) 0%, transparent 50%);
+    }
+    .hero-grid {
+      display: grid; grid-template-columns: 1.2fr 0.8fr;
+      gap: 3rem; align-items: center; position: relative; z-index: 1;
+    }
+    .hero-badge {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem; letter-spacing: 0.2em;
+      color: var(--accent);
+      border: 1px solid rgba(201,168,76,0.25);
+      padding: 0.3rem 1rem; margin-bottom: 1.2rem;
+      text-transform: uppercase;
+    }
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.4rem, 4.5vw, 3.5rem);
+      font-weight: 700; line-height: 1.15;
+      color: #fff; margin-bottom: 0.3rem;
+    }
+    .hero h1 .accent { color: var(--accent); }
+    .hero .title-line {
+      font-size: 1rem; color: rgba(255,255,255,0.6);
+      font-weight: 400; margin-bottom: 0.3rem;
+    }
+    .hero .sub-line {
+      font-size: 0.82rem; color: rgba(255,255,255,0.4);
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .hero-desc {
+      color: rgba(255,255,255,0.55);
+      font-size: 0.88rem; max-width: 520px;
+      margin: 1.5rem 0 2rem; line-height: 1.8;
+    }
+    .hero-cta {
+      display: flex; gap: 1rem; flex-wrap: wrap;
+    }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.8rem 2rem;
+      background: var(--accent); color: var(--navy);
+      font-weight: 600; font-size: 0.8rem;
+      text-decoration: none; text-transform: uppercase;
+      letter-spacing: 0.05em;
+      transition: all 0.3s;
+    }
+    .btn-primary:hover { background: #dbb956; transform: translateY(-2px); }
+    .btn-outline {
+      display: inline-flex; align-items: center;
+      padding: 0.8rem 2rem;
+      border: 1px solid rgba(255,255,255,0.2);
+      color: rgba(255,255,255,0.7);
+      font-weight: 500; font-size: 0.8rem;
+      text-decoration: none; text-transform: uppercase;
+      letter-spacing: 0.05em;
+      transition: all 0.3s;
+    }
+    .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+    .hero-stats {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 1.2rem; margin-top: 2rem;
+    }
+    .hero-stat {
+      padding: 1rem; text-align: center;
+      border: 1px solid rgba(255,255,255,0.06);
+      background: rgba(255,255,255,0.03);
+    }
+    .hero-stat .num {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem; font-weight: 700;
+      color: var(--accent);
+    }
+    .hero-stat .label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem; color: rgba(255,255,255,0.4);
+      text-transform: uppercase; letter-spacing: 0.12em;
+      margin-top: 0.2rem;
+    }
+
+    .hero-right {
+      display: flex; flex-direction: column; align-items: center;
+    }
+    .portrait-frame {
+      width: 220px; height: 220px; border-radius: 50%;
+      background: linear-gradient(145deg, rgba(201,168,76,0.12), rgba(201,168,76,0.04));
+      border: 2px solid rgba(201,168,76,0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 5rem; margin-bottom: 1.5rem;
+      position: relative;
+    }
+    .portrait-frame::after {
+      content: '';
+      position: absolute; inset: -6px; border-radius: 50%;
+      border: 1px solid rgba(201,168,76,0.1);
+      animation: pulse-ring 3s ease-in-out infinite;
+    }
+    @keyframes pulse-ring {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.05); opacity: 0.3; }
+    }
+    .quick-info {
+      text-align: center; color: rgba(255,255,255,0.5);
+      font-size: 0.78rem; line-height: 1.8;
+    }
+    .quick-info strong { color: rgba(255,255,255,0.7); }
+
+    /* SECTIONS */
+    section { padding: 5rem 0; }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem; font-weight: 700;
+      color: var(--navy); margin-bottom: 2.5rem;
+      display: flex; align-items: center; gap: 1rem;
+    }
+    .section-title::after {
+      content: ''; flex: 1; height: 1px;
+      background: var(--border);
+    }
+    .section-title .num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem; color: var(--accent);
+      font-weight: 400;
+    }
+    section.alt { background: var(--white); }
+
+    /* ABOUT */
+    .about-grid {
+      display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 3rem;
+    }
+    .about-text p {
+      color: var(--text-light); margin-bottom: 1rem;
+      font-size: 0.92rem; line-height: 1.8;
+    }
+    .about-text strong { color: var(--text); }
+
+    .info-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      padding: 1.8rem;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.03);
+    }
+    .info-card h3 {
+      font-size: 0.7rem; text-transform: uppercase;
+      letter-spacing: 0.18em; color: var(--accent);
+      font-family: 'JetBrains Mono', monospace;
+      margin-bottom: 1rem;
+    }
+    .info-row {
+      display: flex; justify-content: space-between;
+      padding: 0.65rem 0; border-bottom: 1px solid var(--border);
+      font-size: 0.85rem;
+    }
+    .info-row:last-child { border-bottom: none; }
+    .info-row .key { color: var(--text-light); font-size: 0.78rem; }
+    .info-row .val { color: var(--text); font-weight: 500; text-align: right; }
+
+    /* CAREER */
+    .timeline { position: relative; padding-left: 2.5rem; }
+    .timeline::before {
+      content: '';
+      position: absolute; left: 0; top: 0;
+      width: 2px; height: 100%;
+      background: linear-gradient(180deg, var(--accent), var(--navy-light));
+    }
+    .tl-item {
+      position: relative; margin-bottom: 2rem; padding-left: 1.5rem;
+    }
+    .tl-item::before {
+      content: '';
+      position: absolute;
+      left: -2.85rem; top: 0.4rem;
+      width: 12px; height: 12px;
+      background: var(--accent); border-radius: 50%;
+      border: 2px solid var(--cream);
+    }
+    .tl-item .year {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem; color: var(--accent); font-weight: 600;
+    }
+    .tl-item h4 { font-size: 1rem; margin: 0.2rem 0; }
+    .tl-item p { color: var(--text-light); font-size: 0.85rem; }
+
+    /* EDUCATION */
+    .edu-table {
+      width: 100%; border-collapse: collapse;
+      background: var(--white);
+      border: 1px solid var(--border);
+    }
+    .edu-table th {
+      background: var(--navy); color: #fff;
+      padding: 0.8rem 1rem; font-size: 0.75rem;
+      font-weight: 600; text-align: left;
+      text-transform: uppercase; letter-spacing: 0.05em;
+    }
+    .edu-table td {
+      padding: 0.8rem 1rem; font-size: 0.85rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .edu-table tr:last-child td { border-bottom: none; }
+    .edu-table tr:hover td { background: rgba(201,168,76,0.04); }
+
+    /* RESEARCH INTERESTS */
+    .interests {
+      display: flex; flex-wrap: wrap; gap: 0.7rem;
+    }
+    .interest {
+      padding: 0.55rem 1.2rem;
+      background: var(--white);
+      border: 1px solid var(--border);
+      font-size: 0.82rem; color: var(--text);
+      transition: all 0.3s;
+      cursor: default;
+    }
+    .interest:hover {
+      border-color: var(--accent); color: var(--accent);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(201,168,76,0.1);
+    }
+
+    /* PUBLICATIONS */
+    .pub-group {
+      margin-bottom: 2rem;
+    }
+    .pub-group h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem; color: var(--navy);
+      margin-bottom: 1rem; font-weight: 700;
+    }
+    .pub-list { list-style: none; }
+    .pub-item {
+      padding: 1rem 1.2rem; margin-bottom: 0.5rem;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      font-size: 0.83rem; line-height: 1.6;
+      color: var(--text-light);
+      transition: all 0.3s;
+    }
+    .pub-item:hover {
+      transform: translateX(4px);
+      border-color: var(--accent);
+    }
+    .pub-item .ref {
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--accent); font-weight: 600;
+      font-size: 0.7rem;
+    }
+    .pub-item strong { color: var(--text); }
+    .pub-item em { color: var(--text-muted); }
+
+    /* CV */
+    .cv-section {
+      text-align: center; padding: 3rem 0;
+      background: var(--navy);
+      color: #fff;
+    }
+    .cv-section h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem; margin-bottom: 0.8rem;
+    }
+    .cv-section p { color: rgba(255,255,255,0.5); margin-bottom: 1.5rem; font-size: 0.9rem; }
+    .cv-section .btn-primary { font-size: 0.85rem; }
+
+    /* FOOTER */
+    footer {
+      padding: 2.5rem 0;
+      text-align: center;
+      border-top: 1px solid var(--border);
+      color: var(--text-light); font-size: 0.8rem;
+      background: var(--white);
+    }
+    footer strong { color: var(--text); }
+
+    /* REVEAL ANIMATION */
+    .reveal {
+      opacity: 0; transform: translateY(28px);
+      transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* FLOATING PARTICLES */
+    .particles {
+      position: absolute; inset: 0; overflow: hidden;
+      pointer-events: none; z-index: 0;
+    }
+    .particle {
+      position: absolute;
+      width: 4px; height: 4px;
+      background: rgba(201,168,76,0.15);
+      border-radius: 50%;
+    }
+
+    @media (max-width: 768px) {
+      nav ul { display: none; }
+      .hero-grid { grid-template-columns: 1fr; text-align: center; }
+      .hero-desc { margin-left: auto; margin-right: auto; }
+      .hero-cta { justify-content: center; }
+      .hero-right { order: -1; }
+      .portrait-frame { width: 160px; height: 160px; font-size: 3.5rem; }
+      .hero-stats { grid-template-columns: 1fr 1fr; }
+      .about-grid { grid-template-columns: 1fr; }
+      section { padding: 3rem 0; }
+      .container { padding: 0 1.2rem; }
+      .edu-table { font-size: 0.8rem; }
+      .edu-table th, .edu-table td { padding: 0.6rem 0.7rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="container">
+      <div class="brand">Dr. Mamunur<span>.</span>Rashid</div>
+      <ul>
+        <li><a href="#about">About</a></li>
+        <li><a href="#career">Career</a></li>
+        <li><a href="#education">Education</a></li>
+        <li><a href="#research">Research</a></li>
+        <li><a href="#publications">Publications</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="particles" id="particles"></div>
+    <div class="container">
+      <div class="hero-grid">
+        <div class="reveal">
+          <div class="hero-badge">Bangladesh Open University</div>
+          <h1>Prof. Dr. Mohammad<br><span class="accent">Mamunur Rashid</span></h1>
+          <div class="title-line">Professor, Computer Science</div>
+          <div class="sub-line">School of Science &amp; Technology · Additional Director, IQAC</div>
+          <p class="hero-desc">
+            A dedicated academician with over two decades of service at Bangladesh Open University.
+            Passionate about technology in healthcare, digital transformation, and open &amp; distance learning.
+            Microsoft Certified Professional and UGC PhD Research Fellow.
+          </p>
+          <div class="hero-cta">
+            <a href="#about" class="btn-primary">Explore Profile</a>
+            <a href="#publications" class="btn-outline">Publications</a>
+          </div>
+        </div>
+        <div class="hero-right reveal">
+          <div class="portrait-frame">👨‍🏫</div>
+          <div class="quick-info">
+            <strong>Prof. Dr. Mohammad Mamunur Rashid</strong><br>
+            PhD (BUP), MSc (Madras), BSc (Madras)<br>
+            MCP · UGC Fellow
+          </div>
+          <div class="hero-stats">
+            <div class="hero-stat"><div class="num">22</div><div class="label">Years at BOU</div></div>
+            <div class="hero-stat"><div class="num">15+</div><div class="label">Publications</div></div>
+            <div class="hero-stat"><div class="num">04</div><div class="label">Course Books</div></div>
+            <div class="hero-stat"><div class="num">MCP</div><div class="label">Certified</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="container">
+      <h2 class="section-title reveal"><span class="num">01</span>Biography</h2>
+      <div class="about-grid">
+        <div class="about-text reveal">
+          <p><strong>Dr. Mohammad Mamunur Rashid</strong> is a Professor at the School of Science and Technology, Bangladesh Open University (BOU), Gazipur — a position he has held since 24 September 2023. He also serves as the <strong>Additional Director (Additional Charge)</strong> of the Institutional Quality Assurance Cell (IQAC) at BOU.</p>
+          <p>His journey at BOU began in <strong>2004</strong> as an Assistant Programmer. He later became a Lecturer in 2010 and progressed through the ranks — Assistant Professor, Associate Professor, and finally Professor. This two-decade trajectory reflects his unwavering commitment to open and distance education in Bangladesh.</p>
+          <p>Dr. Rashid earned his <strong>PhD</strong> from Bangladesh University of Professionals (2023), and his <strong>MSc</strong> and <strong>BSc</strong> in Computer Science from the University of Madras, India (2003 &amp; 2001). He is a <strong>Microsoft Certified Professional</strong> and received the prestigious <strong>UGC PhD Research Fellowship</strong> in 2018.</p>
+          <p>A multidisciplinary researcher, his work spans technology adoption in healthcare, machine learning, e-learning, and structural equation modeling. He has authored over 15 peer-reviewed papers and several BOU course textbooks, and serves on editorial boards and academic committees.</p>
+        </div>
+        <div class="info-card reveal">
+          <h3>Quick Facts</h3>
+          <div class="info-row"><span class="key">Position</span><span class="val">Professor, CSE</span></div>
+          <div class="info-row"><span class="key">School</span><span class="val">Science &amp; Technology</span></div>
+          <div class="info-row"><span class="key">University</span><span class="val">Bangladesh Open University</span></div>
+          <div class="info-row"><span class="key">Addl. Role</span><span class="val">Addl. Director, IQAC</span></div>
+          <div class="info-row"><span class="key">PhD</span><span class="val">BUP (2023)</span></div>
+          <div class="info-row"><span class="key">MSc</span><span class="val">Univ. of Madras (2003)</span></div>
+          <div class="info-row"><span class="key">BSc</span><span class="val">Univ. of Madras (2001)</span></div>
+          <div class="info-row"><span class="key">Certification</span><span class="val">Microsoft Certified Professional</span></div>
+          <div class="info-row"><span class="key">Fellowship</span><span class="val">UGC PhD Fellow (2018)</span></div>
+          <div class="info-row"><span class="key">Joined BOU</span><span class="val">2004 (Assistant Programmer)</span></div>
+          <div class="info-row"><span class="key">Location</span><span class="val">Gazipur, Bangladesh</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CAREER -->
+  <section id="career" class="alt">
+    <div class="container">
+      <h2 class="section-title reveal"><span class="num">02</span>Career Journey</h2>
+      <div class="timeline reveal">
+        <div class="tl-item">
+          <div class="year">2023 – Present</div>
+          <h4>Professor</h4>
+          <p>School of Science &amp; Technology, Bangladesh Open University</p>
+        </div>
+        <div class="tl-item">
+          <div class="year">2019 – 2023</div>
+          <h4>Associate Professor</h4>
+          <p>Computer Science, SST, Bangladesh Open University</p>
+        </div>
+        <div class="tl-item">
+          <div class="year">2014 – 2019</div>
+          <h4>Assistant Professor</h4>
+          <p>Computer Science, SST, Bangladesh Open University</p>
+        </div>
+        <div class="tl-item">
+          <div class="year">2010 – 2014</div>
+          <h4>Lecturer</h4>
+          <p>Computer Science, SST, Bangladesh Open University</p>
+        </div>
+        <div class="tl-item">
+          <div class="year">2004 – 2010</div>
+          <h4>Assistant Programmer</h4>
+          <p>Computer Division, Bangladesh Open University</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EDUCATION -->
+  <section id="education">
+    <div class="container">
+      <h2 class="section-title reveal"><span class="num">03</span>Education</h2>
+      <div class="reveal" style="overflow-x: auto;">
+        <table class="edu-table">
+          <thead>
+            <tr><th>Degree</th><th>Institution</th><th>Class/Result</th><th>Year</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>PhD</td><td>Bangladesh University of Professionals</td><td>Awarded</td><td>2023</td></tr>
+            <tr><td>MSc in Computer Science</td><td>University of Madras, India</td><td>First Class</td><td>2003</td></tr>
+            <tr><td>BSc in Computer Science</td><td>University of Madras, India</td><td>First Class</td><td>2001</td></tr>
+            <tr><td>HSC</td><td>Nagarpur Govt. College, Dhaka Board</td><td>First Division</td><td>1997</td></tr>
+            <tr><td>SSC</td><td>Govt. Jhadunath Pilot Model High School, Dhaka Board</td><td>First Division (Star)</td><td>1995</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESEARCH -->
+  <section id="research" class="alt">
+    <div class="container">
+      <h2 class="section-title reveal"><span class="num">04</span>Research Interests</h2>
+      <div class="interests reveal">
+        <span class="interest">Technology in Healthcare</span>
+        <span class="interest">Technology Adoption &amp; Diffusion</span>
+        <span class="interest">Digital Transformation</span>
+        <span class="interest">Educational Technology</span>
+        <span class="interest">E-Learning &amp; ODL</span>
+        <span class="interest">Structural Equation Modeling</span>
+        <span class="interest">Machine Learning</span>
+        <span class="interest">Data Science &amp; Analytics</span>
+        <span class="interest">Telemedicine</span>
+        <span class="interest">eHealth Literacy</span>
+        <span class="interest">Neural Networks</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- PUBLICATIONS -->
+  <section id="publications">
+    <div class="container">
+      <h2 class="section-title reveal"><span class="num">05</span>Publications</h2>
+
+      <div class="pub-group reveal">
+        <h3>Journal Articles</h3>
+        <ul class="pub-list">
+          <li class="pub-item"><span class="ref">J12.</span> <strong>Rashid MM</strong> (2023). Predicting Determinants of Telemedicine Adoption in Healthcare: An Artificial Neural Network Approach. <em>International Journal of Engineering Research &amp; Technology</em>, 12(3), 22-27.</li>
+          <li class="pub-item"><span class="ref">J11.</span> <strong>Rashid MM</strong> (2022). The Impact of Social Influence and Reliability of the Service on Telemedicine Services Acceptance. <em>Journal of Scientific and Technological Research</em>, 4(1), 12-23.</li>
+          <li class="pub-item"><span class="ref">J10.</span> <strong>Rashid MM</strong> (2022). Assessing eHealth Literacy among Bangladeshi Telemedicine Users. <em>Journal of Scientific and Technological Research</em>, 4(1), 72-80.</li>
+          <li class="pub-item"><span class="ref">J9.</span> <strong>Rashid MM</strong> &amp; Rahman KMR (2022). Predictive Factors of Patients' Satisfaction with Telemedicine Services Adoption. <em>IJISRT</em>, 7(3), 623-628.</li>
+          <li class="pub-item"><span class="ref">J8.</span> <strong>Rashid MM</strong> (2020). SWOT Analysis of Telemedicine in Healthcare: Bangladesh Perspective. <em>Journal of Scientific and Technological Research</em>, 3(1), 63-69.</li>
+          <li class="pub-item"><span class="ref">J7.</span> <strong>Rashid MM</strong> &amp; Rahman KMR (2020). Telemedicine Initiatives in Bangladesh: A Scoping Review of Two Decades. <em>Journal of Scientific and Technological Research</em>, 3(1), 21-32.</li>
+          <li class="pub-item"><span class="ref">J6.</span> <strong>Rashid MM</strong>, Jahan M., Islam M.A., Ratna M.M. (2015). Student Enrollment and Dropout: An Evaluation Study of Diploma in CS Program at BOU. <em>International Review of Research in Open and Distributed Learning</em>, 16(4). <strong>(Scopus)</strong></li>
+          <li class="pub-item"><span class="ref">J5.</span> Islam MN, <strong>Rashid MM</strong>, et al. (2014). Analysis and Application of Cognitive Radio on 4G Communications. <em>Journal of Communication Engineering &amp; Systems</em>, 4(3).</li>
+          <li class="pub-item"><span class="ref">J4.</span> <strong>Rashid MM</strong> (2013). Developing Technological Skills through Computer Science Programme at BOU. <em>Commonwealth of Learning (COL)</em>.</li>
+          <li class="pub-item"><span class="ref">J3.</span> Hossain MS, <strong>Rashid MM</strong>, et al. (2013). Study the One-bit Hard Combination Scheme on Cognitive Radio Users. <em>IJCNIS</em>, 5(2), 51-57. <strong>(Scopus)</strong></li>
+          <li class="pub-item"><span class="ref">J2.</span> <strong>Rashid MM</strong> (2014). Achieving Education for All: Learner Support Services in Open and Distance Learning. <em>Quality in School Education</em>, NIOS, India.</li>
+          <li class="pub-item"><span class="ref">J1.</span> <strong>Rashid MM</strong> &amp; Islam MS (2011). Implementing e-Governance in Bangladesh and the de facto. <em>Journal of Scientific and Technological Research</em>, 2, 72-80.</li>
+        </ul>
+      </div>
+
+      <div class="pub-group reveal">
+        <h3>Textbooks &amp; Book Chapters</h3>
+        <ul class="pub-list">
+          <li class="pub-item"><span class="ref">B4.</span> <strong>Rashid MM</strong> &amp; Hossain A (2017). <strong>Computer Programming</strong> (3Cr). Bangladesh Open University.</li>
+          <li class="pub-item"><span class="ref">B3.</span> <strong>Rashid MM</strong> &amp; Islam MN (2014). <strong>Visual Programming</strong> (3Cr). Bangladesh Open University.</li>
+          <li class="pub-item"><span class="ref">B2.</span> <strong>Rashid MM</strong> &amp; Islam MN (2014). <strong>Internet Technology and Web Designing</strong> (3Cr). Bangladesh Open University.</li>
+          <li class="pub-item"><span class="ref">B1.</span> <strong>Rashid MM</strong> et al. (2011). <strong>Office Automation and MS Office</strong> (3Cr). Bangladesh Open University.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- CV -->
+  <section class="cv-section">
+    <div class="container reveal">
+      <h2>Full Academic Profile</h2>
+      <p>View the complete profile including all publications, research, and administrative roles on the official BOU website.</p>
+      <a href="https://www.bou.ac.bd/SSTFacultyMember/198012290616" target="_blank" class="btn-primary">
+        View on BOU Website →
+      </a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <p style="margin-bottom: 0.3rem;"><strong>Prof. Dr. Mohammad Mamunur Rashid</strong></p>
+      <p style="margin-bottom: 0.3rem;">School of Science &amp; Technology, Bangladesh Open University, Gazipur-1705, Bangladesh</p>
+      <p style="margin-bottom: 1.5rem;">
+        <a href="https://www.bou.ac.bd/" target="_blank" style="color: var(--accent); text-decoration: none; font-weight: 500;">bou.ac.bd</a>
+      </p>
+      <p style="font-size: 0.72rem; color: var(--text-muted);">
+        Academic Portfolio · Built with care for Web Engineering Lab · Bangladesh Open University
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    // Particles
+    (function() {
+      const c = document.getElementById('particles');
+      for (let i = 0; i < 30; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        p.style.left = Math.random() * 100 + '%';
+        p.style.top = Math.random() * 100 + '%';
+        p.style.width = p.style.height = (2 + Math.random() * 4) + 'px';
+        p.style.animation = `float-${i} ${8 + Math.random() * 12}s linear infinite`;
+        p.style.animationDelay = Math.random() * 5 + 's';
+        c.appendChild(p);
+        const style = document.createElement('style');
+        style.textContent = `
+          @keyframes float-${i} {
+            0% { transform: translate(0, 0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translate(${Math.random() > 0.5 ? '' : '-'}${20 + Math.random() * 60}px, ${Math.random() > 0.5 ? '' : '-'}${20 + Math.random() * 60}px); opacity: 0; }
+          }
+        `;
+        document.head.appendChild(style);
+      }
+    })();
+
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+          setTimeout(() => e.target.classList.add('visible'), i * 80);
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    reveals.forEach(el => io.observe(el));
+  </script>
+</body>
+</html>
