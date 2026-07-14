@@ -1,165 +1,171 @@
+"""
+Lab 8: Line Clipping using Cohen-Sutherland (Interactive)
+=========================================================
+Computer Graphics Course
+
+Clips line segments against a rectangular window using the
+Cohen-Sutherland algorithm, then plots them in a centered 4-axis
+(x / x' , y / y') coordinate view so original and clipped endpoints
+can be compared directly.
+
+The clip window is defined by two inputs:
+    BL = Bottom-Left  (xmin, ymin)
+    UR = Upper-Right  (xmax, ymax)
+
+Outcode bits (relative to the window xmin,ymin,xmax,ymax):
+    1000 TOP, 0100 BOTTOM, 0010 RIGHT, 0001 LEFT
+
+Algorithm
+---------
+1. Compute outcodes for both endpoints.
+2. Both 0000  -> ACCEPT (trivially inside).
+3. Shared bit  -> REJECT (completely outside a region).
+4. Else clip the outside endpoint at a boundary and repeat.
+
+Requirements:
+    pip install matplotlib numpy
+"""
+
+import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib.patches as mpatches
 
-INSIDE = 0
-LEFT = 1
-RIGHT = 2
-BOTTOM = 4
-TOP = 8
+INSIDE = 0b0000
+LEFT = 0b0001
+RIGHT = 0b0010
+BOTTOM = 0b0100
+TOP = 0b1000
 
-XMIN, YMIN = 150, 100
-XMAX, YMAX = 450, 300
 
-def compute_code(x, y):
+def compute_outcode(x, y, win):
+    xmin, ymin, xmax, ymax = win
     code = INSIDE
-    if x < XMIN:
+    if x < xmin:
         code |= LEFT
-    elif x > XMAX:
+    elif x > xmax:
         code |= RIGHT
-    if y < YMIN:
-        code |= TOP
-    elif y > YMAX:
+    if y < ymin:
         code |= BOTTOM
+    elif y > ymax:
+        code |= TOP
     return code
 
-def code_to_str(code):
-    parts = []
-    if code == 0:
-        return "INSIDE"
-    if code & LEFT:
-        parts.append("LEFT")
-    if code & RIGHT:
-        parts.append("RIGHT")
-    if code & TOP:
-        parts.append("TOP")
-    if code & BOTTOM:
-        parts.append("BOTTOM")
-    return "|".join(parts)
 
-def cohen_sutherland_clip(x1, y1, x2, y2):
-    code1 = compute_code(x1, y1)
-    code2 = compute_code(x2, y2)
-    accept = False
-    steps = []
+def clip_line(x0, y0, x1, y1, win):
+    """Clip segment against the window. Returns (accepted, (x0,y0),(x1,y1))."""
+    xmin, ymin, xmax, ymax = win
+    code0 = compute_outcode(x0, y0, win)
+    code1 = compute_outcode(x1, y1, win)
+    accepted = False
 
     while True:
-        steps.append((x1, y1, x2, y2, code1, code2, "accept" if accept else "processing"))
-
-        if code1 == 0 and code2 == 0:
-            accept = True
-            steps.append((x1, y1, x2, y2, code1, code2, "ACCEPTED"))
+        if code0 == 0 and code1 == 0:
+            accepted = True
             break
-        elif code1 & code2:
-            steps.append((x1, y1, x2, y2, code1, code2, "REJECTED (trivial)"))
+        elif code0 & code1:
             break
         else:
-            code_out = code1 if code1 != 0 else code2
-
+            code_out = code0 if code0 != 0 else code1
             if code_out & TOP:
-                x = x1 + (x2 - x1) * (YMIN - y1) / (y2 - y1)
-                y = YMIN
+                x = x0 + (x1 - x0) * (ymax - y0) / (y1 - y0)
+                y = ymax
             elif code_out & BOTTOM:
-                x = x1 + (x2 - x1) * (YMAX - y1) / (y2 - y1)
-                y = YMAX
+                x = x0 + (x1 - x0) * (ymin - y0) / (y1 - y0)
+                y = ymin
             elif code_out & RIGHT:
-                y = y1 + (y2 - y1) * (XMAX - x1) / (x2 - x1)
-                x = XMAX
+                y = y0 + (y1 - y0) * (xmax - x0) / (x1 - x0)
+                x = xmax
             elif code_out & LEFT:
-                y = y1 + (y2 - y1) * (XMIN - x1) / (x2 - x1)
-                x = XMIN
+                y = y0 + (y1 - y0) * (xmin - x0) / (x1 - x0)
+                x = xmin
 
-            if code_out == code1:
-                x1, y1 = x, y
-                code1 = compute_code(x1, y1)
+            if code_out == code0:
+                x0, y0 = x, y
+                code0 = compute_outcode(x0, y0, win)
             else:
-                x2, y2 = x, y
-                code2 = compute_code(x2, y2)
+                x1, y1 = x, y
+                code1 = compute_outcode(x1, y1, win)
 
-    if accept:
-        return (round(x1), round(y1), round(x2), round(y2)), steps
-    return None, steps
+    if accepted:
+        return True, (x0, y0), (x1, y1)
+    return False, (None, None), (None, None)
 
-print("=== Cohen-Sutherland Line Clipping ===")
-print(f"Clipping window: ({XMIN},{YMIN}) to ({XMAX},{YMAX})")
-x1 = int(input("x1 = "))
-y1 = int(input("y1 = "))
-x2 = int(input("x2 = "))
-y2 = int(input("y2 = "))
 
-code1_init = compute_code(x1, y1)
-code2_init = compute_code(x2, y2)
+def plot_4axis(lines, win):
+    xmin, ymin, xmax, ymax = win
+    fig, ax = plt.subplots(figsize=(8, 8))
 
-print(f"\nInitial region codes:")
-print(f"  P1({x1},{y1}) -> {code_to_str(code1_init)} (binary: {code1_init:04b})")
-print(f"  P2({x2},{y2}) -> {code_to_str(code2_init)} (binary: {code2_init:04b})")
+    # clipping window
+    rect = plt.Rectangle((xmin, ymin), xmax - xmin, ymax - ymin,
+                         fill=False, edgecolor='k', linewidth=2,
+                         label='Clip window (BL-UR)')
+    ax.add_patch(rect)
 
-clipped, steps = cohen_sutherland_clip(x1, y1, x2, y2)
+    all_pts = []
+    for (x0, y0, x1, y1) in lines:
+        all_pts.extend([(x0, y0), (x1, y1)])
+        ax.plot([x0, x1], [y0, y1], 'b--', alpha=0.6,
+                label='Original' if (x0, y0, x1, y1) == lines[0] else "")
+        accepted, p0, p1 = clip_line(x0, y0, x1, y1, win)
+        if accepted:
+            all_pts.extend([p0, p1])
+            ax.plot([p0[0], p1[0]], [p0[1], p1[1]], 'r-', linewidth=2.5,
+                    label='Clipped (x\',y\')' if (x0, y0, x1, y1) == lines[0] else "")
+            ax.plot([x0, p0[0]], [y0, p0[1]], 'g:', alpha=0.5)
+            ax.plot([x1, p1[0]], [y1, p1[1]], 'g:', alpha=0.5)
 
-print(f"\n{'Step':<6} {'x1':<6} {'y1':<6} {'x2':<6} {'y2':<6} {'code1':<16} {'code2':<16} {'Status':<20}")
-print("-" * 92)
-for i, (sx1, sy1, sx2, sy2, c1, c2, status) in enumerate(steps):
-    print(f"{i:<6} {sx1:<6} {sy1:<6} {sx2:<6} {sy2:<6} "
-          f"{code_to_str(c1):<16} {code_to_str(c2):<16} {status:<20}")
+    if all_pts:
+        lim = np.max(np.abs(np.array(all_pts))) * 1.2 + 1.0
+    else:
+        lim = 15.0
 
-fig, ax = plt.subplots(figsize=(8, 6))
-ax.set_title("Cohen-Sutherland Line Clipping", color="white", fontsize=13)
+    ax.set_xlim(-lim, lim)
+    ax.set_ylim(-lim, lim)
+    ax.set_aspect('equal')
+    ax.axhline(0, color='k', linewidth=1.2)
+    ax.axvline(0, color='k', linewidth=1.2)
+    ax.grid(True, linestyle='--', alpha=0.5)
+    ax.set_xlabel("x  /  x'  (horizontal)")
+    ax.set_ylabel("y  /  y'  (vertical)")
+    ax.set_title("Cohen-Sutherland Line Clipping [4-axis view]")
+    ax.legend()
+    plt.tight_layout()
+    plt.savefig("clipping_graph.png", dpi=120)
+    print("Graph saved to clipping_graph.png")
+    plt.show()
 
-ax.axhline(0, color="gray", linewidth=0.8, alpha=0.3)
-ax.axvline(0, color="gray", linewidth=0.8, alpha=0.3)
 
-margin = 30
-ax.set_xlim(min(x1, x2, XMIN) - margin, max(x1, x2, XMAX) + margin)
-ax.set_ylim(min(y1, y2, YMIN) - margin, max(y1, y2, YMAX) + margin)
-ax.set_aspect("equal")
-ax.grid(True, alpha=0.3)
+def main():
+    print("=== Cohen-Sutherland Line Clipping (interactive) ===")
 
-win = mpatches.Rectangle(
-    (XMIN, YMIN), XMAX - XMIN, YMAX - YMIN,
-    fill=True, facecolor="white", alpha=0.08,
-    edgecolor="white", linewidth=2, label="Clipping Window"
-)
-ax.add_patch(win)
-ax.text((XMIN + XMAX) // 2 - 40, YMIN - 18, "Clipping Window",
-        color="white", fontsize=8, fontweight="bold", alpha=0.7)
+    print("Define clip window:")
+    blx = float(input("  BL x (bottom-left): "))
+    bly = float(input("  BL y (bottom-left): "))
+    urx = float(input("  UR x (upper-right): "))
+    ury = float(input("  UR y (upper-right): "))
+    win = (blx, bly, urx, ury)
+    print(f"Clip window: x[{blx},{urx}]  y[{bly},{ury}]")
 
-ax.plot([x1, x2], [y1, y2], "w-", linewidth=1.5, alpha=0.5, label="Original line")
-ax.scatter([x1, x2], [y1, y2], c="white", s=60, zorder=4)
+    n = int(input("Enter number of lines: "))
+    lines = []
+    for i in range(n):
+        print(f"  Line {i+1} (x0 y0 x1 y1):")
+        x0 = float(input("    x0: "))
+        y0 = float(input("    y0: "))
+        x1 = float(input("    x1: "))
+        y1 = float(input("    y1: "))
+        lines.append((x0, y0, x1, y1))
 
-if clipped:
-    cx1, cy1, cx2, cy2 = clipped
-    ax.plot([cx1, cx2], [cy1, cy2], "y-", linewidth=3, label="Clipped (visible)")
-    ax.scatter([cx1, cx2], [cy1, cy2], c="yellow", s=80, zorder=5, edgecolors="darkgoldenrod")
-    ax.annotate(f"({cx1},{cy1})", (cx1, cy1), xytext=(5, 5),
-                textcoords="offset points", color="yellow", fontsize=9, fontweight="bold")
-    ax.annotate(f"({cx2},{cy2})", (cx2, cy2), xytext=(5, 5),
-                textcoords="offset points", color="yellow", fontsize=9, fontweight="bold")
-    result_text = "Line: PARTIALLY / FULLY VISIBLE"
-else:
-    result_text = "Line: REJECTED (outside window)"
+    print("\n--- Results ---")
+    for (x0, y0, x1, y1) in lines:
+        accepted, p0, p1 = clip_line(x0, y0, x1, y1, win)
+        if accepted:
+            print(f"Line ({x0},{y0})-({x1},{y1}): ACCEPTED -> "
+                  f"({p0[0]:.2f},{p0[1]:.2f}) to ({p1[0]:.2f},{p1[1]:.2f})")
+        else:
+            print(f"Line ({x0},{y0})-({x1},{y1}): REJECTED")
 
-ax.annotate(f"P1({x1},{y1})", (x1, y1), xytext=(5, 5),
-            textcoords="offset points", color="white", fontsize=9)
-ax.annotate(f"P2({x2},{y2})", (x2, y2), xytext=(5, 5),
-            textcoords="offset points", color="white", fontsize=9)
+    plot_4axis(lines, win)
 
-info = (
-    f"Window: ({XMIN},{YMIN})-({XMAX},{YMAX})\n"
-    f"P1 code: {code_to_str(code1_init)} ({code1_init:04b})\n"
-    f"P2 code: {code_to_str(code2_init)} ({code2_init:04b})\n"
-    f"Result: {result_text}"
-)
-ax.text(0.02, 0.98, info, transform=ax.transAxes,
-        fontsize=9, verticalalignment="top", color="black",
-        bbox=dict(boxstyle="round", facecolor="wheat", alpha=0.9))
 
-ax.set_xlabel("X", color="white")
-ax.set_ylabel("Y", color="white")
-ax.legend(fontsize=9, loc="lower right")
-ax.set_facecolor("#2b2b2b")
-ax.tick_params(colors="white")
-ax.xaxis.label.set_color("white")
-ax.yaxis.label.set_color("white")
-fig.patch.set_facecolor("#2b2b2b")
-
-plt.tight_layout()
-plt.show()
+if __name__ == "__main__":
+    main()
