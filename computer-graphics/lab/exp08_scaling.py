@@ -1,100 +1,145 @@
+"""
+Lab 7: N-Dimensional Scaling Transformation (Interactive)
+=========================================================
+Computer Graphics Course
+
+This lab demonstrates the SCALE transformation in N dimensions using
+homogeneous (4-axis) coordinates and a 4x4 transformation matrix.
+
+Theory
+------
+    x'_i = s_i * x_i      for i in 0..n-1
+
+In homogeneous 4-axis coordinates every point is stored as a 4-vector:
+
+    [ x0, x1, ..., 0, 1 ]
+
+so the result is always expressed in 4 axes regardless of the chosen
+dimension n (2D or 3D, ...). The scaling matrix is a 4x4 matrix with the
+n scale factors on the leading diagonal and 1 elsewhere:
+
+        [ s0  0   0   0 ]
+        [ 0   s1  0   0 ]
+    T = [ 0   0  s2  0 ]
+        [ 0   0   0   1 ]
+
+    [x'0 x'1 x'2 x'3] = [x0 x1 x2 x3] * T
+
+The number of vertices defines the shape:
+    2 vertices -> straight line
+    3 vertices -> triangle
+    4 vertices -> rectangle
+
+The graph shows a 4-axis centered coordinate system (x / x' and y / y')
+so you can compare the original and scaled shapes.
+
+Requirements:
+    pip install matplotlib numpy
+"""
+
+import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib.patches as mpatches
 
-def scale_point(x, y, fx, fy, sx, sy):
-    return round(fx + (x - fx) * sx), round(fy + (y - fy) * sy)
 
-def draw_triangle(ax, x1, y1, x2, y2, x3, y3, color, label=None):
-    tri = mpatches.Polygon(
-        [(x1, y1), (x2, y2), (x3, y3)],
-        fill=False, edgecolor=color, linewidth=2, label=label
-    )
-    ax.add_patch(tri)
+def scale_matrix_4(sf):
+    """Build a 4x4 scaling matrix from a list of n scale factors."""
+    T = np.eye(4)
+    for i, s in enumerate(sf):
+        T[i, i] = s
+    return T
 
-print("=== Triangle Vertices ===")
-x1 = int(input("x1 = "))
-y1 = int(input("y1 = "))
-x2 = int(input("x2 = "))
-y2 = int(input("y2 = "))
-x3 = int(input("x3 = "))
-y3 = int(input("y3 = "))
 
-print("\n=== Scaling ===")
-fx = int(input("fixed point x = "))
-fy = int(input("fixed point y = "))
-sx = float(input("scale x (sx) = "))
-sy = float(input("scale y (sy) = "))
+def scale_points(points, sf):
+    """
+    Scale `points` (list of n-dim vertices) about the origin.
 
-s1 = scale_point(x1, y1, fx, fy, sx, sy)
-s2 = scale_point(x2, y2, fx, fy, sx, sy)
-s3 = scale_point(x3, y3, fx, fy, sx, sy)
+    Returns the homogeneous 4-vector forms of the original and scaled
+    points (each padded to 4 axes).
+    """
+    dim = len(sf)
+    hom = []
+    for p in points:
+        v = list(p) + [0.0] * (4 - dim - 1) + [1.0]
+        hom.append(v)
+    hom = np.array(hom)
+    T = scale_matrix_4(sf)
+    scaled = hom @ T
+    return hom, scaled
 
-print(f"\n--- 2D Scaling ---")
-print(f"Fixed point: ({fx}, {fy})")
-print(f"Scale factors: sx={sx}, sy={sy}")
-print(f"\nFormula: x' = fx + (x - fx) * sx")
-print(f"         y' = fy + (y - fy) * sy")
 
-print(f"\n{'Vertex':<8} {'Original':<16} {'Scaled':<16} {'Calculation':<30}")
-print("-" * 72)
-for (ox, oy), (sx_p, sy_p), label in [
-    ((x1, y1), s1, "A"), ((x2, y2), s2, "B"), ((x3, y3), s3, "C")
-]:
-    print(f"{label:<8} ({ox:<3},{oy:<3})        ({sx_p:<3},{sy_p:<3})        "
-          f"({ox}-{fx})*{sx}, ({oy}-{fy})*{sy})")
+def plot_4axis(original_hom, scaled_hom, sf):
+    """Plot original and transformed shapes in a centered 4-axis view."""
+    fig, ax = plt.subplots(figsize=(8, 8))
 
-fig, ax = plt.subplots(figsize=(8, 7))
-ax.set_title(f"2D Scaling: sx={sx}, sy={sy} about ({fx},{fy})", color="white", fontsize=13)
+    o2 = original_hom[:, :2]
+    s2 = scaled_hom[:, :2]
+    all_pts = np.vstack([o2, s2])
+    lim = np.max(np.abs(all_pts)) * 1.2 + 1.0
+    lim = float(lim)
 
-all_x = [x1, x2, x3, s1[0], s2[0], s3[0], fx]
-all_y = [y1, y2, y3, s1[1], s2[1], s3[1], fy]
-margin = 30 + max(
-    max(all_x) - min(all_x), max(all_y) - min(all_y)
-) // 2
+    ax.set_xlim(-lim, lim)
+    ax.set_ylim(-lim, lim)
+    ax.set_aspect('equal')
 
-ax.set_xlim(min(all_x) - margin, max(all_x) + margin)
-ax.set_ylim(min(all_y) - margin, max(all_y) + margin)
-ax.set_aspect("equal")
-ax.grid(True, alpha=0.3)
+    # 4-axis centered grid
+    ax.axhline(0, color='k', linewidth=1.2)
+    ax.axvline(0, color='k', linewidth=1.2)
+    ax.grid(True, linestyle='--', alpha=0.5)
 
-ax.axhline(0, color="gray", linewidth=0.8, alpha=0.3)
-ax.axvline(0, color="gray", linewidth=0.8, alpha=0.3)
+    ax.set_xlabel("x0 / x0' (horizontal)")
+    ax.set_ylabel("x1 / x1' (vertical)")
+    factors = ", ".join(f"s{i+1}={s}" for i, s in enumerate(sf))
+    ax.set_title(f"Scaling: original vs scaled  [4-axis view, {factors}]")
 
-draw_triangle(ax, x1, y1, x2, y2, x3, y3, "white", "Original")
-draw_triangle(ax, s1[0], s1[1], s2[0], s2[1], s3[0], s3[1], "lime", f"Scaled (sx={sx}, sy={sy})")
+    # original shape
+    poly = np.vstack([o2, o2[0]])
+    ax.plot(poly[:, 0], poly[:, 1], 'b-o', label='Original (x, y)')
 
-ax.scatter([x1, x2, x3], [y1, y2, y3], c="white", s=60, zorder=4, edgecolors="gray")
-ax.scatter([s1[0], s2[0], s3[0]], [s1[1], s2[1], s3[1]], c="lime", s=60, zorder=4, edgecolors="darkgreen")
-ax.scatter([fx], [fy], c="red", s=120, zorder=5, marker="*", edgecolors="darkred")
-ax.annotate(f"Fixed({fx},{fy})", (fx, fy), xytext=(8, -12),
-            textcoords="offset points", color="red", fontsize=10, fontweight="bold")
+    # scaled shape
+    poly_s = np.vstack([s2, s2[0]])
+    ax.plot(poly_s[:, 0], poly_s[:, 1], 'r-o', label='Scaled (x\', y\')')
 
-for (ox, oy), (rx, ry), label in [
-    ((x1, y1), s1, "A"), ((x2, y2), s2, "B"), ((x3, y3), s3, "C")
-]:
-    ax.annotate(f"{label}({ox},{oy})", (ox, oy), xytext=(5, 8),
-                textcoords="offset points", color="white", fontsize=9, fontweight="bold")
-    ax.annotate(f"{label}'({rx},{ry})", (rx, ry), xytext=(5, 8),
-                textcoords="offset points", color="lime", fontsize=9, fontweight="bold")
+    # connectors from original to scaled vertices
+    for (ox, oy), (sx_, sy_) in zip(o2, s2):
+        ax.plot([ox, sx_], [oy, sy_], 'g:', alpha=0.6)
 
-info = (
-    f"Fixed point: ({fx},{fy})\n"
-    f"sx = {sx}, sy = {sy}\n"
-    f"x' = fx + (x-fx)*sx\n"
-    f"y' = fy + (y-fy)*sy"
-)
-ax.text(0.02, 0.98, info, transform=ax.transAxes,
-        fontsize=10, verticalalignment="top", color="black",
-        bbox=dict(boxstyle="round", facecolor="wheat", alpha=0.9))
+    ax.legend()
+    plt.tight_layout()
+    plt.savefig("scaling_graph.png", dpi=120)
+    print("Graph saved to scaling_graph.png")
+    plt.show()
 
-ax.set_xlabel("X", color="white")
-ax.set_ylabel("Y", color="white")
-ax.legend(fontsize=9, loc="lower right")
-ax.set_facecolor("#2b2b2b")
-ax.tick_params(colors="white")
-ax.xaxis.label.set_color("white")
-ax.yaxis.label.set_color("white")
-fig.patch.set_facecolor("#2b2b2b")
 
-plt.tight_layout()
-plt.show()
+def main():
+    print("=== N-D Scaling Lab (interactive) ===")
+
+    n = int(input("Enter dimension n (e.g. 2 or 3): "))
+    m = int(input("Enter number of vertices (2=line, 3=triangle, 4=rectangle): "))
+
+    pts = []
+    for i in range(m):
+        coords = []
+        for d in range(n):
+            coords.append(float(input(f"  Vertex {i+1} coordinate {d+1}: ")))
+        pts.append(coords)
+    original = np.array(pts)
+
+    sf = []
+    for d in range(n):
+        sf.append(float(input(f"Enter scale factor s{d+1}: ")))
+
+    original_hom, scaled = scale_points(pts, sf)
+
+    print("\n--- Results (always in 4 axes) ---")
+    print("Original (4-axis):")
+    for v in original_hom:
+        print("  " + "  ".join(f"{c:8.4f}" for c in v))
+    print("Scaled  (4-axis):")
+    for v in scaled:
+        print("  " + "  ".join(f"{c:8.4f}" for c in v))
+
+    plot_4axis(original_hom, scaled, sf)
+
+
+if __name__ == "__main__":
+    main()
