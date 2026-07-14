@@ -24,7 +24,7 @@
   - [Exp 05 — Midpoint Circle Algorithm](#exp-05--midpoint-circle-algorithm)
   - [Exp 06 — 2D Translation](#exp-06--2d-translation)
   - [Exp 07 — 2D Rotation](#exp-07--2d-rotation)
-  - [Exp 08 — 2D Scaling](#exp-08--2d-scaling)
+  - [Exp 08 — N-Dimensional Scaling](#exp-08--n-dimensional-scaling)
   - [Exp 09 — 3D Rotation](#exp-09--3d-rotation-about-arbitrary-axis)
   - [Exp 10 — Cohen-Sutherland Clipping](#exp-10--cohen-sutherland-line-clipping)
   - [Exp 11 — Sutherland-Hodgman Clipping](#exp-11--sutherland-hodgman-polygon-clipping)
@@ -492,46 +492,64 @@ ROTATION FORMULA (about origin):
 
 ---
 
-### Exp 08 — 2D Scaling
+### Exp 08 — N-Dimensional Scaling
 
 > **Files:** `exp08_scaling.cpp` | `exp08_scaling.py`
 
 #### Theory
 
-Scaling changes the size of an object relative to a fixed point.
+Scaling changes the size of an object by multiplying every coordinate by a scale factor. The Python implementation is **N-dimensional** and uses homogeneous (4-axis) coordinates with a 4×4 matrix, so the result is always reported in 4 axes regardless of the chosen dimension `n` (2D or 3D, …).
 
 ```
-SCALING FORMULA (from center fx, fy):
+N-DIMENSIONAL SCALING (homogeneous 4×4):
 
-  x' = fx + (x - fx) · sx
-  y' = fy + (y - fy) · sy
+  x'_i = s_i · x_i        for i = 0 .. n-1
 
-  where (sx, sy) = scaling factors
+  [ x'0 x'1 x'2 x'3 ] = [ x0 x1 x2 x3 ] ·
+      [ s0  0  0  0 ]
+      [ 0  s1  0  0 ]
+      [ 0  0  s2  0 ]
+      [ 0  0  0   1 ]
 
-  Uniform scaling:     sx = sy (proportional)
-  Non-uniform scaling: sx ≠ sy (stretched)
+  Each point is stored as a 4-vector [x0, x1, …, 0, 1].
+  The n scale factors occupy the leading diagonal;
+  the last diagonal entry is 1 (homogeneous coordinate).
+  Scaling is performed about the origin.
+```
 
-  Matrix form (about origin):
-  ┌     ┐   ┌         ┐   ┌   ┐
-  │ x'  │ = │ sx  0  │   │ x │
-  │ y'  │   │ 0   sy │ × │ y │
-  └     ┘   └         ┘   └   ┘
+#### Python Implementation
+
+```python
+import numpy as np
+
+def scale_matrix_4(sf):
+    # Build a 4x4 scaling matrix from a list of n scale factors
+    T = np.eye(4)
+    for i, s in enumerate(sf):
+        T[i, i] = s
+    return T
+
+def scale_points(points, sf):
+    # points: list of n-dim vertices -> padded to 4 axes (homogeneous)
+    dim = len(sf)
+    hom = [list(p) + [0.0] * (4 - dim - 1) + [1.0] for p in points]
+    hom = np.array(hom)
+    return hom, hom @ scale_matrix_4(sf)
 ```
 
 #### Visual
 
 ```
-  Original (100×100)     Scaled 1.5x     Scaled (2x, 0.5x)
+  Original triangle (2D slice)      Scaled (sx=2, sy=1.5)
 
-    ┌──────┐              ┌────────────┐    ┌────────────────┐
-    │      │              │            │    │                │
-    │      │              │            │    └────────────────┘
-    └──────┘              │            │
-                          └────────────┘
+    ●───●                    ●───────────●
+    │  ╱                      │          ╱
+    │ ╱                       │         ╱
+    ●                         ●────────●
 
-  1.5× uniform:          2× width, 0.5× height
-  (wider & taller)       (wider & shorter)
+  Output is reported in 4 axes: (x, y, 0, 1)
 ```
+
 
 ---
 
@@ -600,32 +618,32 @@ RODRIGUES' FORMULA:
 
 #### Theory
 
-**Cohen-Sutherland** clips a line against a rectangular window using **outcodes**.
+**Cohen-Sutherland** clips a line against a rectangular window using **outcodes**. The Python implementation defines the window by two corner inputs — **BL** (Bottom-Left, `xmin,ymin`) and **UR** (Upper-Right, `xmax,ymax`).
 
 ```
-OUTCODE ASSIGNMENT:
+OUTCODE ASSIGNMENT (relative to window BL-UR):
 
-         1001 │ 1000 │ 1010
-         ─────┼──────┼─────
-              │      │
-         0001 │ 0000 │ 0010
-              │      │
-         ─────┼──────┼─────
-         0101 │ 0100 │ 0110
+          1001 │ 1000 │ 1010
+          ─────┼──────┼─────
+               │      │
+          0001 │ 0000 │ 0010
+               │      │
+          ─────┼──────┼─────
+          0101 │ 0100 │ 0110
 
   Bit 0 (1): LEFT   (x < xmin)
   Bit 1 (2): RIGHT  (x > xmax)
-  Bit 2 (4): BOTTOM (y > ymax)  [y increases downward]
-  Bit 3 (8): TOP    (y < ymin)
+  Bit 2 (4): BOTTOM (y < ymin)
+  Bit 3 (8): TOP    (y > ymax)
 ```
 
 #### Algorithm
 
 ```
-COHEN-SUTHERLAND:
+COHEN-SUTHERLAND (window = BL, UR):
 
-  code1 = compute_code(x1, y1)
-  code2 = compute_code(x2, y2)
+  code1 = compute_outcode(x1, y1, win)
+  code2 = compute_outcode(x2, y2, win)
 
   LOOP:
     if both codes == 0:
@@ -637,28 +655,43 @@ COHEN-SUTHERLAND:
         update endpoint and its outcode
 ```
 
-#### Decision Flow
+#### Python Implementation
+
+```python
+def compute_outcode(x, y, win):
+    xmin, ymin, xmax, ymax = win
+    code = 0b0000
+    if x < xmin: code |= 0b0001          # LEFT
+    elif x > xmax: code |= 0b0010        # RIGHT
+    if y < ymin: code |= 0b0100          # BOTTOM
+    elif y > ymax: code |= 0b1000        # TOP
+    return code
+
+def clip_line(x0, y0, x1, y1, win):
+    xmin, ymin, xmax, ymax = win
+    code0, code1 = compute_outcode(x0, y0, win), compute_outcode(x1, y1, win)
+    accepted = False
+    while True:
+        if code0 == 0 and code1 == 0:
+            accepted = True; break
+        elif code0 & code1:
+            break                       # shared bit -> reject
+        else:
+            code_out = code0 if code0 != 0 else code1
+            # intersect with appropriate boundary,
+            # replace outside endpoint & recompute outcode
+```
+
+#### Example
 
 ```
-         Start
-           │
-     ┌─────▼─────┐
-     │ code1=0 &  │    YES
-     │ code2=0?  ├────────▶ ACCEPT (fully inside)
-     └─────┬─────┘
-           │ NO
-     ┌─────▼──────┐
-     │ code1 &    │    YES
-     │ code2 ≠ 0? ├────────▶ REJECT (fully outside)
-     └─────┬──────┘
-           │ NO
-     ┌─────▼──────────┐
-     │ Clip endpoint  │
-     │ against boundary│
-     └─────┬──────────┘
-           │
-           └──▶ Back to LOOP
+  Line (-3,2)-(14,8) against window BL=(0,0) UR=(10,10)
+  -> clipped to (0, 3.06)-(10, 6.59)   [ACCEPTED]
+
+  Fully-inside line (2,2)-(8,8)  -> accepted unchanged
+  Fully-outside line             -> REJECTED
 ```
+
 
 ---
 
