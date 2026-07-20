@@ -1,94 +1,204 @@
-import matplotlib.pyplot as plt
-import numpy as np
+"""
+Lab 9: Bézier Curves (Interactive)
+====================================
+Computer Graphics Course
 
-def bernstein(t, i, n):
-    from math import comb
+Bézier curves are parametric curves widely used in computer graphics
+and CAD. A Bézier curve of degree n is defined by n+1 control points:
+
+    B(t) = sum_{i=0}^{n} P_i * B_i^n(t)    t in [0, 1]
+
+where B_i^n(t) are the Bernstein basis polynomials:
+
+    B_i^n(t) = C(n, i) * t^i * (1-t)^{n-i}
+
+Implementation
+--------------
+Two equivalent evaluation methods are provided:
+  1. Bernstein (algebraic)  — uses the formula above.
+  2. De Casteljau (geometric) — recursive linear interpolation;
+     more numerically stable.
+
+This demo lets the user enter 2D control points interactively, then
+draws the control polygon and the smooth Bézier curve on a 4-axis
+centered graph.  The Bernstein basis functions are also plotted in a
+separate figure.
+
+Requirements:
+    pip install matplotlib numpy
+"""
+
+import numpy as np
+import matplotlib.pyplot as plt
+from math import comb
+
+
+def bernstein_basis(i, n, t):
+    """Evaluate the i-th Bernstein basis polynomial of degree n at t."""
     return comb(n, i) * (t ** i) * ((1 - t) ** (n - i))
 
-def bezier_curve(control_x, control_y, steps=100):
-    ts = np.linspace(0, 1, steps + 1)
-    u = 1 - ts
-    b0 = u ** 3
-    b1 = 3 * ts * u ** 2
-    b2 = 3 * ts ** 2 * u
-    b3 = ts ** 3
 
-    px = (b0 * control_x[0] + b1 * control_x[1] + b2 * control_x[2] + b3 * control_x[3])
-    py = (b0 * control_y[0] + b1 * control_y[1] + b2 * control_y[2] + b3 * control_y[3])
-    return px, py
+def bezier_bernstein(ctrl, num=200):
+    """
+    Evaluate a Bézier curve using the Bernstein (algebraic) form.
 
-print("=== Cubic Bezier Curve ===")
-print("Enter 4 control points:")
-pts = []
-for i in range(4):
-    x = int(input(f"P{i} x = "))
-    y = int(input(f"P{i} y = "))
-    pts.append((x, y))
+    Parameters
+    ----------
+    ctrl : ndarray, shape (n+1, 2)
+        Control points.
+    num  : int
+        Number of sample points on the curve.
 
-cx, cy = [p[0] for p in pts], [p[1] for p in pts]
+    Returns
+    -------
+    curve : ndarray, shape (num, 2)
+        Points on the Bézier curve.
+    """
+    n = len(ctrl) - 1
+    t = np.linspace(0, 1, num)
+    curve = np.zeros((num, 2))
+    for i, p in enumerate(ctrl):
+        basis = bernstein_basis(i, n, t)
+        curve[:, 0] += basis * p[0]
+        curve[:, 1] += basis * p[1]
+    return curve
 
-print(f"\nControl points:")
-for i, (x, y) in enumerate(pts):
-    print(f"  P{i}: ({x}, {y})")
 
-print(f"\n{'t':<8} {'B0(t)':<10} {'B1(t)':<10} {'B2(t)':<10} {'B3(t)':<10} {'X(t)':<10} {'Y(t)':<10}")
-print("-" * 68)
-for t_val in [i / 10 for i in range(0, 11)]:
-    b = [bernstein(t_val, i, 3) for i in range(4)]
-    x_t = sum(b[i] * cx[i] for i in range(4))
-    y_t = sum(b[i] * cy[i] for i in range(4))
-    print(f"{t_val:<8.2f} {b[0]:<10.4f} {b[1]:<10.4f} {b[2]:<10.4f} {b[3]:<10.4f} {x_t:<10.2f} {y_t:<10.2f}")
+def de_casteljau(ctrl, t):
+    """
+    Evaluate a Bézier curve at a single t using De Casteljau's algorithm.
 
-px, py = bezier_curve(cx, cy)
+    Parameters
+    ----------
+    ctrl : ndarray, shape (n+1, 2)
+        Control points.
+    t    : float
+        Parameter value in [0, 1].
 
-fig, ax = plt.subplots(figsize=(8, 6))
-ax.set_title("Cubic Bezier Curve", color="white", fontsize=13)
-ax.axhline(0, color="gray", linewidth=0.8, alpha=0.3)
-ax.axvline(0, color="gray", linewidth=0.8, alpha=0.3)
+    Returns
+    -------
+    point : ndarray, shape (2,)
+        Point on the curve at parameter t.
+    """
+    pts = np.array(ctrl, dtype=float)
+    while len(pts) > 1:
+        pts = np.array([(1 - t) * pts[j] + t * pts[j + 1] for j in range(len(pts) - 1)])
+    return pts[0]
 
-all_x = cx + px.tolist()
-all_y = cy + py.tolist()
-margin = 30
-ax.set_xlim(min(all_x) - margin, max(all_x) + margin)
-ax.set_ylim(min(all_y) - margin, max(all_y) + margin)
-ax.set_aspect("equal")
-ax.grid(True, alpha=0.3)
 
-ax.plot(cx, cy, color="white", linewidth=1.5, linestyle="--", label="Control polygon")
-ax.scatter(cx, cy, c="red", s=80, zorder=5, edgecolors="white")
-for i, (x, y) in enumerate(pts):
-    ax.annotate(f"P{i}({x},{y})", (x, y), xytext=(8, 8),
-                textcoords="offset points", color="red", fontsize=10, fontweight="bold")
+def bezier_casteljau(ctrl, num=200):
+    """
+    Evaluate a Bézier curve using De Casteljau's algorithm.
 
-ax.plot(px, py, color="yellow", linewidth=2.5, label="Bezier curve")
+    Returns
+    -------
+    curve : ndarray, shape (num, 2)
+    """
+    t_vals = np.linspace(0, 1, num)
+    return np.array([de_casteljau(ctrl, t) for t in t_vals])
 
-colors = plt.cm.plasma(np.linspace(0, 1, 11))
-for i, t_val in enumerate([i / 10 for i in range(0, 11)]):
-    b = [bernstein(t_val, i, 3) for i in range(4)]
-    x_t = sum(b[i] * cx[i] for i in range(4))
-    y_t = sum(b[i] * cy[i] for i in range(4))
-    ax.scatter(x_t, y_t, c=[colors[i]], s=40, zorder=4, edgecolors="white", linewidth=0.5)
-    if i % 2 == 0:
-        ax.annotate(f"t={t_val:.1f}", (x_t, y_t), xytext=(5, -12),
-                    textcoords="offset points", fontsize=7, color="white", alpha=0.7)
 
-info = (
-    f"4 control points\n"
-    f"Cubic Bernstein basis\n"
-    f"Dots = t at 0.0, 0.1, ..., 1.0"
-)
-ax.text(0.02, 0.98, info, transform=ax.transAxes,
-        fontsize=10, verticalalignment="top", color="black",
-        bbox=dict(boxstyle="round", facecolor="wheat", alpha=0.9))
+def plot_bezier(ctrl, steps=300, method="casteljau"):
+    ctrl = np.array(ctrl, dtype=float)
+    curve = bezier_casteljau(ctrl, steps) if method == "casteljau" else bezier_bernstein(ctrl, steps)
 
-ax.set_xlabel("X", color="white")
-ax.set_ylabel("Y", color="white")
-ax.legend(fontsize=9, loc="upper left")
-ax.set_facecolor("#2b2b2b")
-ax.tick_params(colors="white")
-ax.xaxis.label.set_color("white")
-ax.yaxis.label.set_color("white")
-fig.patch.set_facecolor("#2b2b2b")
+    all_pts = np.vstack([ctrl, curve])
+    lim = np.max(np.abs(all_pts)) * 1.2 + 0.5
+    lim = float(lim)
 
-plt.tight_layout()
-plt.show()
+    fig, ax = plt.subplots(figsize=(8, 8))
+
+    ax.set_xlim(-lim, lim)
+    ax.set_ylim(-lim, lim)
+    ax.set_aspect('equal')
+    ax.axhline(0, color='k', linewidth=1.2)
+    ax.axvline(0, color='k', linewidth=1.2)
+    ax.grid(True, linestyle='--', alpha=0.5)
+
+    # Control polygon (dashed grey)
+    ax.plot(ctrl[:, 0], ctrl[:, 1], 'o-', color='#888888',
+            linewidth=2, markersize=8, label='Control polygon')
+
+    # Bézier curve (blue)
+    ax.plot(curve[:, 0], curve[:, 1], 'b-', linewidth=2.5,
+            label=f'Bézier curve (De Casteljau)' if method == 'casteljau'
+                  else 'Bézier curve (Bernstein)')
+
+    # Label control points
+    for i, (x, y) in enumerate(ctrl):
+        ax.annotate(f"P{i}", (x, y), textcoords="offset points",
+                    xytext=(8, 8), fontsize=10, fontweight='bold',
+                    color='#333333')
+
+    ax.set_xlabel("x")
+    ax.set_ylabel("y")
+    ax.set_title(f"Bézier Curve — {len(ctrl)} control points (degree {len(ctrl)-1})")
+    ax.legend()
+    plt.tight_layout()
+    plt.savefig("bezier_graph.png", dpi=120)
+    print("Graph saved to bezier_graph.png")
+    plt.show()
+
+
+def plot_basis_functions(n, steps=300):
+    t = np.linspace(0, 1, steps)
+    fig, ax = plt.subplots(figsize=(8, 5))
+    for i in range(n + 1):
+        b = bernstein_basis(i, n, t)
+        ax.plot(t, b, lw=2, label=f"B_{i}^{n}(t)")
+    ax.set_xlim(0, 1)
+    ax.set_ylim(0, 1.1)
+    ax.set_xlabel("t")
+    ax.set_ylabel("B_i^n(t)")
+    ax.set_title(f"Bernstein Basis Functions — Degree {n}")
+    ax.grid(True, linestyle='--', alpha=0.5)
+    ax.legend()
+    plt.tight_layout()
+    plt.savefig("bezier_basis.png", dpi=120)
+    print("Basis graph saved to bezier_basis.png")
+    plt.show()
+
+
+def main():
+    print("=== Bézier Curves Lab (Interactive) ===")
+    print("Enter 2D control points for the Bézier curve.")
+    print("The curve degree = number of points - 1.")
+
+    m = int(input("Number of control points (>=2): "))
+    steps = int(input("Number of steps (curve resolution, e.g. 100-500): "))
+
+    ctrl = []
+    for i in range(m):
+        x = float(input(f"  P{i} x: "))
+        y = float(input(f"  P{i} y: "))
+        ctrl.append((x, y))
+
+    ctrl_arr = np.array(ctrl)
+    n = len(ctrl_arr) - 1
+
+    print(f"\nDegree of Bézier curve: {n}")
+    print(f"Control points: {ctrl}")
+    print(f"Curve steps (resolution): {steps}")
+
+    # Evaluate at a few sample t values using both methods
+    print("\n--- Sample evaluations ---")
+    print("   t    |  Bernstein (x,y)      | De Casteljau (x,y)")
+    print("--------|------------------------|---------------------")
+    for t_val in np.linspace(0, 1, 5):
+        b_pt = bezier_bernstein(ctrl_arr, steps)
+        idx = int(t_val * (steps - 1))
+        bxy = b_pt[min(idx, steps - 1)]
+        cxy = de_casteljau(ctrl_arr, t_val)
+        print(f"  {t_val:.2f}  |  ({bxy[0]:8.4f}, {bxy[1]:8.4f})  |  ({cxy[0]:8.4f}, {cxy[1]:8.4f})")
+
+    # Plot
+    print("\nPlotting Bézier curve with control polygon...")
+    plot_bezier(ctrl_arr, steps=steps, method="casteljau")
+
+    show_basis = input(f"\nShow Bernstein basis functions for degree {n}? (y/n): ").strip().lower()
+    if show_basis == 'y':
+        plot_basis_functions(n, steps=steps)
+
+
+if __name__ == "__main__":
+    main()
